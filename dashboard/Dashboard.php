@@ -131,7 +131,7 @@ $conn->close();
                     </a>
                   <?php endif; ?>
 
-                  <a href="/factory_monitoring/repair/report.php?machine_id=<?= $machine['machine_id'] ?>"
+                  <a href="/factory_monitoring/admin/report.php?machine_id=<?= $machine['machine_id'] ?>"
                     class="btn btn-warning btn-sm"
                     style="padding: 4px 8px; font-size: 12px; background-color:#ff8c00; border-color:#ff8c00; width: fit-content;">
                     <i class="fa-solid fa-clipboard"></i> แจ้งซ่อม
