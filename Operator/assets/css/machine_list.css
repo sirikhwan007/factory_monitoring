@@ -1,4 +1,23 @@
 /* การจัดการ Layout หลัก */
+
+.main {
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.dashboard {
+    flex: 1;
+    overflow: auto;
+    background: #f4f9fd;
+    border-radius: 20px;
+    padding: 30px;
+    margin: 20px;
+}
+
 .machine-cards-wrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -30,7 +49,10 @@
     height: 140px;
     object-fit: cover;
     display: block;
+    border-radius: 5px;
+    margin-bottom: 8px;
 }
+
 
 /* ข้อมูลในการ์ด */
 .machine-card .machine-name {
@@ -62,7 +84,7 @@
     padding: 20px;
     border-radius: 15px;
     margin-bottom: 25px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .search-input {
@@ -112,10 +134,12 @@
     .machine-cards-wrapper {
         grid-template-columns: 1fr;
     }
+
     .machine-header {
         flex-direction: column;
         align-items: stretch;
     }
+
     .search-input {
         max-width: 100%;
     }
