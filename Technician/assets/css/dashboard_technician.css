@@ -1,0 +1,81 @@
+/* ===============================
+   Technician Dashboard
+================================ */
+
+/* ---------- Main Layout ---------- */
+.main {
+    margin-left: 260px;
+    padding: 24px;
+}
+
+/* ---------- Title ---------- */
+.dashboard-title {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+/* ---------- Welcome ---------- */
+.welcome-text {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+/* ---------- Card Grid ---------- */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+/* ---------- Card ---------- */
+.card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transition: transform 0.25s, box-shadow 0.25s;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+/* ---------- Card Icon ---------- */
+.card i {
+    font-size: 32px;
+    color: #2980b9;
+    margin-bottom: 12px;
+}
+
+/* ---------- Card Text ---------- */
+.card h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: #2c3e50;
+}
+
+.card p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+/* ---------- Job Count ---------- */
+.card .job-count {
+    font-size: 28px !important;
+    font-weight: 700;
+    color: #e74c3c !important;
+    margin: 10px 0 0 0;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 992px) {
+    .main {
+        margin-left: 0;
+    }
+}

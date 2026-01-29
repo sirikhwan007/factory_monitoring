@@ -1,0 +1,82 @@
+/* ============================
+   Operator Dashboard Layout
+============================ */
+
+body {
+    margin: 0;
+    font-family: "Sarabun", sans-serif;
+    background: #f3f4f6;
+}
+
+/* กริดการ์ดสถิติ */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* กล่องการ์ด */
+.card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.card p {
+    margin-top: 12px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #1e40af;
+}
+
+/* ปุ่มเปิด/ปิด Sidebar */
+.toggle-btn {
+    background: #1e1e2f;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+/* ส่วนหัว Dashboard */
+h1 {
+    margin-top: 0;
+    font-size: 26px;
+    color: #111827;
+    font-weight: 600;
+}
+
+/* ===== MAIN CONTENT ที่ใช้ร่วมกับ Operator ===== */
+.main-operator {
+    margin-left: 260px;  /* กันพื้นที่ไม่ให้ sidebar ทับ */
+    padding: 20px;
+    transition: 0.3s;
+}
+
+/* ============================
+   RESPONSIVE FIX
+============================ */
+@media (max-width: 992px) {
+    .main-operator {
+        margin-left: 0;   /* มือถือไม่ต้องเผื่อ sidebar */
+        padding: 15px;
+    }
+}
+

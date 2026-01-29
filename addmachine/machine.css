@@ -1,0 +1,138 @@
+/* ตั้งชื่อไฟล์นี้ว่า machine.css */
+.card-header {
+  background: linear-gradient(
+    135deg,
+    #007bff,
+    #0056b3
+  ); /* สีน้ำเงินเข้มสวยงาม */
+  border-bottom: none;
+}
+.card {
+  border-radius: 1rem;
+}
+
+/* ซ่อน input type="file" เดิม */
+.file-input {
+  display: none !important;
+}
+
+/* สไตล์ Label หลัก (ข้อความ "Photo (รูปภาพเครื่องจักร)") */
+.upload-label {
+  margin-bottom: 0;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold; /* ให้เป็นตัวหนา */
+}
+
+/* สไตล์แสดงชื่อไฟล์ */
+.file-name {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+.custom-upload-button {
+  display: inline-block; 
+  text-align: center;
+  padding: 12px 30px;
+  border-radius: 50px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1em;
+  background: linear-gradient(
+    to right,
+    #12aa45,
+    #18c744
+  ); /* ปรับสีให้ดูเข้มขึ้น */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  min-width: 200px; 
+}
+
+.custom-upload-button:hover {
+  background: linear-gradient(to right, #12aa45, #18c744);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.live-preview-container {
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.uploaded-photo-preview {
+  max-width: 100%;
+  height: auto;
+  max-height: 200px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  border: 3px solid #dee2e6;
+  display: block;
+  margin: 0 auto;
+}
+
+
+.photo-preview-container {
+  text-align: center;
+  padding: 15px;
+  border: 1px dashed #c3e6cb; 
+  border-radius: 8px;
+  background-color: #f0fff0;
+}
+
+.dashboard {
+    margin: 10px;
+    width: 100%;
+    border-radius: 10px;
+  }
+
+.image-upload-area {
+    text-align: center;
+}
+
+/* Mobile (จอ ≤ 600px) */
+@media (max-width: 600px) {
+  .upload-label {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .custom-upload-button {
+    padding: 10px 20px;
+    font-size: 0.95em;
+    min-width: 140px;
+    width: 100%; /* ปุ่มเต็มความกว้างจอ */
+  }
+
+  .file-name {
+    font-size: 0.85em;
+  }
+
+  .uploaded-photo-preview {
+    max-height: 150px;
+  }
+
+  .photo-preview-container {
+    padding: 10px;
+  }
+
+  .dashboard {
+    margin: 5px;
+  }
+}
+
+/* Very Small Devices (จอ ≤ 400px) */
+@media (max-width: 400px) {
+  .custom-upload-button {
+    font-size: 0.9em;
+    padding: 8px 18px;
+  }
+
+  .upload-label {
+    font-size: 0.9em;
+  }
+}

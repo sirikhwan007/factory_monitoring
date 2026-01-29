@@ -1,0 +1,39 @@
+.upload-container {
+    text-align: center;
+}
+
+.custom-upload-button {
+    display: inline-block;
+    text-align: center;
+    padding: 12px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+    background: linear-gradient(to right, #12aa45, #18c744);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    min-width: 200px; 
+}
+
+.custom-upload-button:hover {
+  background: linear-gradient(to right, #12aa45, #18c744);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+  background: linear-gradient(
+    135deg,
+    #d7d40a,
+    #e8e406
+  );
+  border-bottom: none;
+}
+
+.file-name {
+    font-weight: 500;
+    font-size: 0.95em;
+    color: #333;
+}

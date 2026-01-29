@@ -1,0 +1,180 @@
+/* ===============================
+   FONT & RESET
+================================ */
+@import url("https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Sarabun", sans-serif;
+}
+
+/* ===============================
+   THEME (ADMIN STYLE)
+================================ */
+:root {
+    --primary: #6f1e51;
+    --secondary: #8e44ad;
+    --text-main: #333;
+    --text-muted: #adadad;
+    --bg-main: #ffffff;
+    --danger: #ea2027;
+}
+
+/* ===============================
+   SIDEBAR OPERATOR
+================================ */
+.sidebar-operator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background: var(--bg-main);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+/* ===============================
+   TOP (PROFILE)
+================================ */
+.op-top {
+    padding: 32px 20px 0;
+}
+
+.op-profile-btn {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.op-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 42px; /* ระยะก่อนเมนู */
+}
+
+.op-profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: none;
+}
+
+.op-profile-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.op-profile-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 2px;
+}
+
+.op-profile-role {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* ===============================
+   MENU
+================================ */
+.op-ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.op-ul li {
+    margin-bottom: 6px;
+}
+
+.op-ul a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 1;
+    transition: 0.25s ease;
+}
+
+.op-ul a i {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Hover */
+.op-ul a:hover {
+    background: var(--secondary);
+    color: #fff;
+}
+
+/* Active */
+.op-ul li.active a {
+    background: var(--secondary);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: none;
+}
+
+.op-ul li.active a::before {
+    display: none; /* เอาเส้นซ้ายแบบเดิมออก */
+}
+
+/* ===============================
+   BOTTOM
+================================ */
+.sidebar-bottom {
+    margin-top: auto;
+    padding: 25px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* ---------- LOGOUT ---------- */
+.btn-logout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background: var(--danger);
+    color: #fff;
+    padding: 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.25s ease;
+    width: 100%;
+}
+
+.btn-logout:hover {
+    background: #c0392b;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 992px) {
+    .sidebar-operator {
+        transform: translateX(-100%);
+    }
+
+    .sidebar-operator.active {
+        transform: translateX(0);
+    }
+}

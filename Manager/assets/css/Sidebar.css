@@ -1,0 +1,178 @@
+/* ===============================
+   FONT & RESET
+================================ */
+@import url("https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Sarabun", sans-serif;
+}
+
+/* ===============================
+   THEME (ADMIN STYLE)
+================================ */
+:root {
+    --primary: #6f1e51;
+    --secondary: #8e44ad;
+    --text-main: #333;
+    --text-muted: #adadad;
+    --bg-main: #ffffff;
+    --danger: #ea2027;
+}
+
+/* ===============================
+   SIDEBAR
+================================ */
+.sidebar {
+    max-width: 250px;
+    width: 250px;
+    height: 100vh;
+    position: fixed;      /* 🔥 สำคัญ */
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    background: #fff;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s ease;
+    z-index: 1000;
+}
+
+
+/* ===============================
+   TOP
+================================ */
+.sidebar-top {
+    width: 100%;
+}
+
+/* ---------- PROFILE ---------- */
+.profile-btn {
+    text-decoration: none;
+    color: inherit;
+}
+
+.sb-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0;
+}
+
+
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 2px;
+}
+
+.profile-role {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* ===============================
+   MENU
+================================ */
+.sb-ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.sb-ul li {
+    margin-bottom: 6px;
+}
+
+.sb-ul a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 1;
+    transition: 0.25s ease;
+}
+
+.sb-ul a i {
+    font-size: 16px;
+}
+
+/* Hover */
+.sb-ul a:hover {
+    background: var(--secondary);
+    color: #fff;
+}
+
+/* Active */
+.sb-ul a.active {
+    background: var(--secondary);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* ===============================
+   BOTTOM
+================================ */
+.sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* ---------- LOGOUT ---------- */
+.btn-logout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background: var(--danger);
+    color: #fff;
+    padding: 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.25s ease;
+    width: 100%;
+}
+
+.btn-logout:hover {
+    background: #c0392b;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+}
