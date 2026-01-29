@@ -1,4 +1,4 @@
-const API_BASE = `${window.location.protocol}//${window.location.hostname}:5000`;
+const API_BASE = "https://factory-monitoring.onrender.com";
 
 // --- 1. Plugin และ Utility Functions ---
 
@@ -260,89 +260,70 @@ async function checkInfluxStatus() {
 
   // ดึงข้อมูลจาก API
   async function fetchData() {
-    try {
-      const res = await fetch(`${API_BASE}/api/latest/${MACHINE_MAC}`);
-      const data = await res.json();
-      // console.log("API data:", data);
-      if (!data || Object.keys(data).length === 0) return;
-
-      // สร้าง Date Object ปัจจุบัน (สำคัญสำหรับแกน เวลา)
-      const now = new Date();
-
-      // อัปเดตตัวเลข Text
-      const elTemp = document.getElementById("temp"); if(elTemp) elTemp.textContent = data.temperature?.toFixed(2) ?? "--";
-      const elVib = document.getElementById("vib"); if(elVib) elVib.textContent = data.vibration?.toFixed(2) ?? "--";
-      const elVolt = document.getElementById("volt"); if(elVolt) elVolt.textContent = data.voltage?.toFixed(2) ?? "--";
-      const elCurr = document.getElementById("curr"); if(elCurr) elCurr.textContent = data.current?.toFixed(2) ?? "--";
-      const elPow = document.getElementById("pow"); if(elPow) elPow.textContent = data.power?.toFixed(2) ?? "--";
-
-      // อัปเดตสถานะเครื่องจักร
-      // --- เพิ่มฟังก์ชันตรวจสอบสถานะ (ใส่ไว้ข้างนอกหรือใน fetchData ก็ได้) ---
-function getMachineStatus(data) {
-    let status = { text: "ปกติ", className: "bg-success", isAbnormal: false };
-
-    // กำหนดเกณฑ์ตามที่คุณให้มา
-    const isDanger = (
-        data.temperature >= 35 ||
-        data.vibration >= 15 ||
-        data.current >= 8 ||
-        data.voltage >= 300 ||
-        data.power >= 20
+  try {
+    const res = await fetch(
+      `${API_BASE}/api/latest/${encodeURIComponent(MACHINE_MAC)}`
     );
 
-    const isWarning = (
-        data.temperature >= 34 ||
-        data.vibration >= 5 ||
-        data.current >= 5 ||
-        data.voltage >= 250 ||
-        data.power >= 15
-    );
-
-    if (isDanger) {
-        status = { text: "ผิดปกติ (อันตราย)", className: "bg-danger", isAbnormal: true };
-    } else if (isWarning) {
-        status = { text: "ผิดปกติ (เฝ้าระวัง)", className: "bg-warning text-dark", isAbnormal: true };
-    } else if (data.power <= 0.5) {
-        // เงื่อนไขเดิม: ถ้าไม่มีไฟเข้าเลยแสดงว่าหยุดทำงาน
-        status = { text: "หยุดทำงาน", className: "bg-secondary", isAbnormal: false };
+    if (!res.ok) {
+      console.error("API error:", res.status);
+      return;
     }
 
-    return status;
-}
-      // ในฟังก์ชัน fetchData()
-const statusEl = document.getElementById("machine-status");
-if (statusEl && data) {
-    const machineStatus = getMachineStatus(data);
-    
-    statusEl.textContent = machineStatus.text;
-    // ล้าง class เดิมออกก่อนแล้วใส่ class ใหม่
-    statusEl.className = `badge ${machineStatus.className}`;
-    
-    // (เพิ่มเติม) ถ้าต้องการให้ตัวเลขค่าต่างๆ เป็นสีแดงเมื่อผิดปกติ
-    // document.getElementById("temp").style.color = data.temperature >= 34 ? "red" : "black";
-}
-        
-      const updatedEl = document.getElementById("updated");
-      if (updatedEl) updatedEl.textContent = "Last update: " + now.toLocaleTimeString();
+    const data = await res.json();
+    if (!data || Object.keys(data).length === 0) return;
 
-      // อัปเดตกราฟเส้น (ส่ง now ที่เป็น Date Object ไป)
-      updateLineChart(tempChart, data.temperature, now);
-      updateLineChart(vibChart, data.vibration, now);
-      updateLineChart(voltChart, data.voltage, now);
-      updateLineChart(currChart, data.current, now);
-      updateLineChart(powChart, data.power, now);
+    const now = new Date();
 
-      // อัปเดต Gauge
-      updateGauge(tempGauge, data.temperature, 100);
-      updateGauge(vibGauge, data.vibration, 10);
-      updateGauge(voltGauge, data.voltage, 400);
-      updateGauge(currGauge, data.current, 50);
-      updateGauge(powGauge, data.power, 1000);
+    // ===== อัปเดต Text =====
+    const elTemp = document.getElementById("temp");
+    if (elTemp) elTemp.textContent = data.temperature?.toFixed(2) ?? "--";
 
-    } catch (err) {
-      console.error("❌ Fetch error:", err);
+    const elVib = document.getElementById("vib");
+    if (elVib) elVib.textContent = data.vibration?.toFixed(2) ?? "--";
+
+    const elVolt = document.getElementById("volt");
+    if (elVolt) elVolt.textContent = data.voltage?.toFixed(2) ?? "--";
+
+    const elCurr = document.getElementById("curr");
+    if (elCurr) elCurr.textContent = data.current?.toFixed(2) ?? "--";
+
+    const elPow = document.getElementById("pow");
+    if (elPow) elPow.textContent = data.power?.toFixed(2) ?? "--";
+
+    // ===== สถานะเครื่อง =====
+    const statusEl = document.getElementById("machine-status");
+    if (statusEl) {
+      const machineStatus = getMachineStatus(data);
+      statusEl.textContent = machineStatus.text;
+      statusEl.className = `badge ${machineStatus.className}`;
     }
+
+    const updatedEl = document.getElementById("updated");
+    if (updatedEl) {
+      updatedEl.textContent = "Last update: " + now.toLocaleTimeString();
+    }
+
+    // ===== กราฟ =====
+    updateLineChart(tempChart, data.temperature, now);
+    updateLineChart(vibChart, data.vibration, now);
+    updateLineChart(voltChart, data.voltage, now);
+    updateLineChart(currChart, data.current, now);
+    updateLineChart(powChart, data.power, now);
+
+    // ===== Gauge =====
+    updateGauge(tempGauge, data.temperature, 100);
+    updateGauge(vibGauge, data.vibration, 10);
+    updateGauge(voltGauge, data.voltage, 400);
+    updateGauge(currGauge, data.current, 50);
+    updateGauge(powGauge, data.power, 1000);
+
+  } catch (err) {
+    console.error("❌ Fetch error:", err);
   }
+}
+
+  
 
   // เริ่มทำงาน
   checkInfluxStatus();
