@@ -3,22 +3,13 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
-$username     = $_SESSION['username'] ?? 'ผู้ใช้งาน';
-$role         = $_SESSION['role'] ?? 'Technician';
+$profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] : 'default_profile.png';
+$username     = isset($_SESSION['username']) ? $_SESSION['username'] : 'ผู้ใช้งาน';
+$role         = isset($_SESSION['role']) ? $_SESSION['role'] : 'Technician';
 
 /* ป้องกัน error ถ้าไม่ได้ส่ง activePage มา */
 $activePage = $activePage ?? '';
 ?>
-
-<head>
-  <link rel="stylesheet" href="/factory_monitoring/assets/css/main.css">
-  <link rel="stylesheet"
-        href="/factory_monitoring/Technician/assets/css/sidebar_technician.css?v=<?= time(); ?>">
-</head>
-
-
-<script src="/factory_monitoring/Technician/assets/js/SidebarOperator.js"></script>
 
 <div class="sidebar">
 

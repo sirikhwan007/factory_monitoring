@@ -4,8 +4,18 @@
 
 /* ---------- Main Layout ---------- */
 .main {
-    margin-left: 260px;
+    /* กำหนดให้เนื้อหาอยู่ห่างจากขอบซ้ายเท่ากับความกว้าง Sidebar */
+    margin-left: 260px; 
+    
+    /* บังคับให้อยู่ด้านบนสุด */
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0; /* หรือใช้ margin-left แทนเพื่อเว้นที่ */
+    
     padding: 24px;
+    min-height: 100vh;
+    background-color: #f8f9fa; /* เติมสีพื้นหลังให้อ่อนๆ จะได้เห็นขอบเขตชัดเจน */
 }
 
 /* ---------- Title ---------- */
