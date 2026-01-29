@@ -35,7 +35,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
     z-index: 1000;
     transition: transform 0.3s ease;
 }
@@ -57,7 +57,8 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 42px; /* ระยะก่อนเมนู */
+    margin-bottom: 42px;
+    /* ระยะก่อนเมนู */
 }
 
 .op-profile-img {
@@ -133,7 +134,8 @@
 }
 
 .op-ul li.active a::before {
-    display: none; /* เอาเส้นซ้ายแบบเดิมออก */
+    display: none;
+    /* เอาเส้นซ้ายแบบเดิมออก */
 }
 
 /* ===============================

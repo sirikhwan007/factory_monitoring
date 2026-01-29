@@ -17,7 +17,7 @@ $activePage = $activePage ?? '';
         <a href="/factory_monitoring/operator/profile.php" class="op-profile-btn">
             <div class="op-logo">
                  <img src="/factory_monitoring/admin/uploads/<?php echo htmlspecialchars($profileImage); ?>"
-                     class="profile-img"
+                     class="op-profile-img"
                      alt="Profile">
 
                 <div class="op-profile-info">
@@ -61,7 +61,7 @@ $activePage = $activePage ?? '';
                 <a href="/factory_monitoring/operator/history_operator.php"
                    class="<?= $activePage === 'history' ? 'active' : '' ?>">
                     <i class="fa-solid fa-clock"></i>
-                    <span class="sb-text">รายการแจ้งซ่อมของฉัน</span>
+                    <span class="sb-text">รายการแจ้งซ่อม</span>
                 </a>
             </li>
 
