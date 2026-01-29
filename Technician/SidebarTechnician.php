@@ -42,7 +42,7 @@ $activePage = $activePage ?? '';
                 <a href="/factory_monitoring/Technician/dashboard.php"
                    class="<?php echo ($activePage === 'dashboard') ? 'sb-ul-active' : ''; ?>">
                     <i class="fas fa-home fontawesome"></i>
-                    <span class="sb-text">Dashboard</span>
+                    <span class="sb-text">หน้าหลัก</span>
                 </a>
             </li>
 
