@@ -12,7 +12,6 @@ $activePage = $activePage ?? '';
 ?>
 
 <head>
-  ...
   <link rel="stylesheet" href="/factory_monitoring/assets/css/main.css">
   <link rel="stylesheet"
         href="/factory_monitoring/Technician/assets/css/sidebar_technician.css?v=<?= time(); ?>">
