@@ -43,7 +43,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 <a href="/factory_monitoring/manager/dashboard.php"
                     class="<?= $currentPage === 'dashboard.php' ? 'active' : '' ?>">
                     <i class="fas fa-chart-line"></i>
-                    <span>Dashboard</span>
+                    <span>หน้าหลัก</span>
                 </a>
             </li>
 
