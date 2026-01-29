@@ -17,7 +17,6 @@ $uploadPath = '/factory_monitoring/admin/uploads/';
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 
-<!-- ✅ โหลด CSS ของ Sidebar -->
 <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
 
 <div class="sidebar">
