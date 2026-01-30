@@ -284,17 +284,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $stmt->close();
 
-        // ============================
         // Commit
-        // ============================
         $conn->commit();
 
-        echo "<script>alert('✅ อัปเดตข้อมูลเครื่องจักรเรียบร้อย'); window.location='/factory_monitoring/machine_list/machine.php';</script>";
-        exit();
-    } catch (Exception $e) {
+        // ส่งกลับไปที่หน้าแก้ไขเดิม พร้อมแจ้งสถานะ updated
+        header("Location: /factory_monitoring/machine_list/machine.php?id=$machine_id_new&status=updated");
+        exit;
 
+    } catch (Exception $e) {
+        // หากเกิดข้อผิดพลาด ให้ยกเลิกสิ่งที่ทำมาทั้งหมดใน Transaction นี้
         $conn->rollback();
-        echo "<script>alert('❌ เกิดข้อผิดพลาด: " . $e->getMessage() . "'); history.back();</script>";
-        exit();
+        
+        // ส่งกลับไปหน้าแก้ไข (ใช้ ID เดิมก่อนแก้) พร้อมแจ้ง Error
+        header("Location: machine_edit.php?id=$machine_id_old&status=error&message=" . urlencode($e->getMessage()));
+        exit;
     }
 }
