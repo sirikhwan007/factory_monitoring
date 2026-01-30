@@ -14,11 +14,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Operator') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operator Dashboard | Factory Monitoring</title>
-
+    <title>Operator Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    
+
     <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/dashboard.css">
     <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
 </head>
@@ -30,22 +29,84 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Operator') {
     </div>
 
     <section class="main-operator">
-        
+
         <?php include __DIR__ . '/SidebarOperator.php'; ?>
 
-        <div class="dashboard p-4">
-            <header class="mb-4">
-                <h2 class="dashboard-title">แดชบอร์ด Operator</h2>
-                <p class="text-muted">พื้นที่สำหรับติดตามสถานะเครื่องจักร แจ้งปัญหา และดูคำขอที่คุณส่งไว้</p>
-            </header>
+        <div class="dashboard">
+            <div class="container-fluid">
 
-            <div class="card-grid">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card p-3 shadow-sm">
-                            <h5>สถานะเครื่องจักร</h5>
-                            <p>กำลังทำงานปกติ</p>
+                <div class="dashboard">
+
+
+                    <!-- Machine Overview -->
+                    <h4 class="mt-3 mb-3">ข้อมูลเครื่องจักร</h4>
+                    <div class="row g-3">
+
+                        <div class="col-md-3">
+                            <div class="card shadow-sm p-3 text-center">
+                                <h5>เครื่องจักรทั้งหมด</h5>
+                                <div class="display-6 fw-bold text-primary"><?= $total_machines ?></div>
+                            </div>
                         </div>
+
+                        <div class="col-md-3">
+                            <div class="card shadow-sm p-3 text-center">
+                                <h5>ทำงานปกติ</h5>
+                                <div class="display-6 fw-bold text-success" id="activeCount">0</div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card shadow-sm p-3 text-center">
+                                <h5>ผิดปกติ</h5>
+                                <div class="display-6 fw-bold text-warning" id="errorCount">0</div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card shadow-sm p-3 text-center">
+                                <h5>หยุดทำงาน</h5>
+                                <div class="display-6 fw-bold text-danger" id="stopCount">0</div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <h4 class="mt-4 mb-3">สถานะซ่อมบำรุง</h4>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-3">
+                            <div class="card shadow-sm p-3 text-center">
+                                <h5>ทั้งหมด</h5>
+                                <h2 class="text-primary"><?php echo $total; ?></h2>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card shadow-sm p-3 text-center">
+                                <h5>รอดำเนินการ</h5>
+                                <h2 class="text-warning"><?php echo $pending; ?></h2>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card shadow-sm p-3 text-center">
+                                <h5>กำลังซ่อม</h5>
+                                <h2 class="text-info"><?php echo $in_progress; ?></h2>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card shadow-sm p-3 text-center">
+                                <h5>เสร็จสิ้น</h5>
+                                <h2 class="text-success"><?php echo $completed; ?></h2>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -72,7 +133,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Operator') {
             // Auto-active Menu ตาม URL ปัจจุบัน
             const currentUrl = window.location.href;
             const links = document.querySelectorAll(".op-ul a");
-            
+
             links.forEach(a => {
                 if (a.href === currentUrl) {
                     a.classList.add("active-menu");

@@ -66,9 +66,9 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-    .dashboard {
-      margin-left: 0px;
-    }
+        .dashboard {
+            margin-left: 0px;
+        }
     </style>
 </head>
 
@@ -84,7 +84,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
             <div class="dashboard">
 
-                
+
                 <!-- Machine Overview -->
                 <h4 class="mt-3 mb-3">ข้อมูลเครื่องจักร</h4>
                 <div class="row g-3">
@@ -210,40 +210,34 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                                 <small class="text-muted"><?= $log['created_at'] ?></small>
                             </li>
                         <?php endwhile; ?>
-
                     </ul>
                 </div>
-
             </div>
-
-
         </div>
-
-
     </section>
-    
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="/factory_monitoring/admin/assets/js/SidebarAdmin.js"></script>
     <script>
-$(document).ready(function () {
+        $(document).ready(function() {
 
-    function loadStatus() {
-        $.ajax({
-            url: "/factory_monitoring/api/get_all_machine_status.php",
-            method: "GET",
-            dataType: "json",
-            success: function (res) {
-                $("#activeCount").text(res.active);
-                $("#errorCount").text(res.error);
-                $("#stopCount").text(res.stop);
+            function loadStatus() {
+                $.ajax({
+                    url: "/factory_monitoring/api/get_all_machine_status.php",
+                    method: "GET",
+                    dataType: "json",
+                    success: function(res) {
+                        $("#activeCount").text(res.active);
+                        $("#errorCount").text(res.error);
+                        $("#stopCount").text(res.stop);
+                    }
+                });
             }
-        });
-    }
 
-    loadStatus();
-    setInterval(loadStatus, 5000);
-});
-</script>
+            loadStatus();
+            setInterval(loadStatus, 5000);
+        });
+    </script>
 
 </body>
 
