@@ -193,7 +193,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Commit
         $conn->commit();
 
-        echo "<script>alert('✅ เพิ่มเครื่องจักรพร้อม Datasheet สำเร็จ!'); window.location='/factory_monitoring/machine_list/machine.php';</script>";
+        echo "<script>alert('✅ เพิ่มเครื่องจักรพร้อม สำเร็จ!'); window.location='/factory_monitoring/machine_list/machine.php';</script>";
         exit;
     } catch (Exception $e) {
 
