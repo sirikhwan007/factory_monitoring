@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 
     if (!$old_data) {
-        echo "<script>alert('❌ ไม่พบข้อมูลเครื่องจักรเดิม!'); history.back();</script>";
+        header("Location: machine_edit.php?id=$machine_id_old&error=not_found");
         exit();
     }
 
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {
-        echo "<script>alert('❌ Machine ID หรือ MAC Address ซ้ำในระบบ!'); history.back();</script>";
+        header("Location: machine_edit.php?id=$machine_id_old&error=duplicate");
         exit();
     }
     $stmt->close();
@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $allowed = ["pdf", "doc", "docx", "xlsx", "xls", "txt"];
 
         if (!in_array($ext, $allowed)) {
-            echo "<script>alert('❌ ไฟล์ที่อนุญาต: PDF, DOCX, XLSX, TXT'); history.back();</script>";
+            header("Location: machine_edit.php?id=$machine_id_old&error=invalid_file");
             exit();
         }
 
@@ -287,14 +287,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // ============================
         // Commit
         // ============================
+
+
         $conn->commit();
 
-        echo "<script>alert('✅ อัปเดตข้อมูลเครื่องจักรเรียบร้อย'); window.location='/factory_monitoring/machine_list/machine.php';</script>";
-        exit();
+        // ส่งกลับไปที่หน้าแก้ไขเดิม พร้อมแจ้งสถานะ updated
+        header("Location: /factory_monitoring/machine_list/machine.php?status=updated");
+        exit;
+        
     } catch (Exception $e) {
-
+        // หากเกิดข้อผิดพลาด ให้ยกเลิกสิ่งที่ทำมาทั้งหมดใน Transaction นี้
         $conn->rollback();
-        echo "<script>alert('❌ เกิดข้อผิดพลาด: " . $e->getMessage() . "'); history.back();</script>";
-        exit();
+
+        // ส่งกลับไปหน้าแก้ไข (ใช้ ID เดิมก่อนแก้) พร้อมแจ้ง Error
+        header("Location: machine_edit.php?id=$machine_id_old&status=error&message=" . urlencode($e->getMessage()));
+        exit;
     }
+} else {
+    // กรณีไม่ได้มาด้วยวิธี POST
+    header("Location: /factory_monitoring/machine_list/machines.php");
+    exit;
 }

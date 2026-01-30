@@ -178,16 +178,36 @@ $conn->close();
     });
 
     <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
-    <script>
+        <
+        script
+      script >
         Swal.fire({
-            title: 'ลบข้อมูลสำเร็จ!',
-            text: 'เครื่องจักรและไฟล์ที่เกี่ยวข้องถูกลบออกจากระบบแล้ว',
-            icon: 'success',
-            confirmButtonColor: '#28a745'
+          title: 'ลบข้อมูลสำเร็จ!',
+          text: 'เครื่องจักรและไฟล์ที่เกี่ยวข้องถูกลบออกจากระบบแล้ว',
+          icon: 'success',
+          confirmButtonColor: '#28a745'
         });
-    </script>
+
+
+      const urlParams = new URLSearchParams(window.location.search);
+
+      if (urlParams.get('status') === 'updated') {
+        Swal.fire({
+          title: 'อัปเดตข้อมูลสำเร็จ!',
+          text: 'ระบบได้บันทึกการแก้ไขเรียบร้อยแล้ว',
+          icon: 'success',
+          confirmButtonColor: '#28a745',
+          confirmButtonText: 'ตกลง' // ปุ่ม OK
+        }).then((result) => {
+          // เมื่อกดปุ่ม 'ตกลง' (OK)
+          if (result.isConfirmed) {
+            // ล้างค่า Parameter ใน URL เพื่อไม่ให้ป๊อปอัพเด้งซ้ำ
+            window.history.replaceState({}, document.title, "/factory_monitoring/machine_list/machine.php");
+          }
+        });
+      }
 <?php endif; ?>
-  </script>
+</script>
 </body>
 
 </html>

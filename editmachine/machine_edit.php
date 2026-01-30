@@ -54,6 +54,7 @@ $current_datasheet = $doc['file_path'] ?? "";
   <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
   <link rel="stylesheet" href="/factory_monitoring/editmachine/edit.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     .dashboard {
@@ -241,6 +242,34 @@ $current_datasheet = $doc['file_path'] ?? "";
           fileNameDisplay.textContent = '';
         }
       });
+
+
+      const urlParams = new URLSearchParams(window.location.search);
+
+      // 1. กรณีอัปเดตสำเร็จ
+      if (urlParams.get('status') === 'updated') {
+        Swal.fire({
+          title: 'อัปเดตข้อมูลสำเร็จ!',
+          text: 'ข้อมูลเครื่องจักรถูกบันทึกเรียบร้อยแล้ว',
+          icon: 'success',
+          confirmButtonColor: '#ffc107'
+        }).then(() => {
+          // ลบ parameter ออกจาก URL เพื่อป้องกันป๊อปอัพเด้งซ้ำ
+          window.history.replaceState({}, document.title, window.location.pathname + '?id=' + urlParams.get('id'));
+        });
+      }
+
+      // 2. กรณีเกิดข้อผิดพลาด
+      if (urlParams.get('status') === 'error') {
+        Swal.fire({
+          title: 'เกิดข้อผิดพลาด!',
+          text: urlParams.get('message') || 'ไม่สามารถแก้ไขข้อมูลได้',
+          icon: 'error',
+          confirmButtonColor: '#d33'
+        }).then(() => {
+          window.history.replaceState({}, document.title, window.location.pathname + '?id=' + urlParams.get('id'));
+        });
+      }
     </script>
 </body>
 
