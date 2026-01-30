@@ -66,7 +66,7 @@ if (!$machine) {
             <h2 class="mb-0">ยืนยันการลบเครื่องจักร</h2>
           </div>
           <div class="card-body p-4">
-            <form action="/factory_monitoring/deletemachine/machine_save_delete.php" method="POST" onsubmit="return confirmDelete();">
+            <form id="delete-form" action="/factory_monitoring/deletemachine/machine_save_delete.php" method="POST" onsubmit="return confirmDelete();">
 
 
               <input type="hidden" name="machine_id" value="<?= $machine['machine_id'] ?>">
@@ -127,21 +127,20 @@ if (!$machine) {
                 </div>
 
                 <!-- ช่องกรอกรายละเอียด -->
+                <input type="hidden" name="machine_id" value="<?= $machine['machine_id'] ?>">
                 <div class="col-12 mt-3">
-                  <label class="form-label">รายละเอียด:</label>
-                  <textarea name="delete_reason" class="form-control" rows="4" placeholder="กรอกเหตุผลการลบเครื่องจักร..." required></textarea>
+                  <label class="form-label">รายละเอียดการลบ:</label>
+                  <textarea name="delete_reason" id="delete_reason" class="form-control" rows="4" placeholder="กรอกเหตุผลการลบเครื่องจักร..." required></textarea>
                 </div>
-              </div>
 
-              <div class="col-12 mt-4 d-flex justify-content-center gap-3">
-                <a href="/factory_monitoring/dashboard/Dashboard.php?id=<?= $machine['machine_id'] ?>" class="btn btn-secondary btn-lg">
-                  <i class="fas fa-arrow-left me-2"></i> ยกเลิก
-                </a>
-                <button type="button" id="delete-btn" class="btn btn-danger btn-lg">
-                  <i class="fas fa-trash me-2"></i> ลบเครื่องจักร
-                </button>
-              </div>
-
+                <div class="col-12 mt-4 d-flex justify-content-center gap-3">
+                  <a href="/factory_monitoring/machine_list/machines.php" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i> ยกเลิก
+                  </a>
+                  <button type="button" id="delete-btn" class="btn btn-danger btn-lg">
+                    <i class="fas fa-trash me-2"></i> ลบเครื่องจักร
+                  </button>
+                </div>
             </form>
           </div>
         </div>
@@ -152,25 +151,38 @@ if (!$machine) {
 
   <script src="/factory_monitoring/admin/SidebarAdmin.js"></script>
   <script>
-document.getElementById('delete-btn').addEventListener('click', function() {
-    Swal.fire({
+    document.getElementById('delete-btn').addEventListener('click', function() {
+      const reason = document.getElementById('delete_reason').value.trim();
+
+      // ตรวจสอบก่อนว่ากรอกเหตุผลหรือยัง
+      if (reason === "") {
+        Swal.fire({
+          title: 'กรุณาระบุเหตุผล',
+          text: 'ต้องกรอกเหตุผลการลบก่อนดำเนินการครับ',
+          icon: 'info',
+          confirmButtonColor: '#3085d6'
+        });
+        return;
+      }
+
+      Swal.fire({
         title: 'ยืนยันการลบ?',
-        text: "ข้อมูลเครื่องจักรนี้จะหายไปจากระบบ และไม่สามารถกู้คืนได้!",
+        text: "ข้อมูลและไฟล์เอกสารจะถูกลบถาวร ไม่สามารถกู้คืนได้!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#d33', // สีแดงสำหรับปุ่มลบ
-        cancelButtonColor: '#6c757d', // สีเทาสำหรับยกเลิก
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
         confirmButtonText: '<i class="fas fa-trash"></i> ยืนยันการลบ',
         cancelButtonText: 'ยกเลิก',
-        reverseButtons: true // สลับตำแหน่งปุ่มให้ "ยกเลิก" อยู่ซ้าย "ลบ" อยู่ขวา
-    }).then((result) => {
+        reverseButtons: true
+      }).then((result) => {
         if (result.isConfirmed) {
-            // ถ้ากดยืนยัน ให้ทำการ Submit Form
-            document.getElementById('delete-form').submit();
+          // ส่ง Form ไปที่ machine_save_delete.php
+          document.getElementById('delete-form').submit();
         }
+      });
     });
-});
-</script>
+  </script>
 
 </body>
 

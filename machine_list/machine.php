@@ -47,6 +47,7 @@ $conn->close();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>รายการเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="/factory_monitoring/machine_list/css/machine_list.css">
   <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
   <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
@@ -175,6 +176,17 @@ $conn->close();
         setInterval(() => updateMachineStatus(machineId), 5000);
       });
     });
+
+    <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
+    <script>
+        Swal.fire({
+            title: 'ลบข้อมูลสำเร็จ!',
+            text: 'เครื่องจักรและไฟล์ที่เกี่ยวข้องถูกลบออกจากระบบแล้ว',
+            icon: 'success',
+            confirmButtonColor: '#28a745'
+        });
+    </script>
+<?php endif; ?>
   </script>
 </body>
 

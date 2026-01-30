@@ -104,7 +104,7 @@ try {
 
     $conn->commit();
 
-    header("Location: /factory_monitoring/admin/machines.php?msg=deleted");
+    header("Location: /factory_monitoring/machine_list/machine.php?msg=deleted");
     exit;
 
 } catch (Exception $e) {
