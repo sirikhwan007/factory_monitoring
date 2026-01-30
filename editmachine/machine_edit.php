@@ -242,21 +242,8 @@ $current_datasheet = $doc['file_path'] ?? "";
           fileNameDisplay.textContent = '';
         }
       });
-
-
       const urlParams = new URLSearchParams(window.location.search);
       // 1. กรณีอัปเดตสำเร็จ
-      if (urlParams.get('status') === 'updated') {
-        Swal.fire({
-          title: 'อัปเดตข้อมูลสำเร็จ!',
-          text: 'ข้อมูลเครื่องจักรถูกบันทึกเรียบร้อยแล้ว',
-          icon: 'success',
-          confirmButtonColor: '#ffc107' // สีเหลืองทองตามสไตล์ปุ่มแก้ไข
-        }).then(() => {
-          // ลบ parameter ออกจาก URL เพื่อป้องกันป๊อปอัพเด้งซ้ำ
-          window.history.replaceState({}, document.title, window.location.pathname + '?id=' + urlParams.get('id'));
-        });
-      }
       // 2. กรณีเกิดข้อผิดพลาด
       if (urlParams.get('status') === 'error') {
         Swal.fire({
@@ -265,6 +252,32 @@ $current_datasheet = $doc['file_path'] ?? "";
           icon: 'error',
           confirmButtonColor: '#d33'
         }).then(() => {
+          window.history.replaceState({}, document.title, window.location.pathname + '?id=' + urlParams.get('id'));
+        });
+      }
+      // ตรวจสอบพารามิเตอร์ error ใน URL
+      const errorType = urlParams.get('error');
+
+      if (errorType) {
+        let title = 'เกิดข้อผิดพลาด!';
+        let text = 'ไม่สามารถดำเนินการได้';
+        
+        if (errorType === 'duplicate') {
+          title = 'ข้อมูลซ้ำ!';
+          text = 'Machine ID หรือ MAC Address นี้ซ้ำในระบบ';
+        } else if (errorType === 'invalid_file') {
+          title = 'ไฟล์ไม่ถูกต้อง!';
+          text = 'อนุญาตเฉพาะไฟล์ PDF, DOCX, XLSX และ TXT เท่านั้น';
+        }
+
+        Swal.fire({
+          title: title,
+          text: text,
+          icon: 'error',
+          confirmButtonColor: '#d33',
+          confirmButtonText: 'ตกลง'
+        }).then(() => {
+          // ลบ parameter ออกจาก URL เพื่อป้องกันป๊อปอัพเด้งซ้ำตอน Refresh
           window.history.replaceState({}, document.title, window.location.pathname + '?id=' + urlParams.get('id'));
         });
       }

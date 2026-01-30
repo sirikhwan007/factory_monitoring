@@ -40,9 +40,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {
-        echo "<script>alert('❌ Machine ID หรือ MAC Address ซ้ำในระบบ!'); history.back();</script>";
-        exit();
-    }
+    // ส่งกลับไปหน้าแก้ไข พร้อมแจ้งว่าข้อมูลซ้ำ
+    header("Location: machine_edit.php?id=$machine_id_old&error=duplicate");
+    exit();
+}
     $stmt->close();
 
     // ----------------------------
@@ -106,9 +107,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $allowed = ["pdf", "doc", "docx", "xlsx", "xls", "txt"];
 
         if (!in_array($ext, $allowed)) {
-            echo "<script>alert('❌ ไฟล์ที่อนุญาต: PDF, DOCX, XLSX, TXT'); history.back();</script>";
-            exit();
-        }
+    // ส่งกลับไปหน้าแก้ไข พร้อมแจ้งว่าไฟล์ไม่ถูกต้อง
+    header("Location: machine_edit.php?id=$machine_id_old&error=invalid_file");
+    exit();
+}
 
         // สร้างชื่อใหม่ (ชื่อไฟล์จริง + machine_id)
         $base = pathinfo($_FILES["datasheet"]["name"], PATHINFO_FILENAME);
