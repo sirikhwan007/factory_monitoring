@@ -1,11 +1,53 @@
 <?php
 session_start();
+include "../config.php";
 
 // ตรวจสอบการ Login และสิทธิ์การใช้งาน
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Operator') {
     header("Location: /factory_monitoring/login.php");
     exit();
 }
+
+$page = 'dashboard';
+
+/* -----------------------------------------------------
+   🔹 MACHINE OVERVIEW
+----------------------------------------------------- */
+$total_machines  = $conn->query("SELECT COUNT(*) FROM machines")->fetch_row()[0];
+
+
+/* -----------------------------------------------------
+   🔹 USER OVERVIEW
+----------------------------------------------------- */
+$total_users     = $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0];
+$role_admin      = $conn->query("SELECT COUNT(*) FROM users WHERE role='Admin'")->fetch_row()[0];
+$role_manager    = $conn->query("SELECT COUNT(*) FROM users WHERE role='Manager'")->fetch_row()[0];
+$role_technician = $conn->query("SELECT COUNT(*) FROM users WHERE role='Technician'")->fetch_row()[0];
+$role_operator   = $conn->query("SELECT COUNT(*) FROM users WHERE role='Operator'")->fetch_row()[0];
+
+/* -----------------------------------------------------
+   🔹 REPAIR REQUEST OVERVIEW (งานซ่อม / แจ้งซ่อม)
+----------------------------------------------------- */
+$sql_total = "SELECT COUNT(*) AS total FROM repair_requests";
+$total_repair = $conn->query($sql_total)->fetch_assoc()['total'];
+$total = $total_repair; // <-- วางบรรทัดนี้ถ้าตอนนี้ HTML เรียก $total
+
+$sql_pending = "SELECT COUNT(*) AS pending FROM repair_requests WHERE status='pending'";
+$pending = $conn->query($sql_pending)->fetch_assoc()['pending'];
+
+$sql_in_progress = "SELECT COUNT(*) AS in_progress FROM repair_requests WHERE status='in_progress'";
+$in_progress = $conn->query($sql_in_progress)->fetch_assoc()['in_progress'];
+
+$sql_completed = "SELECT COUNT(*) AS completed FROM repair_requests WHERE status='completed'";
+$completed = $conn->query($sql_completed)->fetch_assoc()['completed'];
+
+/* -----------------------------------------------------
+   🔹 RECENT ACTIVITY (LOGS)
+----------------------------------------------------- */
+$recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 10");
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -145,6 +187,24 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Operator') {
                     });
                 }
             });
+        });
+        $(document).ready(function() {
+
+            function loadStatus() {
+                $.ajax({
+                    url: "/factory_monitoring/api/get_all_machine_status.php",
+                    method: "GET",
+                    dataType: "json",
+                    success: function(res) {
+                        $("#activeCount").text(res.active);
+                        $("#errorCount").text(res.error);
+                        $("#stopCount").text(res.stop);
+                    }
+                });
+            }
+
+            loadStatus();
+            setInterval(loadStatus, 5000);
         });
     </script>
 </body>

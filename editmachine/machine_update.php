@@ -289,7 +289,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // ============================
         $conn->commit();
 
-        echo "<script>alert('✅ อัปเดตข้อมูลเครื่องจักรเรียบร้อย'); window.location='/factory_monitoring/admin/machines.php';</script>";
+        echo "<script>alert('✅ อัปเดตข้อมูลเครื่องจักรเรียบร้อย'); window.location='/factory_monitoring/machine_list/machine.php';</script>";
         exit();
     } catch (Exception $e) {
 
