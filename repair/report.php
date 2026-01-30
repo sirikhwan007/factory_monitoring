@@ -4,7 +4,6 @@ include __DIR__ . "/../config.php";
 
 $user_role = $_SESSION['role'] ?? 'Operator';
 
-// 1. รับค่าจาก URL (รองรับทั้ง id งานซ่อม หรือ machine_id จากหน้า Dashboard)
 $repair_id = $_GET['id'] ?? null;
 $machine_id_from_dash = $_GET['machine_id'] ?? null;
 
@@ -135,7 +134,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
                 <form action="processrepair.php" method="POST">
 
                     <div class="machine-header">
-                        <h2 class="m-0"><i class="fas fa-cogs"></i>
+                        <h2 class="m-0"><i class="fas fa-cogs"> id :</i>
                             <?= htmlspecialchars($row['machine_id']) ?></h2>
                         <small>รายละเอียดเครื่องจักร</small>
                     </div>
@@ -174,20 +173,10 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
                                 <th>เวลาที่แจ้ง:</th>
                                 <td><?= date('d/m/Y H:i', strtotime($row['report_time'])) ?></td>
                             </tr>
-                            <tr>
-                                <th>สถานะ:</th>
-                                <td>
-                                    <?php
-                                    $statusColor = ($row['status'] == 'สำเร็จ') ? 'success' : (($row['status'] == 'กำลังซ่อม') ? 'warning' : 'danger');
-                                    ?>
-                                    <span
-                                        class="badge bg-<?= $statusColor ?>"><?= htmlspecialchars($row['status']) ?></span>
-                                </td>
-                            </tr>
+
                         </table>
 
                         <hr>
-
                         <?php if (!empty($row['username'])): ?>
                             <h5 class="text-muted mb-2 mt-3">
                                 <i class="fas fa-user-cog"></i> ช่างผู้รับผิดชอบ
@@ -240,15 +229,16 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
                             <textarea class="form-control" name="detail" id="detail" rows="3"
                                 placeholder="รายละเอียดของปัญหา..."><?= htmlspecialchars($row['detail'] ?? '') ?></textarea>
                         </div>
+                        <input type="hidden" name="machine_id" value="<?= htmlspecialchars($row['machine_id']) ?>">
+                        <input type="hidden" name="id" value="<?= htmlspecialchars($row['id'] ?? 'ใหม่') ?>">
+
+                        <input type="hidden" name="reporter" value="<?= htmlspecialchars($_SESSION['username'] ?? '') ?>">
+                        <input type="hidden" name="position" value="<?= htmlspecialchars($_SESSION['role'] ?? '') ?>">
                         <!-- ปุ่มส่ง -->
                         <button type="submit" class="btn btn-submit-repair w-100">
                             <i class="fas fa-paper-plane"></i> ส่งคำขอแจ้งซ่อม
                         </button>
-
-
                     </div>
-
-
                 </form>
 
             </div>

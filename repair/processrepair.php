@@ -1,23 +1,45 @@
 <?php
-include "../config.php"; // ../ หมายถึงขึ้นไป 1 ระดับโฟลเดอร์
+session_start();
+include "../config.php"; 
 
-$machine_id = mysqli_real_escape_string($conn, $_POST['machine_id']);
-$reporter   = mysqli_real_escape_string($conn, $_POST['reporter']);
-$position   = mysqli_real_escape_string($conn, $_POST['position']);
-$type       = mysqli_real_escape_string($conn, $_POST['type']);
-$detail     = mysqli_real_escape_string($conn, $_POST['detail']);
+// 1. รับค่าที่จำเป็น (machine_id ห้ามว่าง)
+$repair_id   = $_POST['id'] ?? null;
+$machine_id  = $_POST['machine_id'] ?? null;
+$detail      = $_POST['detail'] ?? '';
+$type        = $_POST['type'] ?? 'Preventive';
+$tech_id     = !empty($_POST['technician_id']) ? (int)$_POST['technician_id'] : null;
+$repair_note = $_POST['repair_note'] ?? '';
 
-$report_time = date("Y-m-d H:i:s");
+// ตรวจสอบเบื้องต้น
+if (!$machine_id) {
+    die("Error: ไม่พบ Machine ID");
+}
 
-$sql = "INSERT INTO repair_history 
-        (machine_id, reporter, position, type, detail, report_time, status)
-        VALUES 
-        ('$machine_id', '$reporter', '$position', '$type', '$detail', '$report_time', 'รอดำเนินการ')";
+if ($repair_id && $repair_id !== 'ใหม่') {
+    // --- กรณีแก้ไข (UPDATE) ---
+    // ใช้สถานะเดิมจากฐานข้อมูล หรือกำหนด Logic ใหม่ที่นี่
+    $sql = "UPDATE repair_history SET 
+            detail = ?, repair_note = ?, technician_id = ?, type = ? 
+            WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssisi", $detail, $repair_note, $tech_id, $type, $repair_id);
+} else {
+    // --- กรณีแจ้งใหม่ (INSERT) ---
+    $reporter = $_SESSION['username'] ?? 'System';
+    $pos      = $_SESSION['role'] ?? '-';
+    $default_status = 'รอดำเนินการ'; // กำหนดสถานะเริ่มต้นที่นี่โดยตรง
 
-if(mysqli_query($conn, $sql)) {
-    header("Location: reporthistory.php");
+    $sql = "INSERT INTO repair_history (machine_id, reporter, position, type, detail, status, report_time) 
+            VALUES (?, ?, ?, ?, ?, ?, NOW())";
+    $stmt = $conn->prepare($sql);
+    // ส่งค่า $default_status เข้าไปแทนการรับจาก $_POST
+    $stmt->bind_param("ssssss", $machine_id, $reporter, $pos, $type, $detail, $default_status);
+}
+
+if ($stmt->execute()) {
+    header("Location: reporthistory.php?id=" . $machine_id);
     exit();
 } else {
-    echo "เกิดข้อผิดพลาด: " . mysqli_error($conn);
+    echo "เกิดข้อผิดพลาด: " . $stmt->error;
 }
 ?>

@@ -84,9 +84,9 @@ if ($repair_id) {
 }
 
 $sidebar_paths = [
-  'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
-  'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
-  'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
+    'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
+    'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
+    'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
 ];
 
 // เลือกไฟล์
@@ -239,7 +239,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             <div class="container-fluid p-0">
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="header-title m-0"><i class="fas fa-edit"></i> จัดการใบแจ้งซ่อม ID: <?= $row['id'] ?></h3>
+                    <h3 class="header-title m-0"><i class="fas fa-edit"></i> จัดการใบแจ้งซ่อม </h3>
                 </div>
 
                 <?= $msg ?>
@@ -249,7 +249,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
                         <div class="col-lg-5 mb-4">
                             <div class="card card-machine h-100">
                                 <div class="machine-header">
-                                    <h2 class="m-0"><i class="fas fa-cogs"></i>
+                                    <h2 class="m-0"><i class="fas fa-cogs"> id : </i>
                                         <?= htmlspecialchars($row['machine_id']) ?></h2>
                                     <small>รายละเอียดเครื่องจักร</small>
                                 </div>
@@ -371,11 +371,11 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
                                                 if ($tech_result->num_rows > 0) {
                                                     $tech_result->data_seek(0);
                                                     while ($tech = $tech_result->fetch_assoc()):
-                                                        ?>
+                                                ?>
                                                         <option value="<?= $tech['user_id'] ?>" <?= (isset($row['technician_id']) && $row['technician_id'] == $tech['user_id']) ? 'selected' : '' ?>>
                                                             <?= htmlspecialchars($tech['username']) ?>
                                                         </option>
-                                                        <?php
+                                                <?php
                                                     endwhile;
                                                 }
                                                 ?>
