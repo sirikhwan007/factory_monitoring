@@ -45,15 +45,6 @@ $activePage = $activePage ?? '';
                 </a>
             </li>
 
-            <!-- Report -->
-            <li>
-                <a href="/factory_monitoring/operator/report_operator.php"
-                   class="<?= $activePage === 'report' ? 'active' : '' ?>">
-                    <i class="fa-solid fa-tools"></i>
-                    <span class="sb-text">แจ้งซ่อม</span>
-                </a>
-            </li>
-
             <!-- History -->
             <li>
                 <a href="/factory_monitoring/operator/history_operator.php"

@@ -59,7 +59,7 @@ $conn->close();
       background: #f4f9fd;
       border-radius: 20px;
       padding: 30px;
-      margin: 20px;
+      margin: 0px;
       margin-left: 250px;
     }
   </style>

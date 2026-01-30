@@ -294,6 +294,16 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             color: #888;
         }
 
+        .dashboard {
+            flex: 1;
+            overflow: auto;
+            background: #f4f9fd;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 0px;
+            margin-left: 250px;
+        }
+
         /* --- Responsive Adjustments --- */
         /* สำหรับหน้าจอ Mobile (เล็กกว่า 992px) */
         @media (max-width: 992px) {
@@ -350,7 +360,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
         <div class="sidebar-wrapper">
 
             <?php $activePage = 'history';
-            include __DIR__ . '/SidebarOperator.php'; 
+            include __DIR__ . '/SidebarOperator.php';
             ?>
 
         </div>
@@ -412,7 +422,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                                     $repair_complete_date = $repair_datetime->format('d/m/Y');
                                     $repair_complete_time = $repair_datetime->format('H:i');
                                 }
-                                ?>
+                        ?>
                                 <tr>
                                     <td class="text-center"><strong><?= $no++ ?></strong></td>
                                     <td><?= htmlspecialchars($row['machine_id']) ?></td>
@@ -439,7 +449,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 
                                     <td class="text-center">
                                         <span class="status-badge <?= $status_class ?>">
-                                            <?= $status_icon ?>         <?= $row['status'] ?>
+                                            <?= $status_icon ?> <?= $row['status'] ?>
                                         </span>
                                     </td>
 
@@ -468,8 +478,8 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <script src="SidebarAdmin.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $('.btn-assign').click(function () {
+        $(document).ready(function() {
+            $('.btn-assign').click(function() {
                 var repairId = $(this).data('id');
                 $('#modal_repair_id').val(repairId);
             });
