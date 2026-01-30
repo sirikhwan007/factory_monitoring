@@ -43,6 +43,16 @@ $res = $q->get_result();
 $doc = $res->fetch_assoc();
 $q->close();
 
+$sidebar_paths = [
+    'Admin'    => '/../admin/SidebarAdmin.php',
+    'Manager'  => '/factory_monitoring/Manager/partials/SidebarManager.php',
+    'Operator' => '/../Operator/SidebarOperator.php',
+
+];
+
+// เลือกไฟล์ตาม Role ถ้าไม่เจอให้ใช้ของ Operator เป็นค่าเริ่มต้น (Default)
+$sidebar_file = $sidebar_paths[$user_role] ?? '/../Operator/SidebarOperator.php';
+
 
 $stmt->close();
 $conn->close();
@@ -60,6 +70,8 @@ $conn->close();
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js" defer></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
+  <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
+  <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
   <link rel="stylesheet" href="/factory_monitoring/dashboard/dashboard.css">
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -69,10 +81,11 @@ $conn->close();
 
 <body>
   <div class="btn-hamburger"><i class="fa-solid fa-bars"></i></div>
+  
 
   <section class="main">
 
-    <?php include __DIR__ . '/../admin/SidebarAdmin.php'; ?>
+    <?php include __DIR__ . $sidebar_file; ?>
 
     <div class="dashboard">
       <div id="dashboard-content">
@@ -133,7 +146,7 @@ $conn->close();
                     </a>
                   <?php endif; ?>
 
-                  <a href="/factory_monitoring/admin/report.php?machine_id=<?= $machine['machine_id'] ?>"
+                  <a href="/factory_monitoring/admin/edit_repair.php?machine_id=<?= $machine['machine_id'] ?>"
                     class="btn btn-warning btn-sm"
                     style="padding: 4px 8px; font-size: 12px; background-color:#ff8c00; border-color:#ff8c00; width: fit-content;">
                     <i class="fa-solid fa-clipboard"></i> แจ้งซ่อม

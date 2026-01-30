@@ -334,9 +334,7 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                     <?php endif; ?>
                 </div>
             </div>
-
         </div>
-
     </section>
 
     <!-- Modal สำหรับดูรายละเอียดการแจ้งซ่อม -->
