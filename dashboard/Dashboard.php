@@ -44,14 +44,13 @@ $doc = $res->fetch_assoc();
 $q->close();
 
 $sidebar_paths = [
-  'Admin'    => '/../admin/SidebarAdmin.php',
-  'Manager'  => '/factory_monitoring/Manager/partials/SidebarManager.php',
-  'Operator' => '/../Operator/SidebarOperator.php',
-
+  'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
+  'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
+  'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
 ];
 
-// เลือกไฟล์ตาม Role ถ้าไม่เจอให้ใช้ของ Operator เป็นค่าเริ่มต้น (Default)
-$sidebar_file = $sidebar_paths[$user_role] ?? '/../Operator/SidebarOperator.php';
+// เลือกไฟล์
+$sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 
 
@@ -91,7 +90,7 @@ $conn->close();
 
   <section class="main">
 
-    <?php include __DIR__ . $sidebar_file; ?>
+    <?php include $sidebar_file; ?>
 
     <div class="dashboard">
       <div id="dashboard-content">
