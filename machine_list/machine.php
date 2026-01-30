@@ -48,6 +48,7 @@ $conn->close();
   <title>รายการเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/factory_monitoring/machine_list/css/machine_list.css">
+  <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
   <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
   <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />

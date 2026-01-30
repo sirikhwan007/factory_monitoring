@@ -1,5 +1,8 @@
 <?php
 include "../config.php";
+session_start();
+
+$user_role = $_SESSION['role'] ?? 'Operator';
 
 if (!isset($_GET['id'])) {
   die("ไม่พบเครื่องจักรที่เลือก");
@@ -25,6 +28,15 @@ $resDoc = $stmtDoc->get_result();
 $doc = $resDoc->fetch_assoc();
 $stmtDoc->close();
 
+$sidebar_paths = [
+  'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
+  'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
+  'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
+];
+
+// เลือกไฟล์
+$sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
+
 $current_datasheet = $doc['file_path'] ?? "";
 
 ?>
@@ -38,9 +50,16 @@ $current_datasheet = $doc['file_path'] ?? "";
   <title>แก้ไขข้อมูลเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
+  <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
+  <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
   <link rel="stylesheet" href="/factory_monitoring/editmachine/edit.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .dashboard {
+      margin-left: 250px;
+    }
+  </style>
 </head>
 
 <body>
@@ -49,7 +68,7 @@ $current_datasheet = $doc['file_path'] ?? "";
 
   <section class="main">
 
-    <?php include __DIR__ . '/../admin/SidebarAdmin.php'; ?>
+    <?php include $sidebar_file; ?>
 
     <div class="dashboard">
       <div class="container my-5">
@@ -147,33 +166,33 @@ $current_datasheet = $doc['file_path'] ?? "";
                 <label class="form-label fw-bold">Datasheet (PDF/DOCX/XLSX):</label>
 
                 <div class="upload-container text-center">
-    <!-- ไฟล์ปัจจุบัน -->
-    <?php if (!empty($current_datasheet)): ?>
-      <p>
-        ไฟล์ปัจจุบัน:
-        <a href="/factory_monitoring/<?= $current_datasheet ?>" target="_blank">
-          <?= basename($current_datasheet) ?>
-        </a>
-      </p>
-    <?php else: ?>
-      <p class="text-muted">ไม่มีไฟล์ Datasheet</p>
-    <?php endif; ?>
+                  <!-- ไฟล์ปัจจุบัน -->
+                  <?php if (!empty($current_datasheet)): ?>
+                    <p>
+                      ไฟล์ปัจจุบัน:
+                      <a href="/factory_monitoring/<?= $current_datasheet ?>" target="_blank">
+                        <?= basename($current_datasheet) ?>
+                      </a>
+                    </p>
+                  <?php else: ?>
+                    <p class="text-muted">ไม่มีไฟล์ Datasheet</p>
+                  <?php endif; ?>
 
-    <!-- ไฟล์ล่าสุด (ใหม่) -->
-    <p id="datasheet-name" class="file-name mt-2 mb-2">
-        <?php if(!empty($new_datasheet_name ?? '')): ?>
-            ไฟล์ล่าสุด: <?= htmlspecialchars($new_datasheet_name) ?>
-        <?php endif; ?>
-    </p>
+                  <!-- ไฟล์ล่าสุด (ใหม่) -->
+                  <p id="datasheet-name" class="file-name mt-2 mb-2">
+                    <?php if (!empty($new_datasheet_name ?? '')): ?>
+                      ไฟล์ล่าสุด: <?= htmlspecialchars($new_datasheet_name) ?>
+                    <?php endif; ?>
+                  </p>
 
-    <!-- ปุ่มอัปโหลด -->
-    <input type="file" id="datasheet" name="datasheet"
-           accept=".pdf,.doc,.docx,.xls,.xlsx" class="d-none">
+                  <!-- ปุ่มอัปโหลด -->
+                  <input type="file" id="datasheet" name="datasheet"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx" class="d-none">
 
-    <label for="datasheet" class="custom-upload-button mt-2">
-        UPLOAD DATASHEET <i class="fas fa-file-upload"></i>
-    </label>
-</div>
+                  <label for="datasheet" class="custom-upload-button mt-2">
+                    UPLOAD DATASHEET <i class="fas fa-file-upload"></i>
+                  </label>
+                </div>
 
                 <div class="col-12 mt-4 d-flex justify-content-center">
                   <button type="submit" class="btn btn-warning btn-lg">
@@ -213,16 +232,15 @@ $current_datasheet = $doc['file_path'] ?? "";
 
 
       const fileInput = document.getElementById('datasheet');
-const fileNameDisplay = document.getElementById('datasheet-name');
+      const fileNameDisplay = document.getElementById('datasheet-name');
 
-fileInput.addEventListener('change', function() {
-    if (this.files && this.files.length > 0) {
-        fileNameDisplay.textContent = 'ไฟล์ล่าสุด: ' + this.files[0].name;
-    } else {
-        fileNameDisplay.textContent = '';
-    }
-});
-
+      fileInput.addEventListener('change', function() {
+        if (this.files && this.files.length > 0) {
+          fileNameDisplay.textContent = 'ไฟล์ล่าสุด: ' + this.files[0].name;
+        } else {
+          fileNameDisplay.textContent = '';
+        }
+      });
     </script>
 </body>
 
