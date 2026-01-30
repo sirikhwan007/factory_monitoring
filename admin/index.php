@@ -170,15 +170,19 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col-md-2">
                         <div class="card shadow-sm p-3 text-center">
-                            <h6>ผู้ใช้ทั้งหมด</h6>
-                            <div class="display-6 fw-bold text-primary"><?= $total_users ?></div>
+                            <a href="/factory_monitoring/admin/users.php" class="text-decoration-none">
+                                <h6>ผู้ใช้ทั้งหมด</h6>
+                                <div class="display-6 fw-bold text-primary"><?= $total_users ?></div>
+                            </a>
                         </div>
                     </div>
 
                     <div class="col-md-2">
                         <div class="card shadow-sm p-3 text-center">
+                            <a href="/factory_monitoring/admin/users.php?role=Admin" class="text-decoration-none">
                             <h6>Admin</h6>
                             <div class="display-6 fw-bold text-danger"><?= $role_admin ?></div>
+                            </a>
                         </div>
                     </div>
 
