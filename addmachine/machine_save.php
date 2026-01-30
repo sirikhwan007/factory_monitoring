@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {
-        echo "<script>alert('❌ Machine ID นี้มีอยู่แล้วในระบบ!'); history.back();</script>";
+        header("Location: /factory_monitoring/addmachine/machine.php?error=duplicate_id");
         exit();
     }
     $stmt->close();
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {
-        echo "<script>alert('❌ MAC Address นี้ถูกใช้แล้ว!'); history.back();</script>";
+        header("Location: /factory_monitoring/addmachine/machine.php?error=duplicate_mac");
         exit();
     }
     $stmt->close();
@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $allowed = ["pdf", "doc", "docx", "xls", "xlsx", "txt"];
 
         if (!in_array($ds_extension, $allowed)) {
-            echo "<script>alert('❌ อัปโหลดได้เฉพาะไฟล์ PDF, DOCX, XLSX เท่านั้น'); history.back();</script>";
+            header("Location: /factory_monitoring/addmachine/machine.php?error=invalid_file");
             exit();
         }
 
@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // กำหนดชื่อใหม่โดยใช้ชื่อไฟล์จริง + machine_id
         $new_ds_name = $machine_id . "_" . $clean_name . "." . $ds_extension;
 
-        
+
         $target_ds_file = $target_dir . $new_ds_name;
 
         if (move_uploaded_file($_FILES["datasheet"]["tmp_name"], $target_ds_file)) {
@@ -193,12 +193,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Commit
         $conn->commit();
 
-        echo "<script>alert('✅ เพิ่มเครื่องจักรพร้อม สำเร็จ!'); window.location='/factory_monitoring/machine_list/machine.php';</script>";
+        // ส่งกลับไปที่หน้า machine.php พร้อมแนบสถานะ success ไปทาง URL
+        header("Location: /factory_monitoring/addmachine/machine.php?status=success");
         exit;
     } catch (Exception $e) {
-
+        // หากเกิดข้อผิดพลาด ให้ยกเลิกสิ่งที่ทำมาทั้งหมด (Rollback)
         $conn->rollback();
-        echo "<script>alert('❌ เกิดข้อผิดพลาด: " . $e->getMessage() . "'); history.back();</script>";
+
+        // ส่งกลับไปหน้าเดิมพร้อมแจ้ง Error (หรือจะใช้ die แบบเดิมที่คุณเคยใช้ก็ได้ครับ)
+        header("Location: /factory_monitoring/addmachine/machine.php?status=error&message=" . urlencode($e->getMessage()));
         exit;
     }
 }

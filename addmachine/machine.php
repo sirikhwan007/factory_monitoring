@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>รายการเครื่องจักร</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="/factory_monitoring/addmachine/machine.css">
     <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -14,7 +15,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-
+    
 </head>
 
 <body>
@@ -165,6 +166,50 @@
                     fileNameSpan.classList.add('text-muted');
                 }
             });
+            // ตรวจสอบ URL parameters เพื่อแสดงป๊อปอัพ
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // ถ้า URL มีคำว่า ?status=success
+            if (urlParams.get('status') === 'success') {
+                Swal.fire({
+                    title: 'บันทึกสำเร็จ!',
+                    text: 'เพิ่มข้อมูลเครื่องจักรใหม่เรียบร้อยแล้ว',
+                    icon: 'success',
+                    confirmButtonColor: '#198754'
+                }).then(() => {
+                    // ลบ parameter ออกจาก URL เพื่อไม่ให้ป๊อปอัพเด้งซ้ำตอนกด Refresh
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            }
+
+            // ถ้า URL มีคำว่า ?status=error
+            if (urlParams.get('status') === 'error') {
+                Swal.fire({
+                    title: 'เกิดข้อผิดพลาด!',
+                    text: urlParams.get('message') || 'ไม่สามารถบันทึกข้อมูลได้',
+                    icon: 'error',
+                    confirmButtonColor: '#d33'
+                });
+            }
+
+            // 2. กรณีข้อมูลซ้ำ (Error)
+            const errorType = urlParams.get('error');
+            if (errorType) {
+                let msg = 'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
+                if (errorType === 'duplicate_id') msg = ' Machine ID นี้มีในระบบแล้ว!';
+                if (errorType === 'duplicate_mac') msg = ' MAC Address นี้มีในระบบแล้ว!';
+                if (errorType === 'invalid_file') msg = ' ไฟล์ที่อัปโหลดไม่ถูกต้อง!';
+
+                Swal.fire({
+                    title: 'ข้อมูลซ้ำ!',
+                    text: msg,
+                    icon: 'error',
+                    confirmButtonColor: '#d33'
+                }).then(() => {
+                    // ลบ error ออกจาก URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            }
         </script>
 </body>
 
