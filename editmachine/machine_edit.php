@@ -242,34 +242,6 @@ $current_datasheet = $doc['file_path'] ?? "";
           fileNameDisplay.textContent = '';
         }
       });
-
-
-      const urlParams = new URLSearchParams(window.location.search);
-
-      // 1. กรณีอัปเดตสำเร็จ
-      if (urlParams.get('status') === 'updated') {
-        Swal.fire({
-          title: 'อัปเดตข้อมูลสำเร็จ!',
-          text: 'ข้อมูลเครื่องจักรถูกบันทึกเรียบร้อยแล้ว',
-          icon: 'success',
-          confirmButtonColor: '#ffc107'
-        }).then(() => {
-          // ลบ parameter ออกจาก URL เพื่อป้องกันป๊อปอัพเด้งซ้ำ
-          window.history.replaceState({}, document.title, window.location.pathname + '?id=' + urlParams.get('id'));
-        });
-      }
-
-      // 2. กรณีเกิดข้อผิดพลาด
-      if (urlParams.get('status') === 'error') {
-        Swal.fire({
-          title: 'เกิดข้อผิดพลาด!',
-          text: urlParams.get('message') || 'ไม่สามารถแก้ไขข้อมูลได้',
-          icon: 'error',
-          confirmButtonColor: '#d33'
-        }).then(() => {
-          window.history.replaceState({}, document.title, window.location.pathname + '?id=' + urlParams.get('id'));
-        });
-      }
     </script>
 </body>
 
