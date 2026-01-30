@@ -50,13 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 // 4. การดึงข้อมูลมาแสดงผลใน Form
 if ($repair_id) {
-    // แก้ไข SQL: เพิ่ม LEFT JOIN users เพื่อดึงชื่อช่าง (u.username)
     $sql = "SELECT r.*, m.location, u.username 
             FROM repair_history r 
             LEFT JOIN machines m ON r.machine_id = m.machine_id 
             LEFT JOIN users u ON r.technician_id = u.user_id 
             WHERE r.id = ?";
-            
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $repair_id);
     $stmt->execute();
@@ -316,16 +315,10 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 
                                         <div class="p-3 bg-light rounded border mb-3">
                                             <?php if (!empty($row['username'])): ?>
-                                                <?= htmlspecialchars($row['username']) ?>
+                                                <span class="fw-bold text-primary"><?= htmlspecialchars($row['username']) ?></span>
                                             <?php else: ?>
                                                 <span class="text-muted fst-italic">ยังไม่ได้มอบหมายช่าง</span>
                                             <?php endif; ?>
-                                        </div>
-
-                                    <?php else: ?>
-                                        <div class="mt-2 text-muted fst-italic">
-                                            <i class="fas fa-user-slash"></i>
-                                            ยังไม่ได้มอบหมายช่าง
                                         </div>
                                     <?php endif; ?>
 
@@ -353,7 +346,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
                         <div class="col-lg-7 mb-4">
                             <div class="card card-custom h-100">
                                 <div class="card-header bg-primary text-white">
-                                    <strong><i class="fas fa-tools"></i> ส่วนการจัดการ / มอบหมายงาน</strong>
+                                    <strong><i class="fas fa-tools"></i> ส่วนแก้ไข</strong>
                                 </div>
                                 <div class="card-body">
 
