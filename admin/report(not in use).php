@@ -1,36 +1,21 @@
 <?php
-// ================================
-// เริ่ม Session (ห้ามมี output ก่อน)
-// ================================
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ================================
-// เช็กการล็อกอิน
-// ================================
 if (!isset($_SESSION['user_id'])) {
     header("Location: /factory_monitoring/login.php");
     exit();
 }
 
-// ================================
-// เชื่อมต่อฐานข้อมูล
-// ================================
 include __DIR__ . "/../config.php";
 
-// ================================
-// รับ machine_id จาก Dashboard
-// ================================
 $machine_id = $_GET['machine_id'] ?? null;
 
 if (!$machine_id) {
     die("ไม่พบเครื่องจักรที่เลือก");
 }
 
-// ================================
-// ดึงข้อมูลเครื่องจักร
-// ================================
 $stmt = $conn->prepare("SELECT machine_id, name FROM machines WHERE machine_id = ?");
 $stmt->bind_param("s", $machine_id);
 $stmt->execute();
@@ -45,9 +30,6 @@ $machine = $result->fetch_assoc();
 $stmt->close();
 $conn->close();
 
-// ================================
-// ข้อมูลผู้ใช้ (Sidebar)
-// ================================
 $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 $username     = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 $role         = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
@@ -148,7 +130,7 @@ $role         = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                               placeholder="กรุณาระบุรายละเอียดปัญหาที่พบ เช่น เสียงดัง, เครื่องไม่ทำงาน"
                               required></textarea>
                 </div>
-
+                
                 <!-- ปุ่มส่ง -->
                 <button type="submit" class="btn btn-submit-repair w-100">
                     <i class="fas fa-paper-plane"></i> ส่งคำขอแจ้งซ่อม

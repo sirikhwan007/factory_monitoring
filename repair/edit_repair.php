@@ -1,6 +1,9 @@
 <?php
 session_start();
-include __DIR__ . "/../config.php"; 
+include __DIR__ . "/../config.php";
+
+// ตรวจสอบ Role ของผู้ใช้งาน (ดึงจาก session ที่คุณตั้งไว้ตอน Login)
+$user_role = $_SESSION['role'] ?? 'Operator';
 
 // 1. รับค่าจาก URL (รองรับทั้ง id งานซ่อม หรือ machine_id จากหน้า Dashboard)
 $repair_id = $_GET['id'] ?? null;
@@ -79,6 +82,15 @@ if ($repair_id) {
 } else {
     die("ไม่พบข้อมูลเครื่องจักรหรือรายการแจ้งซ่อม");
 }
+
+$sidebar_paths = [
+  'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
+  'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
+  'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
+];
+
+// เลือกไฟล์
+$sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
@@ -220,7 +232,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 
     <section class="main">
         <div class="sidebar-wrapper">
-            <?php include __DIR__ . '/SidebarAdmin.php'; ?>
+            <?php include $sidebar_file; ?>
         </div>
 
         <div class="content-container">

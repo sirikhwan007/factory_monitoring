@@ -42,7 +42,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
       </li>
 
       <li>
-        <a href="/factory_monitoring/admin/reporthistory.php">
+        <a href="/factory_monitoring/repair/reporthistory.php">
           <i class="fas fa-history"></i><span class="sb-text">ประวัติการแจ้งซ่อม</span>
         </a>
       </li>
