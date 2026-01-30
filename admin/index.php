@@ -2,6 +2,8 @@
 session_start();
 include "../config.php"; // เชื่อมฐานข้อมูล
 
+$user_role = $_SESSION['role'] ?? 'Admin';
+
 // เช็กล็อกอิน
 if (!isset($_SESSION['user_id'])) {
     header("Location: /factory_monitoring/login.php");
@@ -46,9 +48,13 @@ $in_progress = $conn->query($sql_in_progress)->fetch_assoc()['in_progress'];
 $sql_completed = "SELECT COUNT(*) AS completed FROM repair_requests WHERE status='completed'";
 $completed = $conn->query($sql_completed)->fetch_assoc()['completed'];
 
-/* -----------------------------------------------------
-   🔹 RECENT ACTIVITY (LOGS)
------------------------------------------------------ */
+$sidebar_paths = [
+    'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
+];
+
+// เลือกไฟล์
+$sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
+
 $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 10");
 
 ?>
@@ -78,7 +84,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
     <section class="main">
 
-        <?php include __DIR__ . '/SidebarAdmin.php'; ?>
+        <?php include $sidebar_file; ?>
 
         <div class="container-fluid">
 
@@ -91,8 +97,8 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                     <div class="col-md-3">
                         <div class="card shadow-sm p-3 text-center">
                             <a href="/factory_monitoring/machine_list/machine.php" class="text-decoration-none">
-                                <h5>เครื่องจักรทั้งหมด</h5>  
-                            <div class="display-6 fw-bold text-primary"><?= $total_machines ?></div>
+                                <h5>เครื่องจักรทั้งหมด</h5>
+                                <div class="display-6 fw-bold text-primary"><?= $total_machines ?></div>
                             </a>
                         </div>
                     </div>

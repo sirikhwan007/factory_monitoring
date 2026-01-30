@@ -143,7 +143,7 @@ $conn->close();
         let statusText = "";
         let color = "";
 
-        if (power > 0) { // 
+        if (power > 0) {  
           statusText = `กำลังทำงาน (${power} W)`;
           color = "#28a745"; // เขียว
         } else {
