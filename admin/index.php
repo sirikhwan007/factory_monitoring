@@ -90,8 +90,10 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col-md-3">
                         <div class="card shadow-sm p-3 text-center">
-                            <h5>เครื่องจักรทั้งหมด</h5>
+                            <a href="/factory_monitoring/machine_list/machine.php" class="text-decoration-none">
+                                <h5>เครื่องจักรทั้งหมด</h5>  
                             <div class="display-6 fw-bold text-primary"><?= $total_machines ?></div>
+                            </a>
                         </div>
                     </div>
 
