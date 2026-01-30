@@ -177,9 +177,7 @@ $conn->close();
     });
 
     <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
-        <
-        script
-      script >
+        <script >
         Swal.fire({
           title: 'ลบข้อมูลสำเร็จ!',
           text: 'เครื่องจักรและไฟล์ที่เกี่ยวข้องถูกลบออกจากระบบแล้ว',

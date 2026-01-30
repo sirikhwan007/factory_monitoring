@@ -194,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->commit();
 
         // ส่งกลับไปที่หน้า machine.php พร้อมแนบสถานะ success ไปทาง URL
-        header("Location: /factory_monitoring/addmachine/machine.php?status=success");
+        header("Location: /factory_monitoring/machine_list/machine.php?status=success");
         exit;
     } catch (Exception $e) {
         // หากเกิดข้อผิดพลาด ให้ยกเลิกสิ่งที่ทำมาทั้งหมด (Rollback)
