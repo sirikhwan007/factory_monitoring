@@ -29,11 +29,10 @@ if ($repair_id && $repair_id !== 'ใหม่') {
     $pos      = $_SESSION['role'] ?? '-';
     $default_status = 'รอดำเนินการ'; // กำหนดสถานะเริ่มต้นที่นี่โดยตรง
 
-    $sql = "INSERT INTO repair_history (machine_id, reporter, position, type, detail, status, report_time) 
-            VALUES (?, ?, ?, ?, ?, ?, NOW())";
+    $sql = "INSERT INTO repair_history (machine_id, reporter, position, type, detail, status, technician_id, report_time) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
     $stmt = $conn->prepare($sql);
-    // ส่งค่า $default_status เข้าไปแทนการรับจาก $_POST
-    $stmt->bind_param("ssssss", $machine_id, $reporter, $pos, $type, $detail, $default_status);
+    $stmt->bind_param("ssssssi", $machine_id, $reporter, $pos, $type, $detail, $default_status, $tech_id);
 }
 
 if ($stmt->execute()) {

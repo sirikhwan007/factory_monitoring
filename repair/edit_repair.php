@@ -52,7 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // 4. การดึงข้อมูลมาแสดงผลใน Form
 if ($repair_id) {
     // ดึงข้อมูลจาก ID งานซ่อม (Mode แก้ไข)
-    $stmt = $conn->prepare("SELECT r.*, m.location FROM repair_history r LEFT JOIN machines m ON r.machine_id = m.machine_id WHERE r.id = ?");
+    $stmt = $conn->prepare("SELECT r.*, m.location, u.username 
+                       FROM repair_history r 
+                       LEFT JOIN machines m ON r.machine_id = m.machine_id 
+                       LEFT JOIN users u ON r.technician_id = u.user_id 
+                       WHERE r.id = ?");
     $stmt->bind_param("i", $repair_id);
     $stmt->execute();
     $row = $stmt->get_result()->fetch_assoc();
