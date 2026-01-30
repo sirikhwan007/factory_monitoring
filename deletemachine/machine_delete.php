@@ -158,7 +158,7 @@ if (!$machine) {
       if (reason === "") {
         Swal.fire({
           title: 'กรุณาระบุเหตุผล',
-          text: 'ต้องกรอกเหตุผลการลบก่อนดำเนินการครับ',
+          text: 'กรุณาระบุเหตุผลการลบก่อนดำเนินการ',
           icon: 'info',
           confirmButtonColor: '#3085d6'
         });
