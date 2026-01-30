@@ -21,7 +21,7 @@
   --warning: #ffc312;
   --success: #1abc9c;
   --info: #3498db;
-}
+} 
 
 /* ===== Buttons ===== */
 .btn {
@@ -79,6 +79,7 @@
   border-radius: 20px;
   padding: 30px;
   margin: 20px;
+  
 }
 
 .card {

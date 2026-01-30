@@ -28,7 +28,6 @@ $activePage = $activePage ?? '';
         </a>
 
         <ul class="op-ul">
-
             <!-- Dashboard -->
             <li>
                 <a href="/factory_monitoring/operator/dashboard.php"
@@ -37,10 +36,9 @@ $activePage = $activePage ?? '';
                     <span class="sb-text">หน้าหลัก</span>
                 </a>
             </li>
-
             <!-- Machines -->
             <li>
-                <a href="/factory_monitoring/Operator/machine.php"
+                <a href="/factory_monitoring/machine_list/machine.php"
                    class="<?= $activePage === 'machines' ? 'active' : '' ?>">
                     <i class="fa-solid fa-industry"></i>
                     <span class="sb-text">เครื่องจักรทั้งหมด</span>

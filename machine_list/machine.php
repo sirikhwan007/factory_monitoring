@@ -7,6 +7,8 @@ if (!isset($_SESSION['user_id'])) {
   exit();
 }
 
+$user_role = $_SESSION['role'] ?? 'Operator';
+
 // เชื่อมต่อฐานข้อมูล
 $conn = new mysqli("localhost", "root", "", "factory_monitoring");
 if ($conn->connect_error) {
@@ -25,14 +27,13 @@ if ($result && $result->num_rows > 0) {
 }
 
 $sidebar_paths = [
-    'Admin'    => '/../admin/SidebarAdmin.php',
-    'Manager'  => '../factory_monitoring/Manager/partials/SidebarManager.php',
-    'Operator' => '/../Operator/SidebarOperator.php',
-
+  'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
+  'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
+  'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
 ];
 
-// เลือกไฟล์ตาม Role ถ้าไม่เจอให้ใช้ของ Operator เป็นค่าเริ่มต้น (Default)
-$sidebar_file = $sidebar_paths[$user_role] ?? '/../Operator/SidebarOperator.php';
+// เลือกไฟล์
+$sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 
 $conn->close();
@@ -51,6 +52,17 @@ $conn->close();
   <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+  <style>
+    .dashboard {
+      flex: 1;
+      overflow: auto;
+      background: #f4f9fd;
+      border-radius: 20px;
+      padding: 30px;
+      margin: 20px;
+      margin-left: 250px;
+    }
+  </style>
 </head>
 
 <body>
@@ -59,7 +71,7 @@ $conn->close();
 
   <section class="main">
 
-    <?php include __DIR__ . $sidebar_file; ?>
+    <?php include $sidebar_file; ?>
 
     <div class="dashboard">
       <h2 class="dashboard-title">รายการเครื่องจักร</h2>

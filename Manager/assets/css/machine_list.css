@@ -6,6 +6,8 @@
     padding: 10px 0;
 }
 
+
+
 /* การ์ดเครื่องจักร */
 .machine-card {
     background-color: #ffffff;
@@ -110,10 +112,12 @@
     .machine-cards-wrapper {
         grid-template-columns: 1fr;
     }
+
     .machine-header {
         flex-direction: column;
         align-items: stretch;
     }
+
     .search-input {
         max-width: 100%;
     }
