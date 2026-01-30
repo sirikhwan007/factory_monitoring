@@ -197,7 +197,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: /factory_monitoring/machine_list/machine.php?status=success");
         exit;
     } catch (Exception $e) {
-        // หากเกิดข้อผิดพลาด ให้ยกเลิกสิ่งที่ทำมาทั้งหมด (Rollback)
         $conn->rollback();
 
         // ส่งกลับไปหน้าเดิมพร้อมแจ้ง Error (หรือจะใช้ die แบบเดิมที่คุณเคยใช้ก็ได้ครับ)
