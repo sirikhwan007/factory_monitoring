@@ -104,7 +104,7 @@ $conn->close();
             <div class="row g-3 align-items-center">
 
               <!-- รูปเครื่องจักร -->
-              <div class="col-md-4 text-center" onclick="location.href='/factory_monitoring/admin/machine_detail.php?id=<?php echo $machine['machine_id']; ?>'">
+              <div class="col-md-4 text-center" onclick="location.href='/factory_monitoring/machine_list/machine_detail.php?id=<?php echo $machine['machine_id']; ?>'">
 
                 <?php
                 // ตรวจสอบว่ามีข้อมูลชื่อไฟล์รูปภาพหรือไม่
