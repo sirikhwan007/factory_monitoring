@@ -100,7 +100,6 @@ $conn->close();
         <!--เอาไว้แสดงข้อมูลเครื่องจักร-->
         <div class="container my-4">
           <div class="card mb-3 shadow-sm p-3">
-
             <div class="row g-3 align-items-center">
               <!-- รูปเครื่องจักร -->
               <div class="col-md-4 text-center">

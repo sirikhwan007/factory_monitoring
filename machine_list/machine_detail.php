@@ -30,9 +30,9 @@ if (!$machine) {
 }
 
 $sidebar_paths = [
-  'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
-  'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
-  'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
+    'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
+    'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
+    'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
 ];
 
 // เลือกไฟล์
@@ -52,7 +52,7 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
     <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
-  <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
+    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
@@ -186,8 +186,6 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
         <div class="sidebar-wrapper">
             <?php include $sidebar_file; ?>
         </div>
-        
-
         <div class="content-container">
 
             <div class="container-fluid p-0">
@@ -202,7 +200,6 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                         <div class="row g-0">
                             <div class="col-md-5">
                                 <?php
-                                // ตรวจสอบว่ามีข้อมูลชื่อไฟล์รูปภาพหรือไม่
                                 $imgSrc = !empty($machine['photo_url'])
                                     ? "/factory_monitoring/" . $machine['photo_url']
                                     : "/factory_monitoring/assets/default-machine.png";
@@ -210,7 +207,7 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                                 <img src="<?php echo $imgSrc; ?>"
                                     alt="รูปเครื่องจักร"
                                     class="img-fluid rounded shadow-sm"
-                                    style="max-height: 200px; object-fit: cover;">
+                                    style="max-height: 75%; object-fit: cover;">
                             </div>
 
                             <div class="col-md-7 p-4">
