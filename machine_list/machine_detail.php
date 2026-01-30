@@ -327,7 +327,7 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                                             <td><?= $report_date ?></td>
                                             <td><?= $status_badge ?></td>
                                             <td class="text-center">
-                                                <a href="edit_repair.php?id=<?= htmlspecialchars($repair_row['id']) ?>" class="btn btn-sm btn-primary">
+                                                <a href="/factory_monitoring/repair/edit_repair.php?id=<?= htmlspecialchars($repair_row['id']) ?>" class="btn btn-sm btn-primary">
                                                     <i class="fas fa-edit"></i> แก้ไข
                                                 </a>
                                                 <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#repairDetailModal"
