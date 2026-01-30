@@ -112,6 +112,29 @@ $page = 'dashboard';
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="assets/js/SidebarAdmin.js"></script>
     <script src="assets/js/users.js"></script>
+    <script>
+    $(document).ready(function() {
+        // ตรวจสอบค่า 'role' จาก URL (Query String)
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleFilter = urlParams.get('role');
+
+        if (roleFilter) {
+            // เรียกใช้ฟังก์ชันกรองข้อมูลที่มีอยู่แล้วใน assets/js/users.js
+            if (roleFilter === 'all') {
+                filterRole('all');
+            } else {
+                filterRole(roleFilter);
+            }
+
+            // (ทางเลือก) ปรับสถานะปุ่ม Filter ให้แสดงผลว่าเลือก Role นั้นอยู่
+            $(".role-filter .btn").each(function() {
+                if ($(this).text().trim() === roleFilter || (roleFilter === 'all' && $(this).text().trim() === 'All')) {
+                    $(this).addClass("btn-primary text-white").siblings().removeClass("btn-primary text-white");
+                }
+            });
+        }
+    });
+</script>
 </body>
 
 </html>

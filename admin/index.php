@@ -166,45 +166,52 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                 <!-- USER OVERVIEW -->
                 <h4 class="mt-4 mb-3">ข้อมูลผู้ใช้งานระบบ</h4>
+
                 <div class="row g-3">
 
-                    <div class="col-md-2">
-                        <div class="card shadow-sm p-3 text-center">
-                            <a href="/factory_monitoring/admin/users.php" class="text-decoration-none">
-                                <h6>ผู้ใช้ทั้งหมด</h6>
+                    <div class="col">
+                        <a href="/factory_monitoring/admin/users.php?role=all" class="text-decoration-none">
+                            <div class="card shadow-sm p-3 text-center h-100">
+                                <h6>ทั้งหมด</h6>
                                 <div class="display-6 fw-bold text-primary"><?= $total_users ?></div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     </div>
 
-                    <div class="col-md-2">
-                        <div class="card shadow-sm p-3 text-center">
-                            <a href="/factory_monitoring/admin/users.php?role=Admin" class="text-decoration-none">
-                            <h6>Admin</h6>
-                            <div class="display-6 fw-bold text-danger"><?= $role_admin ?></div>
-                            </a>
-                        </div>
+                    <div class="col">
+                        <a href="/factory_monitoring/admin/users.php?role=Admin" class="text-decoration-none">
+                            <div class="card shadow-sm p-3 text-center h-100">
+                                <h6>Admin</h6>
+                                <div class="display-6 fw-bold text-danger"><?= $role_admin ?></div>
+                            </div>
+                        </a>
                     </div>
 
-                    <div class="col-md-2">
-                        <div class="card shadow-sm p-3 text-center">
-                            <h6>Manager</h6>
-                            <div class="display-6 fw-bold text-info"><?= $role_manager ?></div>
-                        </div>
+                    <div class="col">
+                        <a href="/factory_monitoring/admin/users.php?role=Manager" class="text-decoration-none">
+                            <div class="card shadow-sm p-3 text-center h-100">
+                                <h6>Manager</h6>
+                                <div class="display-6 fw-bold text-info"><?= $role_manager ?></div>
+                            </div>
+                        </a>
                     </div>
 
-                    <div class="col-md-2">
-                        <div class="card shadow-sm p-3 text-center">
-                            <h6>Technician</h6>
-                            <div class="display-6 fw-bold text-success"><?= $role_technician ?></div>
-                        </div>
+                    <div class="col">
+                        <a href="/factory_monitoring/admin/users.php?role=Technician" class="text-decoration-none">
+                            <div class="card shadow-sm p-3 text-center h-100">
+                                <h6>Technician</h6>
+                                <div class="display-6 fw-bold text-success"><?= $role_technician ?></div>
+                            </div>
+                        </a>
                     </div>
 
-                    <div class="col-md-2">
-                        <div class="card shadow-sm p-3 text-center">
-                            <h6>Operator</h6>
-                            <div class="display-6 fw-bold text-warning"><?= $role_operator ?></div>
-                        </div>
+                    <div class="col">
+                        <a href="/factory_monitoring/admin/users.php?role=Operator" class="text-decoration-none">
+                            <div class="card shadow-sm p-3 text-center h-100">
+                                <h6>Operator</h6>
+                                <div class="display-6 fw-bold text-warning"><?= $role_operator ?></div>
+                            </div>
+                        </a>
                     </div>
 
                 </div>
