@@ -3,12 +3,12 @@ session_start();
 require_once "../config.php";
 
 /* ===== Auth Guard ===== */
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Operator') {
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Manager') {
     header("Location: /factory_monitoring/login.php");
     exit();
 }
 
-/* ===== Load Operator Data ===== */
+/* ===== Load Manager Data ===== */
 $user_id = $_SESSION['user_id'];
 
 $stmt = $conn->prepare("
@@ -31,7 +31,7 @@ $profileImage = !empty($op['profile_image'])
     <title>Operator Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS -->
-    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/profile.css">
+    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/profile.css">
     <!-- FontAwesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -43,7 +43,7 @@ $profileImage = !empty($op['profile_image'])
     <img src="<?= $profileImage ?>" class="profile-img">
 
     <h2><?= htmlspecialchars($op['username']) ?></h2>
-    <p class="role">Operator</p>
+    <p class="role">Manager</p>
 
     <div class="info-box">
         <p><strong>Email:</strong> <?= htmlspecialchars($op['email']) ?></p>
