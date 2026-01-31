@@ -161,7 +161,12 @@ const createLineChart = (ctx, label, color) => {
 };
 
 // --- 3. ฟังก์ชันอัปเดตข้อมูล ---
-
+function getMachineStatus(data) {
+    if (!data) return { text: "OFFLINE", className: "bg-secondary" };
+    return (data.power > 0) 
+        ? { text: "RUNNING", className: "bg-success" } 
+        : { text: "STANDBY", className: "bg-warning" };
+}
 // อัปเดตเข็มและสี
 function updateGauge(gauge, value, maxValue) {
   if (!gauge) return;
@@ -183,7 +188,7 @@ function updateLineChart(chart, value, timeDateObject, smooth = true) {
     chart.data.datasets[0].data.shift();
   }
 
-  // ✅ smooth เฉพาะ live
+  //  smooth เฉพาะ live
   if (smooth) {
     chart.data.datasets[0].data =
       smoothData(chart.data.datasets[0].data, 3);
@@ -192,7 +197,57 @@ function updateLineChart(chart, value, timeDateObject, smooth = true) {
   chart.update('none');
 }
 
+// ฟังก์ชันสำหรับกำหนดสีและข้อความตามสถานะเครื่องจักร
+// ฟังก์ชันสำหรับกำหนดสีและข้อความตามสถานะเครื่องจักร (อ้างอิงเงื่อนไขจาก server.js)
+function getMachineStatus(data) {
+  if (!data || Object.keys(data).length === 0) {
+    return { text: "รอดำเนินการ", className: "bg-secondary" };
+  }
 
+  const temp = data.temperature || 0;
+  const cur = data.current || 0;
+  const vib = data.vibration || 0; // ใน server.js ใช้ accel_percent
+  const volt = data.voltage || 0;
+  const power = data.power || 0;
+
+  // ระดับความรุนแรง (Logic เดียวกับ server.js)
+  let danger = false;
+  let warning = false;
+
+  // -------- Temperature --------
+  if (temp >= 35) danger = true;
+  else if (temp >= 34) warning = true;
+
+  // -------- Vibration --------
+  if (vib >= 15) danger = true;
+  else if (vib >= 5) warning = true;
+
+  // -------- Current --------
+  if (cur >= 8) danger = true;
+  else if (cur >= 5) warning = true;
+
+  // -------- Voltage --------
+  if (volt >= 300) danger = true;
+  else if (volt >= 250) warning = true;
+
+  // -------- Power --------
+  if (power >= 20) danger = true;
+  else if (power >= 15) warning = true;
+
+  // -------- สรุปสถานะเพื่อแสดงผลบน Dashboard --------
+  if (danger) {
+    return { text: "อันตราย (Danger)", className: "bg-danger" }; // ไฟแดง
+  } 
+  else if (warning) {
+    return { text: "ผิดปกติ (Warning)", className: "bg-warning text-dark" }; // ไฟเหลือง
+  } 
+  else if (power > 0) {
+    return { text: "กำลังทำงาน (Normal)", className: "bg-success" }; // ไฟเขียว
+  } 
+  else {
+    return { text: "หยุดทำงาน (Standby)", className: "bg-secondary" }; // กรณีเครื่องปิด
+  }
+}
 // --- 4. Main Execution ---
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -211,29 +266,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const currGauge = createGauge(document.getElementById("currGauge"), 50);
   const powGauge = createGauge(document.getElementById("powGauge"), 1000);
 
-
-  //loadhistory
-  /*async function loadHistory() {
-  const res = await fetch(`${API_BASE}/api/history?range=1h`);
-  const history = await res.json();
-
-  history.temperature.forEach(p =>
-  updateLineChart(tempChart, p.value, new Date(p.time), false)
-);
-history.vibration.forEach(p =>
-  updateLineChart(vibChart, p.value, new Date(p.time), false)
-);
-history.voltage.forEach(p =>
-  updateLineChart(voltChart, p.value, new Date(p.time), false)
-);
-history.current.forEach(p =>
-  updateLineChart(currChart, p.value, new Date(p.time), false)
-);
-history.power.forEach(p =>
-  updateLineChart(powChart, p.value, new Date(p.time), false)
-);
-
-}*/
 
   // ตรวจสอบสถานะ InfluxDB
 async function checkInfluxStatus() {
