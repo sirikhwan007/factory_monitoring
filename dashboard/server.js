@@ -1,19 +1,15 @@
 import express from "express";
 import cors from "cors";
 import mqtt from "mqtt";
-import { InfluxDB } from "@influxdata/influxdb-client";
+import { InfluxDB, Point } from "@influxdata/influxdb-client";
 
 const app = express();
-app.use(cors({
-  origin: "*"
-}));
-
+app.use(cors({ origin: "*" }));
 
 // =======================
-// ENV (Render)
+// 1. Configuration (Environment Variables)
 // =======================
 const PORT = process.env.PORT || 5000;
-
 const INFLUX_URL = process.env.INFLUX_URL;
 const INFLUX_TOKEN = process.env.INFLUX_TOKEN;
 const INFLUX_ORG = process.env.INFLUX_ORG;
@@ -24,156 +20,120 @@ const MQTT_USER = process.env.MQTT_USER;
 const MQTT_PASS = process.env.MQTT_PASS;
 
 // =======================
-// InfluxDB
+// 2. InfluxDB Setup
 // =======================
 const influx = new InfluxDB({ url: INFLUX_URL, token: INFLUX_TOKEN });
 const queryApi = influx.getQueryApi(INFLUX_ORG);
+const writeApi = influx.getWriteApi(INFLUX_ORG, INFLUX_BUCKET);
 
 // =======================
-// MQTT
+// 3. MQTT Setup & Logic
 // =======================
-const client = mqtt.connect(process.env.MQTT_URL, {
-  username: process.env.MQTT_USER,
-  password: process.env.MQTT_PASS,
-  reconnectPeriod: 5000
+const mqttClient = mqtt.connect(MQTT_URL, {
+    username: MQTT_USER,
+    password: MQTT_PASS,
+    reconnectPeriod: 5000
 });
 
-client.on("connect", () => {
-  console.log("MQTT connected");
-  client.subscribe("factory/esp32/sensor");
-});
-
-
-client.on("error", err => {
-  console.error("MQTT error:", err.message);
-});
-
-// --- [2] ส่วนการเชื่อมต่อ MQTT (วางต่อจากตั้งค่า InfluxDB) ---
-const mqttClient = mqtt.connect("mqtt://broker.freemqtt.com", {
-    username: "freemqtt",
-    password: "public"
-});
 mqttClient.on("connect", () => {
-    console.log("✅ Connected to MQTT Broker");
-    mqttClient.subscribe("test/sensor/data"); // Subscribe รอรับข้อมูลจาก ESP32
+    console.log("✅ MQTT Connected & Monitoring Started");
+    mqttClient.subscribe("test/sensor/data"); 
 });
 
+mqttClient.on("error", (err) => {
+    console.error("❌ MQTT Error:", err.message);
+});
 
-// --- [3] ฟังก์ชันเงื่อนไขและการบันทึกข้อมูล ---
 mqttClient.on("message", (topic, message) => {
     try {
-        const data = JSON.parse(message.toString());
-        const temp = data.temperature || 0;
-        const cur = data.pzem?.current || 0;
-        const vib = data.accel_percent || 0;
-        const volt = data.accel_percent || 0;
-        const power = data.pzem?.power || 0;
+        const payload = JSON.parse(message.toString());
+        const mac = payload.mac || "unknown";
+        const points = [];
 
-        // ประกาศสถานะไฟเบื้องต้น (ปิดหมด)
+        // --- ส่วนที่ 1: ดึงค่าจาก Payload มาเตรียมไว้ใช้ ---
+        const temp = payload.temperature || 0;
+        const vib = payload.accel_percent || 0;
+        const pzem = payload.pzem || {};
+        const volt = pzem.voltage || 0;
+        const cur = pzem.current || 0;
+        const power = pzem.power || 0;
+
+        // --- ส่วนที่ 2: บันทึกลง InfluxDB (แทนที่ไฟล์ Python เดิม) ---
+        // Temperature
+        if (typeof payload.temperature === 'number') {
+            points.push(new Point("DS18B20").tag("device", mac).floatField("temperature", temp));
+        }
+        // PZEM
+        if (Object.keys(pzem).length > 0) {
+            const p = new Point("PZEM004T").tag("device", mac);
+            let hasData = false;
+            ["voltage", "current", "power", "energy", "frequency", "power_factor"].forEach(key => {
+                if (typeof pzem[key] === 'number') {
+                    p.floatField(key, pzem[key]);
+                    hasData = true;
+                }
+            });
+            if (hasData) points.push(p);
+        }
+        // Vibration
+        if (typeof payload.accel_percent === 'number') {
+            points.push(new Point("MPU6050").tag("device", mac).floatField("accel_percent", vib));
+        }
+
+        if (points.length > 0) {
+            writeApi.writePoints(points);
+            console.log(`📊 InfluxDB: Recorded ${points.length} points for ${mac}`);
+        }
+
+        // --- ส่วนที่ 3: Logic ควบคุมไฟ LED (Alert System) ---
+        let danger = false;
+        let warning = false;
+
+        if (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || power >= 20) {
+            danger = true;
+        } else if (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15) {
+            warning = true;
+        }
+
         let ledStates = {
-            green: { pin: 33, value: 0 },
-            yellow: { pin: 32, value: 0 },
-            red: { pin: 19, value: 0 }
+            green:  { pin: 33, value: (!danger && !warning) ? 1 : 0 },
+            yellow: { pin: 32, value: (warning && !danger) ? 1 : 0 },
+            red:    { pin: 19, value: (danger) ? 1 : 0 }
         };
 
-// ระดับความรุนแรง
-let danger = false;
-let warning = false;
-
-// -------- Temperature --------
-if (temp >= 35) danger = true;
-else if (temp >= 34) warning = true;
-
-// -------- Vibration --------
-if (vib >= 15) danger = true;
-else if (vib >= 5) warning = true;
-
-// -------- Current --------
-if (cur >= 8) danger = true;
-else if (cur >= 5) warning = true;
-
-if (volt >= 300) danger = true;
-else if (volt >= 250) warning = true;
-
-if (power >= 20) danger = true;
-else if (power >= 15) warning = true;
-
-// -------- สรุปสถานะ --------
-if (danger) {
-  ledStates.red.value = 1;
-}
-else if (warning) {
-  ledStates.yellow.value = 1;
-}
-else {
-  ledStates.green.value = 1;
-}
-
-        // --- ส่งคำสั่ง MQTT ไปที่ ESP32 ---
-        // ส่งสถานะไฟทั้ง 3 ดวงเพื่อให้ ESP32 อัปเดตพร้อมกัน
+        // ส่งคำสั่งกลับไปยัง ESP32
         Object.values(ledStates).forEach(led => {
             mqttClient.publish("test/cmd/led", JSON.stringify({ pin: led.pin, value: led.value }));
         });
 
-        // ... ส่วนบันทึก InfluxDB ...
     } catch (err) {
-        console.error("❌ Logic Error:", err);
+        console.error("❌ Process Error:", err);
     }
 });
 
 // =======================
-// API
+// 4. API Endpoints
 // =======================
-app.get("/", (req, res) => {
-  res.send("Factory Monitoring API running");
+app.get("/", (req, res) => res.send("Factory Monitoring API running"));
+
+app.get("/api/latest/:mac", (req, res) => {
+    const mac = req.params.mac.toLowerCase();
+    const fluxQuery = `
+        from(bucket: "${INFLUX_BUCKET}")
+          |> range(start: -24h)
+          |> filter(fn: (r) => r["device"] == "${mac}")
+          |> last()
+    `;
+
+    const result = {};
+    queryApi.queryRows(fluxQuery, {
+        next: (row, tableMeta) => {
+            const o = tableMeta.toObject(row);
+            result[o._field] = o._value;
+        },
+        complete: () => res.json(result),
+        error: (err) => res.status(500).json({ error: err.message })
+    });
 });
 
-app.get("/api/latest/:mac", async (req, res) => {
-  const mac = req.params.mac.toLowerCase();
-
-  const fluxQuery = `
-    from(bucket: "${INFLUX_BUCKET}")
-      |> range(start: -24h)
-      |> filter(fn: (r) => r["device"] == "${mac.toLowerCase()}")
-      |> last()
-  `;
-
-  const result = {};
-
-  queryApi.queryRows(fluxQuery, {
-    next: (row, tableMeta) => {
-      const o = tableMeta.toObject(row);
-      result[o._field] = o._value;
-    },
-    complete: () => {
-      res
-        .type("application/json; charset=utf-8")
-        .json(result);
-    },
-    error: err => {
-      res
-        .status(500)
-        .type("application/json; charset=utf-8")
-        .json(err);
-    }
-  });
-});
-
-app.get("/api/status", async (req, res) => {
-  try {
-    await queryApi.collectRows(`
-      from(bucket: "${INFLUX_BUCKET}")
-        |> range(start: -1m)
-        |> limit(n:1)
-    `);
-    res.json({ connected: true });
-  } catch (err) {
-    res.json({ connected: false, error: err.message });
-  }
-});
-
-
-// =======================
-app.listen(PORT, () => {
-  console.log(`API running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Server ready on port ${PORT}`));
