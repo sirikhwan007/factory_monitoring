@@ -227,15 +227,6 @@ $username_session = $_SESSION['username'] ?? 'ช่างเทคนิค';
                                     <?= nl2br(htmlspecialchars($row['detail'])) ?>
                                 </div>
 
-                                <h5 class="text-muted mb-2 mt-3">
-                                    <i class="fas fa-user-cog"></i> ช่างผู้รับผิดชอบ
-                                </h5>
-                                <div class="p-3 bg-light rounded border mb-3">
-                                    <?= !empty($row['username'])
-                                        ? htmlspecialchars($row['username'])
-                                        : '<span class="text-muted fst-italic">ยังไม่ได้มอบหมายช่าง</span>'; ?>
-                                </div>
-
                                 <?php if (!empty($row['repair_time'])): ?>
                                     <h5 class="text-muted mb-2 mt-4">
                                         <i class="fas fa-calendar-check"></i> วันที่ซ่อมเสร็จ
