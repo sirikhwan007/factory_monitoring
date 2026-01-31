@@ -104,10 +104,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         <span>พนักงานหน้างาน</span>
                     </a>
                 </li>
-
            <li>
-                    <a href="/factory_monitoring/Manager/history_manager.php"
-                        class="<?= $currentPage === 'history_manager.php' ? 'active' : '' ?>">
+                    <a href="/factory_monitoring/repair/reporthistory.php"
+                        class="<?= $currentPage === 'reporthistory.php' ? 'active' : '' ?>">
                         <i class="fas fa-screwdriver-wrench"></i>
                         <span>ประวัติการแจ้งซ่อม</span>
                     </a>

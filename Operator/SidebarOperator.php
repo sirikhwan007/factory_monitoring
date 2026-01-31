@@ -47,7 +47,7 @@ $activePage = $activePage ?? '';
 
             <!-- History -->
             <li>
-                <a href="/factory_monitoring/operator/history_operator.php"
+                <a href="/factory_monitoring/repair/reporthistory.php"
                    class="<?= $activePage === 'history' ? 'active' : '' ?>">
                     <i class="fa-solid fa-clock"></i>
                     <span class="sb-text">รายการแจ้งซ่อม</span>
