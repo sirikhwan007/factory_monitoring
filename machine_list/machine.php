@@ -83,7 +83,6 @@ $conn->close();
           <i class="fa-solid fa-plus"></i> เพิ่มเครื่องจักร
         </a>
       </div>
-
       <div class="machine-cards-wrapper">
         <?php if (count($machines) > 0): ?>
           <?php foreach ($machines as $m): ?>
