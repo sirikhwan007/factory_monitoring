@@ -2,54 +2,36 @@
 session_start();
 require_once "../config.php";
 
-/* ===== AUTH GUARD ===== */
-if (!isset($_SESSION['user_id'])) {
+/* ===== Auth Guard ===== */
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Manager') {
     header("Location: /factory_monitoring/login.php");
     exit();
 }
 
-/* ===== LOAD OPERATOR DATA ===== */
+/* ===== Load Manager Data ===== */
 $user_id = $_SESSION['user_id'];
 
 $stmt = $conn->prepare("
-    SELECT username, email, phone, profile_image
-    FROM users
+    SELECT username, email, phone, profile_image 
+    FROM users 
     WHERE user_id = ?
 ");
-
-$stmt->bind_param("i", $user_id);
+$stmt->bind_param("s", $user_id);
 $stmt->execute();
+$op = $stmt->get_result()->fetch_assoc();
 
-$result = $stmt->get_result();
-
-/* ===== DATA GUARD ===== */
-if ($result->num_rows === 0) {
-    // session มี แต่ user ไม่มี → state พัง
-    session_destroy();
-    header("Location: /factory_monitoring/login.php");
-    exit();
-}
-
-$op = $result->fetch_assoc();
-
-/* ===== PROFILE IMAGE ===== */
-$uploadPath = "/factory_monitoring/Manager/uploads/";
-$profileImage = (!empty($op['profile_image']))
-    ? $uploadPath . htmlspecialchars($op['profile_image'])
-    : $uploadPath . "default_profile.png";
+$profileImage = !empty($op['profile_image'])
+    ? "/factory_monitoring/admin/uploads/" . $op['profile_image']
+    : "/factory_monitoring/admin/uploads/default.png";
 ?>
-
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <title>Operator Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!-- CSS -->
-    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/profile.css">
-
+    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/profile.css">
     <!-- FontAwesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -58,27 +40,22 @@ $profileImage = (!empty($op['profile_image']))
 
 <div class="profile-container">
 
-    <!-- ===== PROFILE IMAGE ===== -->
-    <img src="<?= $profileImage ?>"
-         class="profile-img"
-         onerror="this.src='/factory_monitoring/Manager/uploads/default_profile.png'">
+    <img src="<?= $profileImage ?>" class="profile-img">
 
     <h2><?= htmlspecialchars($op['username']) ?></h2>
-    <p class="role">Operator</p>
+    <p class="role">Manager</p>
 
-    <!-- ===== INFO ===== -->
     <div class="info-box">
         <p><strong>Email:</strong> <?= htmlspecialchars($op['email']) ?></p>
         <p><strong>Phone:</strong> <?= htmlspecialchars($op['phone']) ?></p>
     </div>
 
-    <!-- ===== ACTION ===== -->
     <button class="btn-edit" onclick="openPasswordModal()">
         <i class="fa-solid fa-key"></i> เปลี่ยนรหัสผ่าน
     </button>
 </div>
 
-<!-- ===== CHANGE PASSWORD MODAL ===== -->
+<!-- ===== Modal Change Password ===== -->
 <div id="passwordModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closePasswordModal()">&times;</span>

@@ -8,100 +8,137 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
+/* ===== SESSION DATA ===== */
 $username = $_SESSION['username'] ?? 'Manager';
-$role = $_SESSION['role'] ?? 'Manager';
-$uploadPath = '/factory_monitoring/admin/uploads/';
+$role     = $_SESSION['role'] ?? 'Manager';
 
+/* ===== PROFILE IMAGE (จาก SESSION) ===== */
+$uploadPath = "/factory_monitoring/Manager/uploads/";
+$profileImage = !empty($_SESSION['profile_image'])
+    ? $uploadPath . $_SESSION['profile_image']
+    : $uploadPath . "default_profile.png";
 
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 
-<link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
+<!DOCTYPE html>
+<html lang="th">
 
-<div class="sidebar">
+<head>
+    <meta charset="UTF-8">
+    <title>Sidebar</title>
 
-    <div class="sidebar-top">
+    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        <a href="/factory_monitoring/manager/profile.php" class="profile-btn">
-            <div class="sb-logo">
-                <img src="<?= $uploadPath . htmlspecialchars($profileImage) ?>" class="profile-img"
-                    onerror="this.src='/factory_monitoring/assets/img/default_profile.png'">
+    <style>
+        /* ===== TOGGLE BUTTON ===== */
+        .toggle-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 2000;
+            background: #6f1e51;
+            color: #fff;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: none;
+        }
 
+        /* SHOW TOGGLE ON MOBILE */
+        @media (max-width: 992px) {
+            .toggle-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
 
-                <div class="profile-info">
-                    <span class="profile-name"><?= htmlspecialchars($username) ?></span>
-                    <span class="profile-role"><?= htmlspecialchars($role) ?></span>
+<body>
+
+    <button class="toggle-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="sidebar active">
+
+        <div class="sidebar-top">
+
+            <a href="/factory_monitoring/Manager/profile.php" class="profile-btn">
+                <div class="sb-logo">
+                    <img src="<?= $profileImage ?>"
+                        class="profile-img"
+                        onerror="this.src='/factory_monitoring/Manager/uploads/default_profile.png'">
+
+                    <div class="profile-info">
+                        <span class="profile-name"><?= htmlspecialchars($username) ?></span>
+                        <span class="profile-role"><?= htmlspecialchars($role) ?></span>
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
 
-        <ul class="sb-ul">
+            <ul class="sb-ul">
 
-            <li>
-                <a href="/factory_monitoring/manager/dashboard.php"
-                    class="<?= $currentPage === 'dashboard.php' ? 'active' : '' ?>">
-                    <i class="fas fa-chart-line"></i>
-                    <span>หน้าหลัก</span>
-                </a>
-            </li>
+                <li>
+                    <a href="/factory_monitoring/Manager/dashboard.php"
+                        class="<?= $currentPage === 'dashboard.php' ? 'active' : '' ?>">
+                        <i class="fas fa-chart-line"></i>
+                        <span>หน้าหลัก</span>
+                    </a>
+                </li>
 
-            <li>
-                <a href="/factory_monitoring/machine_list/machine.php"
-                    class="<?= $currentPage === 'machines.php' ? 'active' : '' ?>">
-                    <i class="fas fa-industry"></i>
-                    <span>สถานะเครื่องจักร</span>
-                </a>
-            </li>
+                <li>
+                    <a href="/factory_monitoring/Machine_list/machine.php"
+                        class="<?= $currentPage === 'machine.php' ? 'active' : '' ?>">
+                        <i class="fas fa-industry"></i>
+                        <span>สถานะเครื่องจักร</span>
+                    </a>
+                </li>
 
-            <li>
-                <a href="/factory_monitoring/manager/downtime.php"
-                    class="<?= $currentPage === 'downtime.php' ? 'active' : '' ?>">
-                    <i class="fas fa-stopwatch"></i>
-                    <span>Downtime / OEE</span>
-                </a>
-            </li>
+                <li>
+                    <a href="/factory_monitoring/Manager/user_roles.php"
+                        class="<?= $currentPage === 'user_roles.php' ? 'active' : '' ?>">
+                        <i class="fas fa-user-clock"></i>
+                        <span>พนักงานหน้างาน</span>
+                    </a>
+                </li>
 
-            <li>
-                <a href="/factory_monitoring/manager/history_manager.php"
-                    class="<?= $currentPage === 'history_manager.php' ? 'active' : '' ?>">
-                    <i class="fas fa-screwdriver-wrench"></i>
-                    <span>ประวัติการแจ้งซ่อม</span>
-                </a>
-            </li>
+           <li>
+                    <a href="/factory_monitoring/Manager/history_manager.php"
+                        class="<?= $currentPage === 'history_manager.php' ? 'active' : '' ?>">
+                        <i class="fas fa-screwdriver-wrench"></i>
+                        <span>ประวัติการแจ้งซ่อม</span>
+                    </a>
+                </li> 
 
-            <li>
-                <a href="/factory_monitoring/manager/pm_schedule.php"
-                    class="<?= $currentPage === 'pm_schedule.php' ? 'active' : '' ?>">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>ตาราง PM</span>
-                </a>
-            </li>
+         <!--   <li>  
+                    <a href="/factory_monitoring/Manager/maintenance_schedule.php"
+                        class="<?= $currentPage === 'maintenance_schedule.php' ? 'active' : '' ?>">
+                        <i class="fas fa-file-lines"></i>
+                        <span>ประวัติการบำรุงรักษา</span>
+                    </a>
+                </li>  -->
 
-            <li>
-                <a href="/factory_monitoring/manager/workforce.php"
-                    class="<?= $currentPage === 'workforce.php' ? 'active' : '' ?>">
-                    <i class="fas fa-user-clock"></i>
-                    <span>พนักงานหน้างาน</span>
-                </a>
-            </li>
+            </ul>
+        </div>
 
-            <li>
-                <a href="/factory_monitoring/manager/reports.php"
-                    class="<?= $currentPage === 'reports.php' ? 'active' : '' ?>">
-                    <i class="fas fa-file-lines"></i>
-                    <span>rererrerer</span>
-                </a>
-            </li>
+        <div class="sidebar-bottom">
+            <a href="/factory_monitoring/logout.php" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>ออกจากระบบ</span>
+            </a>
+        </div>
 
-        </ul>
     </div>
 
-    <div class="sidebar-bottom">
-        <a href="/factory_monitoring/logout.php" class="btn-logout">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>ออกจากระบบ</span>
-        </a>
-    </div>
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+    </script>
 
-</div>
+</body>
+
+</html>

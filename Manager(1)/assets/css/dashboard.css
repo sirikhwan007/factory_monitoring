@@ -1,0 +1,104 @@
+/* ===============================
+   Dashboard Layout
+================================ */
+.main {
+    padding: 24px;
+    background-color: #f6f8fb;
+    min-height: 100vh;
+    margin-left: 250px;   /* 🔥 ให้ตรงกับ sidebar */
+    transition: all .3s ease;
+}
+
+.dashboard {
+    max-width: 1400px;
+    margin: auto;
+}
+
+.dashboard-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+/* ===============================
+   KPI Cards
+================================ */
+.kpi-card {
+    border: none;
+    border-radius: 14px;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+
+.kpi-card h6 {
+    font-size: .9rem;
+    color: #6c757d;
+    margin-bottom: 6px;
+}
+
+.kpi-card h3 {
+    font-weight: 700;
+}
+
+/* ===============================
+   Table Card
+================================ */
+.card {
+    border-radius: 14px;
+    border: none;
+}
+
+.card h5 {
+    font-weight: 600;
+}
+
+/* ===============================
+   Table
+================================ */
+.table {
+    vertical-align: middle;
+}
+
+.table th {
+    font-size: .85rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.table td {
+    font-size: .95rem;
+}
+
+/* ===============================
+   Badges
+================================ */
+.badge {
+    padding: .45em .65em;
+    font-size: .75rem;
+    border-radius: 8px;
+}
+
+/* ===============================
+   Sidebar Interaction
+================================ */
+.main.expanded {
+    margin-left: 80px;
+}
+
+/* ===============================
+   Responsive
+================================ */
+@media (max-width: 768px) {
+    .main {
+        padding: 16px;
+    }
+
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+}

@@ -1,104 +1,114 @@
-/* ===============================
-   Dashboard Layout
-================================ */
-.main {
-    padding: 24px;
-    background-color: #f6f8fb;
+body {
+    background: #f4f6f9;
+    font-family: 'Sarabun', sans-serif;
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    background: #f4f6f9;
+}
+
+
+.layout-wrapper {
     min-height: 100vh;
-    margin-left: 250px;   /* 🔥 ให้ตรงกับ sidebar */
-    transition: all .3s ease;
+    margin-left: 250px;
+}
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
-.dashboard {
-    max-width: 1400px;
-    margin: auto;
+
+h2 {
+    margin-bottom: 5px;
 }
 
-.dashboard-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 4px;
+.subtitle {
+    color: #777;
+    margin-bottom: 20px;
 }
 
-/* ===============================
-   KPI Cards
-================================ */
+/* KPI */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
 .kpi-card {
-    border: none;
+    background: #fff;
+    padding: 20px;
     border-radius: 14px;
-    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,.05);
 }
 
-.kpi-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0,0,0,.08);
-}
-
-.kpi-card h6 {
-    font-size: .9rem;
-    color: #6c757d;
-    margin-bottom: 6px;
+.kpi-card span {
+    font-size: 14px;
+    color: #666;
 }
 
 .kpi-card h3 {
-    font-weight: 700;
+    margin-top: 8px;
+    font-size: 28px;
 }
 
-/* ===============================
-   Table Card
-================================ */
+/* สี */
+.success { border-left: 6px solid #27ae60; }
+.warning { border-left: 6px solid #f39c12; }
+.danger  { border-left: 6px solid #c0392b; }
+
+/* TABLE */
 .card {
+    background: #fff;
+    padding: 20px;
     border-radius: 14px;
-    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,.05);
 }
 
-.card h5 {
-    font-weight: 600;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
 }
 
-/* ===============================
-   Table
-================================ */
-.table {
-    vertical-align: middle;
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
 }
 
-.table th {
-    font-size: .85rem;
-    color: #6c757d;
-    text-transform: uppercase;
-    border-bottom: 1px solid #e9ecef;
+th {
+    background: #f8f9fa;
 }
 
-.table td {
-    font-size: .95rem;
-}
-
-/* ===============================
-   Badges
-================================ */
 .badge {
-    padding: .45em .65em;
-    font-size: .75rem;
-    border-radius: 8px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #fff;
 }
 
-/* ===============================
-   Sidebar Interaction
-================================ */
-.main.expanded {
-    margin-left: 80px;
-}
+.badge.online { background: #27ae60; }
+.badge.offline { background: #c0392b; }
 
-/* ===============================
-   Responsive
-================================ */
-@media (max-width: 768px) {
-    .main {
-        padding: 16px;
+@media(max-width:992px){
+    .main-content {
+        margin-left: 0;
+    }
+}
+@media (max-width: 992px) {
+    .layout-wrapper {
+        flex-direction: column;
     }
 
-    .dashboard-title {
-        font-size: 1.5rem;
+    .sidebar {
+        width: 100%;
+        min-height: auto;
     }
 }
