@@ -387,7 +387,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                         $no = 1;
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()):
-                                // ... (Logic สถานะ และ วันที่ เหมือนเดิม ไม่ต้องแก้) ...
                                 $status_class = '';
                                 $status_icon = '';
                                 switch ($row['status']) {

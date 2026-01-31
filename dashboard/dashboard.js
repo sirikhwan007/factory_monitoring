@@ -4,7 +4,6 @@ const API_BASE = "https://factory-monitoring.onrender.com";
 
 // --- 1. Plugin และ Utility Functions ---
 
-// Plugin สำหรับเข็ม (Needle) ของ Gauge
 const gaugeNeedlePlugin = {
   id: 'gaugeNeedle',
   afterDatasetDraw(chart) {
@@ -185,7 +184,7 @@ function updateLineChart(chart, value, timeDateObject, smooth = true) {
     chart.data.datasets[0].data.shift();
   }
 
-  // ✅ smooth เฉพาะ live
+  // smooth เฉพาะ live
   if (smooth) {
     chart.data.datasets[0].data =
       smoothData(chart.data.datasets[0].data, 3);
@@ -237,30 +236,32 @@ async function checkInfluxStatus() {
   // ดึงข้อมูลจาก API
   async function fetchData() {
     try {
-      const res = await fetch(`${API_BASE}/api/latest/${MACHINE_MAC}`);
-      const data = await res.json();
-      // console.log("API data:", data);
-      if (!data || Object.keys(data).length === 0) return;
+        const urlParams = new URLSearchParams(window.location.search);
+        const MACHINE_MAC = urlParams.get('id') || "01"; 
+        
+        const res = await fetch(`${API_BASE}/api/latest/${encodeURIComponent(MACHINE_MAC)}`);
+        const data = await res.json();
+        
+        if (!data || Object.keys(data).length === 0) return;
 
-      // สร้าง Date Object ปัจจุบัน (สำคัญสำหรับแกน เวลา)
-      const now = new Date();
+        const now = new Date();
 
       // อัปเดตตัวเลข Text
       const elTemp = document.getElementById("temp"); if(elTemp) elTemp.textContent = data.temperature?.toFixed(2) ?? "--";
-      const elVib = document.getElementById("vib"); if(elVib) elVib.textContent = data.vibration?.toFixed(2) ?? "--";
+      const elVib = document.getElementById("vib"); if(elVib) elVib.textContent = data.accel_percent?.toFixed(2) ?? "--";
       const elVolt = document.getElementById("volt"); if(elVolt) elVolt.textContent = data.voltage?.toFixed(2) ?? "--";
       const elCurr = document.getElementById("curr"); if(elCurr) elCurr.textContent = data.current?.toFixed(2) ?? "--";
       const elPow = document.getElementById("pow"); if(elPow) elPow.textContent = data.power?.toFixed(2) ?? "--";
 
       // อัปเดตสถานะเครื่องจักร
-      // --- เพิ่มฟังก์ชันตรวจสอบสถานะ (ใส่ไว้ข้างนอกหรือใน fetchData ก็ได้) ---
+      // --- เพิ่มฟังก์ชันตรวจสอบสถานะ
 function getMachineStatus(data) {
     let status = { text: "ปกติ", className: "bg-success", isAbnormal: false };
 
     // กำหนดเกณฑ์ตามที่คุณให้มา
     const isDanger = (
         data.temperature >= 35 ||
-        data.vibration >= 15 ||
+        data.accel_percent >= 15 ||
         data.current >= 8 ||
         data.voltage >= 300 ||
         data.power >= 20
@@ -275,9 +276,9 @@ function getMachineStatus(data) {
     );
 
     if (isDanger) {
-        status = { text: "ผิดปกติ (อันตราย)", className: "bg-danger", isAbnormal: true };
+        status = { text: "อันตราย", className: "bg-danger", isAbnormal: true };
     } else if (isWarning) {
-        status = { text: "ผิดปกติ (เฝ้าระวัง)", className: "bg-warning text-dark", isAbnormal: true };
+        status = { text: "ผิดปกติ", className: "bg-warning text-dark", isAbnormal: true };
     } else if (data.power <= 0.5) {
         // เงื่อนไขเดิม: ถ้าไม่มีไฟเข้าเลยแสดงว่าหยุดทำงาน
         status = { text: "หยุดทำงาน", className: "bg-secondary", isAbnormal: false };
@@ -303,14 +304,14 @@ if (statusEl && data) {
 
       // อัปเดตกราฟเส้น (ส่ง now ที่เป็น Date Object ไป)
       updateLineChart(tempChart, data.temperature, now);
-      updateLineChart(vibChart, data.vibration, now);
+      updateLineChart(vibChart, data.accel_percent, now);
       updateLineChart(voltChart, data.voltage, now);
       updateLineChart(currChart, data.current, now);
       updateLineChart(powChart, data.power, now);
 
       // อัปเดต Gauge
       updateGauge(tempGauge, data.temperature, 100);
-      updateGauge(vibGauge, data.vibration, 10);
+      updateGauge(vibGauge, data.accel_percent, 10);
       updateGauge(voltGauge, data.voltage, 400);
       updateGauge(currGauge, data.current, 50);
       updateGauge(powGauge, data.power, 1000);
