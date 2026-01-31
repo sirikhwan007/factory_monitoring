@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $insert_sql = "INSERT INTO repair_history (machine_id, reporter, detail, status, technician_id, report_time) 
                        VALUES (?, ?, ?, ?, ?, NOW())";
         $stmt = $conn->prepare($insert_sql);
-        $stmt->bind_param("sssss", $m_id, $reporter, $detail, $status, $technician_id);
+        $stmt->bind_param("ssssi", $m_id, $reporter, $detail, $status, $technician_id);
     }
 
     if ($stmt->execute()) {
