@@ -83,7 +83,7 @@ $repairs = $conn->query("
 <section class="main p-4">
 
 <h3>Manager Control Panel</h3>
-<p class="text-muted">ภาพรวมระบบโรงงาน (ข้อมูลจริง)</p>
+<p class="text-muted">ภาพรวมระบบโรงงาน</p>
 
 <!-- KPI -->
 <div class="row g-4 mb-4">
