@@ -5,35 +5,27 @@ if (!isset($_SESSION['user_id'])) {
   header("Location: /factory_monitoring/login.php");
   exit();
 }
-
 // ตรวจสอบ Role ของผู้ใช้งาน (ดึงจาก session ที่คุณตั้งไว้ตอน Login)
 $user_role = $_SESSION['role'] ?? 'Operator';
-
-
 // รับค่า machine_id ที่ส่งมา
 $machine_id = $_GET['id'] ?? null;
-
 if (!$machine_id) {
   die("ไม่พบเครื่องจักรที่เลือก");
 }
-
 // เชื่อมต่อฐานข้อมูล
 $conn = new mysqli("localhost", "root", "", "factory_monitoring");
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
-
 // ดึงข้อมูลเครื่องจักร
 $stmt = $conn->prepare("SELECT * FROM machines WHERE machine_id = ?");
 $stmt->bind_param("s", $machine_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $machine = $result->fetch_assoc();
-
 if (!$machine) {
   die("ไม่พบข้อมูลเครื่องจักร");
 }
-
 // ดึงไฟล์ Datasheet
 $doc = null;
 $q = $conn->prepare("SELECT file_path FROM machine_documents WHERE machine_id = ?");
@@ -48,11 +40,8 @@ $sidebar_paths = [
   'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
   'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
 ];
-
 // เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
-
-
 
 $stmt->close();
 $conn->close();
@@ -77,7 +66,7 @@ $conn->close();
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
-    .dashboard { 
+    .dashboard {
       margin-left: 250px;
     }
   </style>
@@ -96,15 +85,12 @@ $conn->close();
         <div class="dashboard-header">
           Motor Dashboard
         </div>
-
-        
-
         <!--เอาไว้แสดงข้อมูลเครื่องจักร-->
         <div class="container my-4">
           <div class="card mb-3 shadow-sm p-3">
             <div class="row g-3 align-items-center">
               <!-- รูปเครื่องจักร -->
-              <div class="col-md-4 text-center" onclick="location.href='/factory_monitoring/machine_list/machine_detail.php?id=<?php echo $machine['machine_id']; ?>'" style="cursor: pointer;">        
+              <div class="col-md-4 text-center" onclick="location.href='/factory_monitoring/machine_list/machine_detail.php?id=<?php echo $machine['machine_id']; ?>'" style="cursor: pointer;">
                 <?php
                 // ตรวจสอบว่ามีข้อมูลชื่อไฟล์รูปภาพหรือไม่
                 $imgSrc = !empty($machine['photo_url'])

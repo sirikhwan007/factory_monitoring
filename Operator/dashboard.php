@@ -78,8 +78,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
             <div class="container-fluid">
 
                 <div class="dashboard">
-
-
+                    <h2 class="mb-4">แดชบอร์ดผู้ปฏิบัติงาน</h2>
                     <!-- Machine Overview -->
                     <h4 class="mt-3 mb-3">ข้อมูลเครื่องจักร</h4>
                     <div class="row g-3">
