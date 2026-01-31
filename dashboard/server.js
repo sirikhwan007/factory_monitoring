@@ -133,7 +133,7 @@ app.get("/api/latest/:mac", async (req, res) => {
 
   const fluxQuery = `
     from(bucket: "${INFLUX_BUCKET}")
-      |> range(start: -10m)
+      |> range(start: -24h)
       |> filter(fn: (r) => r["device"] == "${mac.toLowerCase()}")
       |> last()
   `;
