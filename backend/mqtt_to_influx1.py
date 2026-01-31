@@ -3,6 +3,8 @@ import json
 import paho.mqtt.client as mqtt
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
+from dotenv import load_dotenv
+load_dotenv()
 
 # ===== CONFIG (ดึงจาก Environment Variables) =====
 # บน Render ให้ไปตั้งค่าที่ Environment -> Add Environment Variable
