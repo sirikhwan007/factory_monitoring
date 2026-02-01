@@ -23,7 +23,7 @@ $username  = $_SESSION['username'] ?? 'ช่างเทคนิค';
 // ===============================
 $sql = "UPDATE repair_history
         SET technician_id = ?,
-            technician_username = ?,
+            username = ?, 
             status = 'กำลังซ่อม'
         WHERE id = ?";
 

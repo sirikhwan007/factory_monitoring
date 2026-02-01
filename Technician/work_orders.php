@@ -328,17 +328,23 @@ $result = $stmt->get_result();
                                 </span>
                             </td>
                             <td class="text-center">
-                                <?php if (!$isAssigned): ?>
-                                    <form method="post" action="actions/accept_job.php">
-                                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                                        <button class="btn btn-success btn-sm" onclick="return confirm('ยืนยันรับงาน?')">
-                                            ✔ รับงาน
-                                        </button>
-                                    </form>
-                                <?php else: ?>
-                                    <span class="badge bg-success">รับแล้ว</span>
-                                <?php endif; ?>
-                            </td>
+    <?php if (!$isAssigned): ?>
+        <form method="post" action="actions/accept_job.php">
+            <input type="hidden" name="id" value="<?= $row['id'] ?>">
+            <button class="btn btn-success btn-sm" onclick="return confirm('ยืนยันรับงาน?')">
+                ✔ รับงาน
+            </button>
+        </form>
+    <?php else: ?>
+        <?php if ($row['technician_id'] == $current_user_id): ?>
+            <a href="work_detail.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">
+                <i class="fas fa-edit"></i> จัดการงาน
+            </a>
+        <?php else: ?>
+            <span class="badge bg-secondary">ช่างท่านอื่นรับแล้ว</span>
+        <?php endif; ?>
+    <?php endif; ?>
+</td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>

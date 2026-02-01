@@ -346,54 +346,37 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
                         <div class="col-lg-7 mb-4">
                             <div class="card card-custom h-100">
                                 <div class="card-header bg-primary text-white">
-                                    <strong><i class="fas fa-tools"></i> ส่วนแก้ไข</strong>
+                                    <strong><i class="fas fa-tools"></i> ส่วนการจัดการ / มอบหมายงาน</strong>
                                 </div>
                                 <div class="card-body">
 
                                     <div class="row">
-                                        <div class="mb-4">
-                                            <label class="form-label text-muted">ช่างที่รับผิดชอบปัจจุบัน (จากใบแจ้งซ่อม):</label>
-                                            <div class="p-4 mb-2 bg-light border-start border-4 border-success rounded shadow-sm">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="fas fa-id-badge fa-3x text-success"></i>
-                                                    </div>
-                                                    <div class="ms-4">
-                                                        <?php if (!empty($row['username'])): ?>
-                                                            <h4 class="mb-0 text-dark"><?= htmlspecialchars($row['username']) ?></h4>
-                                                            <span class="badge bg-success-soft text-success border border-success">กำลังรับผิดชอบงานนี้</span>
-                                                        <?php else: ?>
-                                                            <h4 class="mb-0 text-danger">ยังไม่ได้มอบหมายช่าง</h4>
-                                                            <span class="text-muted small">กรุณาเลือกช่างจากรายการด้านล่าง</span>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="status" class="form-label">อัปเดตสถานะ:</label>
+                                            <select class="form-select" name="status" id="status" required>
+                                                <option value="รอดำเนินการ" <?= $row['status'] == 'รอดำเนินการ' ? 'selected' : '' ?>>รอดำเนินการ</option>
+                                                <option value="ยกเลิก" <?= $row['status'] == 'ยกเลิก' ? 'selected' : '' ?>>ยกเลิก</option>
+                                                
+                                            </select>
                                         </div>
 
-                                        <div class="mb-4">
-                                            <label for="technician_id" class="form-label fw-bold text-primary">
-                                                <i class="fas fa-user-edit"></i> เปลี่ยนตัวช่างผู้รับผิดชอบ:
-                                            </label>
-                                            <select class="form-select form-select-lg border-primary" name="technician_id" id="technician_id">
-                                                <option value="">-- เลือกเพื่อมอบหมายช่างคนใหม่ --</option>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="technician_id" class="form-label">ช่างผู้รับผิดชอบ:</label>
+                                            <select class="form-select" name="technician_id" id="technician_id">
+                                                <option value="">-- ยังไม่ระบุ --</option>
                                                 <?php
                                                 if ($tech_result->num_rows > 0) {
                                                     $tech_result->data_seek(0);
                                                     while ($tech = $tech_result->fetch_assoc()):
-                                                ?>
+                                                        ?>
                                                         <option value="<?= $tech['user_id'] ?>" <?= (isset($row['technician_id']) && $row['technician_id'] == $tech['user_id']) ? 'selected' : '' ?>>
                                                             <?= htmlspecialchars($tech['username']) ?>
-                                                            <?= ($row['technician_id'] == $tech['user_id']) ? '(ช่างคนปัจจุบัน)' : '' ?>
                                                         </option>
-                                                <?php
+                                                        <?php
                                                     endwhile;
                                                 }
                                                 ?>
                                             </select>
-                                            <p class="form-text text-muted mt-2">
-                                                <i class="fas fa-info-circle"></i> หากต้องการคงช่างคนเดิมไว้ ไม่ต้องแก้ไขส่วนนี้
-                                            </p>
                                         </div>
                                     </div>
 
