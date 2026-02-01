@@ -277,14 +277,35 @@ async function checkInfluxStatus() {
 
       // อัปเดตสถานะเครื่องจักรตาม Power (W)
       // ในฟังก์ชัน fetchData()
+// อัปเดตสถานะเครื่องจักรตามค่าเซ็นเซอร์หลายตัว (สอดคล้องกับ Logic ของ Server)
 const statusEl = document.getElementById("machine-status");
 if (statusEl) {
-    // ถ้า Power มากกว่า 0.5W ถือว่าเครื่องทำงาน (เผื่อ noise ของ sensor)
-    if (data.power > 0.5) { 
-        statusEl.className = "badge bg-success";
-        statusEl.textContent = "กำลังทำงาน";
-    } else {
+    const temp = data.temperature || 0;
+    const vib = data.vibration || 0;
+    const cur = data.current || 0;
+    const volt = data.voltage || 0;
+    const power = data.power || 0;
+
+    // กำหนดเงื่อนไข Danger และ Warning
+    const isDanger = (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || power >= 20);
+    const isWarning = (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15);
+    const isRunning = (power > 0.5); // เช็คว่าเครื่องเปิดอยู่หรือไม่
+
+    if (isDanger) {
+        // สถานะผิดปกติรุนแรง (เทียบเท่าไฟสีแดง)
         statusEl.className = "badge bg-danger";
+        statusEl.textContent = "ผิดปกติ (อันตราย)";
+    } else if (isWarning) {
+        // สถานะเตือน (เทียบเท่าไฟสีเหลือง)
+        statusEl.className = "badge bg-warning text-dark"; // ใช้ text-dark เพื่อให้ชัดเจนบนสีเหลือง
+        statusEl.textContent = "ผิดปกติ (เฝ้าระวัง)";
+    } else if (isRunning) {
+        // สถานะทำงานปกติ (เทียบเท่าไฟสีเขียว)
+        statusEl.className = "badge bg-success";
+        statusEl.textContent = "กำลังทำงานปกติ";
+    } else {
+        // สถานะหยุดทำงาน
+        statusEl.className = "badge bg-secondary"; 
         statusEl.textContent = "หยุดทำงาน";
     }
 }
@@ -293,11 +314,11 @@ if (statusEl) {
       if (updatedEl) updatedEl.textContent = "Last update: " + now.toLocaleTimeString();
 
       // อัปเดตกราฟเส้น (ส่ง now ที่เป็น Date Object ไป)
-      updateLineChart(tempChart, data.temperature, now);
-      updateLineChart(vibChart, data.vibration, now);
-      updateLineChart(voltChart, data.voltage, now);
-      updateLineChart(currChart, data.current, now);
-      updateLineChart(powChart, data.power, now);
+      updateLineChart(tempChart, data.temperature, now, false);
+      updateLineChart(vibChart, data.vibration, now, false);
+      updateLineChart(voltChart, data.voltage, now, false);
+      updateLineChart(currChart, data.current, now, false);
+      updateLineChart(powChart, data.power, now, false);
 
       // อัปเดต Gauge
       updateGauge(tempGauge, data.temperature, 100);
