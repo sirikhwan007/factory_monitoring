@@ -34,34 +34,20 @@ h2 {
 }
 
 /* KPI */
-.kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.kpi-card {
+/* KPI CARD */
+.card.kpi {
     background: #fff;
     padding: 20px;
     border-radius: 14px;
     box-shadow: 0 4px 12px rgba(0,0,0,.05);
+    border-left: 6px solid transparent;
 }
 
-.kpi-card span {
-    font-size: 14px;
-    color: #666;
-}
-
-.kpi-card h3 {
-    margin-top: 8px;
-    font-size: 28px;
-}
-
-/* สี */
-.success { border-left: 6px solid #27ae60; }
-.warning { border-left: 6px solid #f39c12; }
-.danger  { border-left: 6px solid #c0392b; }
+/* สี KPI */
+.kpi.success { border-left-color: #27ae60; }
+.kpi.warning { border-left-color: #f39c12; }
+.kpi.danger  { border-left-color: #c0392b; }
+.kpi.info    { border-left-color: #0d6efd; } /* งานเดือนนี้ */
 
 /* TABLE */
 .card {
@@ -109,6 +95,7 @@ th {
 
     .sidebar {
         width: 100%;
-        min-height: auto;
+        height: auto;
+        position: relative;
     }
 }
