@@ -29,6 +29,33 @@ function initSearch() {
     });
 }
 
+function filterStatus(status) {
+    const cards = document.querySelectorAll('.machine-card');
+    
+    // จัดการเรื่องความสวยงามของปุ่ม (Active class)
+    const buttons = document.querySelectorAll('.status-filter .btn');
+    buttons.forEach(btn => {
+        if (btn.textContent.includes(status) || (status === 'all' && btn.textContent.includes('ทั้งหมด'))) {
+            btn.classList.add('btn-primary', 'text-white');
+            btn.classList.remove('btn-outline-primary', 'btn-outline-success', 'btn-outline-warning', 'btn-outline-secondary');
+        } else {
+            btn.classList.remove('btn-primary', 'text-white');
+        }
+    });
+
+    cards.forEach(card => {
+        const machineStatus = card.getAttribute('data-status-text') || "";
+        
+        if (status === 'all') {
+            card.style.display = "block";
+        } else if (machineStatus.includes(status)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}
+
 // ฟังก์ชันอัปเดตสถานะเครื่องจักรจาก API
 async function updateMachineStatus(machineId) {
     try {
@@ -45,18 +72,15 @@ async function updateMachineStatus(machineId) {
         const isWarning = (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15);
         const isRunning = (power > 0.5); 
 
+        const card = document.querySelector(`.machine-card[onclick*="id=${machineId}"]`);
         const statusElement = document.getElementById(`status-${machineId}`);
-        if (!statusElement) return;
-
+        
         let statusText = "";
         let color = "";
 
-        if (isDanger) {
-            statusText = "ผิดปกติ (อันตราย)";
-            color = "#dc3545";
-        } else if (isWarning) {
-            statusText = "ผิดปกติ (เฝ้าระวัง)";
-            color = "#ffc107";
+        if (isDanger || isWarning) {
+            statusText = "ผิดปกติ"; // ยุบรวมเพื่อให้ Filter ง่ายขึ้น
+            color = (isDanger) ? "#dc3545" : "#ffc107";
         } else if (isRunning) {
             statusText = "กำลังทำงานปกติ";
             color = "#28a745";
@@ -65,17 +89,42 @@ async function updateMachineStatus(machineId) {
             color = "#6c757d";
         }
 
-        statusElement.innerHTML = `สถานะ: <span style="font-weight: bold;">${statusText}</span>`;
-        statusElement.style.color = color;
+        // เก็บสถานะไว้ที่ตัว Card เพื่อใช้ในการกรอง (Filter)
+        if (card) {
+            card.setAttribute('data-status-text', statusText);
+        }
+
+        if (statusElement) {
+            statusElement.innerHTML = `สถานะ: <span style="font-weight: bold;">${statusText}</span>`;
+            statusElement.style.color = color;
+        }
 
     } catch (error) {
-        console.error(`Error fetching machine ${machineId}:`, error);
-        const statusElement = document.getElementById(`status-${machineId}`);
-        if (statusElement) {
-            statusElement.textContent = "สถานะ: ไม่พบข้อมูล";
-            statusElement.style.color = "#6c757d";
-        }
+        console.error("Error:", error);
     }
+}
+
+
+function filterStatus(status, element) {
+    // 1. สลับไฮไลท์สีปุ่ม (Active Class)
+    const buttons = document.querySelectorAll('.btn-filter');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    element.classList.add('active');
+
+    // 2. กรองการ์ดเครื่องจักร
+    const cards = document.querySelectorAll('.machine-card');
+    cards.forEach(card => {
+        // ดึงข้อความจากส่วนสถานะของการ์ดนั้นๆ
+        const machineStatusText = card.querySelector('.machine-status').textContent || "";
+        
+        if (status === 'all') {
+            card.style.display = "block";
+        } else if (machineStatusText.includes(status)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
 }
 
 // เริ่มต้นทำงานเมื่อโหลด DOM เสร็จ

@@ -63,6 +63,73 @@ $conn->close();
       margin: 0px;
       margin-left: 250px;
     }
+
+    /* บังคับกลุ่มปุ่มให้เรียงแนวนอน */
+    .status-filter {
+      display: flex !important;
+      flex-direction: row !important;
+      gap: 12px;
+      /* ระยะห่างระหว่างปุ่ม */
+      flex-wrap: nowrap;
+      /* ห้ามขึ้นบรรทัดใหม่ */
+      overflow-x: auto;
+      /* ให้ปัดข้างได้ถ้าปุ่มยาวเกินจอ */
+      margin-bottom: 20px;
+      padding: 10px 0;
+    }
+
+    /* ซ่อนแถบเลื่อน (Scrollbar) เพื่อความสวยงาม */
+    .status-filter::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* สไตล์ปุ่มตัวกรอง (เลียนแบบหน้า Users) */
+    .btn-filter {
+      white-space: nowrap;
+      /* ห้ามข้อความในปุ่มตัดบรรทัด */
+      padding: 8px 22px;
+      border-radius: 30px;
+      border: 1px solid #dee2e6;
+      background-color: #fff;
+      color: #6c757d;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    /* เครื่องจักรทั้งหมด - สีน้ำเงิน */
+.btn-filter.btn-all.active {
+    background-color: #0d6efd ;
+    color: white ;
+    border-color: #0d6efd ;
+}
+
+/* กำลังทำงาน - สีเขียว */
+.btn-filter.btn-running.active {
+    background-color: #28a745 ;
+    color: white ;
+    border-color: #28a745 ;
+}
+
+/* ผิดปกติ - สีเหลือง */
+.btn-filter.btn-warning.active {
+    background-color: #ffc107 ;
+    color: #212529 ; /* ตัวหนังสือสีเข้มเพื่อให้มองเห็นชัดบนพื้นเหลือง */
+    border-color: #ffc107 ;
+}
+
+
+.btn-filter.btn-stopped.active {
+    background-color: #dc3545 ;
+    color: white ;
+    border-color: #dc3545 ;
+}
+
+/* Hover Effect (เลือกใช้สีเทาอ่อนสำหรับทุกปุ่มตอนยังไม่คลิก) */
+.btn-filter:hover:not(.active) {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+}
   </style>
 </head>
 
@@ -76,6 +143,14 @@ $conn->close();
 
     <div class="dashboard">
       <h2 class="dashboard-title">รายการเครื่องจักร</h2>
+
+
+      <div class="status-filter">
+        <button onclick="filterStatus('all', this)" class="btn-filter btn-all active">เครื่องจักรทั้งหมด</button>
+        <button onclick="filterStatus('กำลังทำงานปกติ', this)" class="btn-filter btn-running">กำลังทำงาน</button>
+        <button onclick="filterStatus('ผิดปกติ', this)" class="btn-filter btn-warning">ผิดปกติ</button>
+        <button onclick="filterStatus('หยุดทำงาน', this)" class="btn-filter btn-stopped">หยุดทำงาน</button>
+      </div>
 
       <div class="machine-header">
         <input type="text" id="searchInput" placeholder="ค้นหาเครื่องจักร..." class="search-input">
@@ -109,10 +184,9 @@ $conn->close();
   <script src="assets/js/SidebarManager.js"></script>
   <script src="/factory_monitoring/machine_list/js/machine.js"></script>
   <script>
-    
-
     <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
-        <script >
+        <
+        script >
         Swal.fire({
           title: 'ลบข้อมูลสำเร็จ!',
           text: 'เครื่องจักรและไฟล์ที่เกี่ยวข้องถูกลบออกจากระบบแล้ว',
