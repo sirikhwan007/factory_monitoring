@@ -55,7 +55,7 @@ $repairs  = $conn->query("
     <title>Manager Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/dashboard.css">
+    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
@@ -64,6 +64,7 @@ $repairs  = $conn->query("
         <?php include __DIR__ . '/partials/SidebarManager.php'; ?>
 
         <section class="main p-4">
+
 
             <h3>Manager Control Panel</h3>
             <p class="text-muted">ภาพรวมระบบโรงงาน</p>
@@ -134,6 +135,7 @@ $repairs  = $conn->query("
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
+
                         </tbody>
                     </table>
                 </div>
@@ -175,7 +177,6 @@ $repairs  = $conn->query("
                     </table>
                 </div>
             </div>
-
         </section>
     </div>
 
