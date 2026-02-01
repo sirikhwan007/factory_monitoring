@@ -1,4 +1,5 @@
 <?php
+// repair/reporthistory.php
 // ... (ส่วน PHP ด้านบนเหมือนเดิม ไม่ต้องแก้) ...
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -16,6 +17,19 @@ if ($tech_result->num_rows > 0) {
     while ($tech = $tech_result->fetch_assoc()) {
         $technicians[] = $tech;
     }
+}
+
+$status_filter = $_GET['status'] ?? 'all';
+
+if ($status_filter !== 'all') {
+    // ใช้ Prepared Statement เพื่อความปลอดภัย
+    $stmt = $conn->prepare("SELECT * FROM repair_history WHERE status = ? ORDER BY report_time DESC");
+    $stmt->bind_param("s", $status_filter);
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else {
+    // ถ้าเป็น all หรือไม่มีค่าส่งมา ให้แสดงทั้งหมด
+    $result = $conn->query("SELECT * FROM repair_history ORDER BY report_time DESC");
 }
 
 $sidebar_paths = [
@@ -344,6 +358,12 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             }
         }
 
+        .status-badge.cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
         /* ซ่อนปุ่ม hamburger บนจอใหญ่ */
         @media (min-width: 993px) {
             .btn-hamburger {
@@ -406,6 +426,10 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                                     case 'ซ่อมไม่สำเร็จ':
                                         $status_class = 'failed';
                                         $status_icon = '<i class="fas fa-exclamation-triangle"></i>';
+                                        break;
+                                    case 'ยกเลิก': // เพิ่มเคสนี้
+                                        $status_class = 'cancelled';
+                                        $status_icon = '<i class="fas fa-times-circle"></i>';
                                         break;
                                 }
                                 $report_datetime = new DateTime($row['report_time']);

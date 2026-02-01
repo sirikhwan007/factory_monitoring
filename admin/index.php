@@ -48,6 +48,14 @@ $in_progress = $conn->query($sql_in_progress)->fetch_assoc()['in_progress'];
 $sql_completed = "SELECT COUNT(*) AS completed FROM repair_requests WHERE status='completed'";
 $completed = $conn->query($sql_completed)->fetch_assoc()['completed'];
 
+$total_repair = $conn->query("SELECT COUNT(*) FROM repair_history")->fetch_row()[0];
+$total = $total_repair;
+
+$pending = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='รอดำเนินการ'")->fetch_row()[0];
+$in_progress = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='กำลังซ่อม'")->fetch_row()[0];
+$completed = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='สำเร็จ'")->fetch_row()[0];
+$cancelled = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ยกเลิก'")->fetch_row()[0];
+
 $sidebar_paths = [
     'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
 ];
@@ -129,33 +137,45 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                 <h4 class="mt-4 mb-3">สถานะซ่อมบำรุง</h4>
 
-                <div class="row g-3">
+                <div class="row g-3 row-cols-1 row-cols-md-3 row-cols-lg-5">
 
-                    <div class="col-md-3">
-                        <div class="card shadow-sm p-3 text-center">
-                            <h5>ทั้งหมด</h5>
-                            <h2 class="text-primary"><?php echo $total; ?></h2>
+                    <div class="col">
+                        <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
+                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=all'">
+                            <h6 class="text-muted">ทั้งหมด</h6>
+                            <h2 class="fw-bold text-primary"><?= $total ?></h2>
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card shadow-sm p-3 text-center">
-                            <h5>รอดำเนินการ</h5>
-                            <h2 class="text-warning"><?php echo $pending; ?></h2>
+                    <div class="col">
+                        <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
+                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=รอดำเนินการ'">
+                            <h6 class="text-muted">รอดำเนินการ</h6>
+                            <h2 class="fw-bold text-warning"><?= $pending ?></h2>
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card shadow-sm p-3 text-center">
-                            <h5>กำลังซ่อม</h5>
-                            <h2 class="text-info"><?php echo $in_progress; ?></h2>
+                    <div class="col">
+                        <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
+                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=กำลังซ่อม'">
+                            <h6 class="text-muted">กำลังซ่อม</h6>
+                            <h2 class="fw-bold text-info"><?= $in_progress ?></h2>
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card shadow-sm p-3 text-center">
-                            <h5>เสร็จสิ้น</h5>
-                            <h2 class="text-success"><?php echo $completed; ?></h2>
+                    <div class="col">
+                        <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
+                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=สำเร็จ'">
+                            <h6 class="text-muted">เสร็จสิ้น</h6>
+                            <h2 class="fw-bold text-success"><?= $completed ?></h2>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
+                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=ยกเลิก'">
+                            <h6 class="text-muted">ยกเลิก</h6>
+                            <h2 class="fw-bold text-danger"><?= $cancelled ?></h2>
                         </div>
                     </div>
 
