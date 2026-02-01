@@ -92,41 +92,39 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                 <!-- Machine Overview -->
                 <h4 class="mt-3 mb-3">ข้อมูลเครื่องจักร</h4>
-                <div class="row g-3">
 
+                <div class="row mb-4">
                     <div class="col-md-3">
-                        <div class="card shadow-sm p-3 text-center">
-                            <a href="/factory_monitoring/machine_list/machine.php" class="text-decoration-none">
-                                <h5>เครื่องจักรทั้งหมด</h5>
-                                <div class="display-6 fw-bold text-primary"><?= $total_machines ?></div>
-                            </a>
+                        <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
+                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=all'">
+                            <h5 class="text-muted">เครื่องจักรทั้งหมด</h5>
+                            <h2 class="fw-bold text-primary"><?= $total_machines ?></h2>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="card shadow-sm p-3 text-center">
-                            <h5>ทำงานปกติ</h5>
-                            <div class="display-6 fw-bold text-success" id="activeCount">0</div>
-
+                        <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
+                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=กำลังทำงาน'">
+                            <h5 class="text-muted text-success">กำลังทำงาน</h5>
+                            <h2 class="fw-bold text-success" id="activeCount">0</h2>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="card shadow-sm p-3 text-center">
-                            <h5>ผิดปกติ</h5>
-                            <div class="display-6 fw-bold text-warning" id="errorCount">0</div>
-
+                        <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
+                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=ผิดปกติ'">
+                            <h5 class="text-muted text-warning">ผิดปกติ</h5>
+                            <h2 class="fw-bold text-warning" id="errorCount">0</h2>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="card shadow-sm p-3 text-center">
-                            <h5>หยุดทำงาน</h5>
-                            <div class="display-6 fw-bold text-danger" id="stopCount">0</div>
-
+                        <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
+                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=หยุดทำงาน'">
+                            <h5 class="text-muted text-danger">หยุดทำงาน</h5>
+                            <h2 class="fw-bold text-danger" id="stopCount">0</h2>
                         </div>
                     </div>
-
                 </div>
 
                 <h4 class="mt-4 mb-3">สถานะซ่อมบำรุง</h4>
