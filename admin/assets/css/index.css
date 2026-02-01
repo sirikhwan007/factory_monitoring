@@ -64,6 +64,7 @@
   justify-content: space-between;
   align-items: center;
   transition: 0.3s ease;
+  position: fixed;
 }
 .sidebar-top,
 .sidebar-bottom {
@@ -78,7 +79,7 @@
   background: #f4f9fd;
   border-radius: 20px;
   padding: 30px;
-  margin: 20px;
+  margin-left: 250px;
 }
 
 .card {
