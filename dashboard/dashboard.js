@@ -341,3 +341,60 @@ if (statusEl) {
   setInterval(fetchData, 1000);       // ดึงข้อมูลทุก 1 วินาที
   setInterval(checkInfluxStatus, 5000); // เช็คสถานะทุก 5 วินาที
 });
+
+// ฟังก์ชันแสดงประวัติ 24 ชั่วโมงด้วย SweetAlert2
+async function show24hHistory() {
+    // แสดง Loading ระหว่างรอข้อมูล
+    Swal.fire({
+        title: 'กำลังดึงข้อมูลย้อนหลัง...',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    try {
+        // ดึงข้อมูลจาก API (ใช้ range=24h)
+        const res = await fetch(`${API_BASE}/api/history?range=24h&mac=${MACHINE_MAC}`);
+        const history = await res.json();
+
+        // ปิด Loading และเปิดหน้าต่างกราฟ
+        Swal.fire({
+            title: `ประวัติการทำงาน 24 ชม. (${MACHINE_MAC})`,
+            html: '<canvas id="historyChart" width="400" height="250"></canvas>',
+            width: '80%',
+            confirmButtonText: 'ปิด',
+            didOpen: () => {
+                const ctx = document.getElementById('historyChart').getContext('2d');
+                
+                // รวมข้อมูลทุก Field เข้าด้วยกันเพื่อหา Labels (เวลา)
+                // หมายเหตุ: ปรับโครงสร้างข้อมูลตามที่ API ส่งกลับมา
+                const labels = history.temperature.map(p => new Date(p.time));
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: 'Temp (°C)', data: history.temperature.map(p => p.value), borderColor: '#f87171', tension: 0.2, pointRadius: 0 },
+                            { label: 'Vib (g)', data: history.vibration.map(p => p.value), borderColor: '#facc15', tension: 0.2, pointRadius: 0 },
+                            { label: 'Power (W)', data: history.power.map(p => p.value), borderColor: '#a78bfa', tension: 0.2, pointRadius: 0 }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: { 
+                                type: 'time', 
+                                time: { unit: 'hour', displayFormats: { hour: 'HH:mm' } },
+                                title: { display: true, text: 'เวลา' }
+                            },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+        });
+    } catch (err) {
+        console.error("History Error:", err);
+        Swal.fire('ผิดพลาด', 'ไม่สามารถดึงข้อมูลย้อนหลังได้', 'error');
+    }
+}
