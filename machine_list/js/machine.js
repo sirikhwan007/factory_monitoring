@@ -72,7 +72,7 @@ async function updateMachineStatus(machineId) {
         const isWarning = (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15);
         const isRunning = (power > 0.5); 
 
-        const card = document.querySelector(`.machine-card[onclick*="id=${machineId}"]`);
+        const card = document.querySelector(`.machine-card`); 
         const statusElement = document.getElementById(`status-${machineId}`);
         
         let statusText = "";
@@ -80,13 +80,13 @@ async function updateMachineStatus(machineId) {
 
         if (isDanger || isWarning) {
             statusText = "ผิดปกติ"; // ยุบรวมเพื่อให้ Filter ง่ายขึ้น
-            color = (isDanger) ? "#dc3545" : "#ffc107";
+            color =  "#ffc107";
         } else if (isRunning) {
             statusText = "กำลังทำงานปกติ";
             color = "#28a745";
         } else {
             statusText = "หยุดทำงาน";
-            color = "#6c757d";
+            color = "#dc3545";
         }
 
         // เก็บสถานะไว้ที่ตัว Card เพื่อใช้ในการกรอง (Filter)
@@ -97,6 +97,7 @@ async function updateMachineStatus(machineId) {
         if (statusElement) {
             statusElement.innerHTML = `สถานะ: <span style="font-weight: bold;">${statusText}</span>`;
             statusElement.style.color = color;
+            
         }
 
     } catch (error) {

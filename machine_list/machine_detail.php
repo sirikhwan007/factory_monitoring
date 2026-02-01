@@ -223,15 +223,14 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                                     </tr>
                                     <tr>
                                         <th>Location:</th>
-                                        <td><i class="fas fa-map-marker-alt text-danger"></i> <?= htmlspecialchars($machine['location']) ?></td>
+                                        <td> <?= htmlspecialchars($machine['location']) ?></td>
                                     </tr>
                                     <tr>
                                         <th>Status:</th>
                                         <td>
-                                            <?php
-                                            $statusColor = ($machine['status'] == 'Active' || $machine['status'] == 'Running') ? 'success' : 'danger';
-                                            ?>
-                                            <span class="badge bg-<?= $statusColor ?>"><?= htmlspecialchars($machine['status']) ?></span>
+                                            <span id="detail-status-display" style="font-weight: bold; font-size: 1rem;">
+                                                กำลังโหลดสถานะ...
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -415,43 +414,9 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="SidebarAdmin.js"></script>
-
-    <script>
-        function viewRepairDetail(repairData) {
-            document.getElementById('modalReporter').textContent = repairData.reporter || '-';
-            document.getElementById('modalPosition').textContent = repairData.position || '-';
-            document.getElementById('modalType').textContent = repairData.type || '-';
-            document.getElementById('modalReportTime').textContent = new Date(repairData.report_time).toLocaleDateString('th-TH', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            document.getElementById('modalDetail').textContent = repairData.detail || '-';
-            document.getElementById('modalStatus').textContent = repairData.status || '-';
-
-            if (repairData.updated_at) {
-                document.getElementById('modalUpdatedTime').textContent = new Date(repairData.updated_at).toLocaleDateString('th-TH', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-            } else {
-                document.getElementById('modalUpdatedTime').textContent = '-';
-            }
-
-            if (repairData.comment) {
-                document.getElementById('commentSection').style.display = 'block';
-                document.getElementById('modalComment').textContent = repairData.comment;
-            } else {
-                document.getElementById('commentSection').style.display = 'none';
-            }
-        }
-    </script>
+    <script src="/factory_monitoring/admin/assets/js/SidebarAdmin.js"></script>
+    <script src="/factory_monitoring/Manager/assets/js/SidebarManager.js"></script>
+    <script src="/factory_monitoring/machine_list/js/machine_detail.js"></script>
 
 </body>
 
