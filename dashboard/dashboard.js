@@ -186,11 +186,7 @@ function updateLineChart(chart, value, timeDateObject, smooth = true) {
     chart.data.datasets[0].data.shift();
   }
 
-  // ✅ smooth เฉพาะ live
-  if (smooth) {
-    chart.data.datasets[0].data =
-      smoothData(chart.data.datasets[0].data, 3);
-  }
+  
 
   chart.update('none');
 }
