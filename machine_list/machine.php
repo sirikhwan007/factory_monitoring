@@ -106,74 +106,10 @@ $conn->close();
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="assets/js/SidebarAdmin.js"></script>
+  <script src="assets/js/SidebarManager.js"></script>
+  <script src="/factory_monitoring/machine_list/js/machine.js"></script>
   <script>
-    document.getElementById('searchInput').addEventListener('input', function() {
-      const keyword = this.value.toLowerCase();
-      const cards = document.querySelectorAll('.machine-card');
-
-      cards.forEach(card => {
-        const name = card.querySelector('.machine-name').textContent.toLowerCase();
-        const id = card.querySelector('.machine-id').textContent.toLowerCase();
-        const status = card.querySelector('.machine-status').textContent.toLowerCase();
-        const location = card.querySelector('.machine-location').textContent.toLowerCase();
-
-        if (
-          name.includes(keyword) ||
-          id.includes(keyword) ||
-          status.includes(keyword) ||
-          location.includes(keyword)
-        ) {
-          card.style.display = "block"; // แสดงเมื่อเจอผลลัพธ์
-        } else {
-          card.style.display = "none"; // ซ่อนเมื่อไม่ตรง
-        }
-      });
-    });
-    //สถานะเครื่องจักร
-    async function updateMachineStatus(machineId) {
-      try {
-        const res = await fetch(`http://192.168.1.75:5000/api/last-power/${machineId}`);
-        const data = await res.json();
-
-        const power = data.power ?? 0;
-        const statusElement = document.getElementById(`status-${machineId}`);
-
-        let statusText = "";
-        let color = "";
-
-        if (power > 0) {
-          statusText = `กำลังทำงาน (${power} W)`;
-          color = "#28a745"; // เขียว
-        } else {
-          statusText = `หยุดทำงาน (${power} W)`;
-          color = "#dc3545"; // แดง
-        }
-
-        statusElement.textContent = `สถานะ: ${statusText}`;
-        statusElement.style.color = color;
-
-      } catch (error) {
-        console.error("Error fetching power:", error);
-        const statusElement = document.getElementById(`status-${machineId}`);
-        if (statusElement) {
-          statusElement.textContent = "สถานะเครื่องจักร: ไม่พบข้อมูล";
-          statusElement.style.color = "#6c757d";
-        }
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const machineCards = document.querySelectorAll(".machine-card");
-
-      machineCards.forEach(card => {
-        const idText = card.querySelector(".machine-id").textContent;
-        const machineId = idText.replace("ID:", "").trim();
-        updateMachineStatus(machineId);
-
-        // อัปเดตทุก 5 วินาที (optional)
-        setInterval(() => updateMachineStatus(machineId), 5000);
-      });
-    });
+    
 
     <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
         <script >
