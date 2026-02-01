@@ -355,8 +355,7 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
                                         <?php endif; ?>
                                     </div>
 
-                                    <textarea class="form-control" name="repair_note" rows="4"
-                                        <?= ($row['status'] === 'สำเร็จ') ? 'readonly' : '' ?>><?= htmlspecialchars($row['repair_note'] ?? '') ?></textarea>
+                                    
 
                                 </div>
                             </div>
