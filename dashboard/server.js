@@ -1,3 +1,4 @@
+// server version02
 import express from "express";
 import cors from "cors";
 import mqtt from "mqtt";
@@ -82,39 +83,124 @@ mqttClient.on("message", (topic, message) => {
         console.error("Process Error:", err);
     }
 });
-
-// --- API Endpoints ---
-app.get("/api/latest/:mac", (req, res) => {
-    const mac = req.params.mac.toLowerCase();
+app.get("/api/latest/:mac", async (req, res) => {
+  const { mac } = req.params; // รับค่าจาก URL เช่น /api/latest/aa:bb:cc...
+  try {
     const fluxQuery = `
-        from(bucket: "${INFLUX_BUCKET}")
-          |> range(start: -24h)
-          |> filter(fn: (r) => r["device"] == "${mac}")
-          |> last()
+      from(bucket: "${INFLUX_BUCKET}")
+        |> range(start: -10m)
+        |> filter(fn: (r) => r["device"] == "${mac.toLowerCase()}")
+        |> filter(fn: (r) => r["_measurement"] == "DS18B20" or r["_measurement"] == "MPU6050" or r["_measurement"] == "PZEM004T")
+        |> filter(fn: (r) => r["_field"] == "temperature" or r["_field"] == "accel_percent" or r["_field"] == "voltage" or r["_field"] == "current" or r["_field"] == "power")
+        |> last() 
     `;
 
-    const result = {};
-    queryApi.queryRows(fluxQuery, {
-        next: (row, tableMeta) => {
-            const o = tableMeta.toObject(row);
-            result[o._field] = o._value;
-        },
-        complete: () => res.json(result),
-        error: (err) => res.status(500).json({ error: err.message })
+    let result = {
+      temperature: 0,
+      vibration: 0,
+      voltage: 0,
+      current: 0,
+      power: 0,
+      energy: 0,
+      frequency: 0,
+      power_factor: 0,
+      accel_percent: 0
+    };
+
+    await queryApi.queryRows(fluxQuery, {
+      next: (row, tableMeta) => {
+        const o = tableMeta.toObject(row);
+        switch (o._field) {
+          case "temperature": result.temperature = o._value; break;
+          case "accel_percent": result.vibration = o._value; break;
+          case "voltage": result.voltage = o._value; break;
+          case "current": result.current = o._value; break;
+          case "power": result.power = o._value; break;
+          case "energy": result.energy = o._value; break;
+          case "frequency": result.frequency = o._value; break;
+          case "power_factor": result.power_factor = o._value; break;
+        }
+      },
+      complete: () => res.json(result),
+      error: (err) => res.status(500).send(err)
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+//----------------------------
+// =============================
+//  API ดึงข้อมูลย้อนหลัง (ใส่ตรงนี้)
+// =============================
+app.get("/api/history", async (req, res) => {
+  const range = req.query.range || "1h";
+
+  const fluxQuery = `
+    from(bucket: "${INFLUX_BUCKET}")
+      |> range(start: -${range})
+      |> filter(fn: (r) => r["device"] == "${mac.toLowerCase()}")
+      |> filter(fn: (r) =>
+        r["_measurement"] == "MPU6050" or
+        r["_measurement"] == "DS18B20" or
+        r["_measurement"] == "PZEM004T"
+      )
+      |> filter(fn: (r) =>
+        r["_field"] == "temperature" or
+        r["_field"] == "accel_percent" or
+        r["_field"] == "voltage" or
+        r["_field"] == "current" or
+        r["_field"] == "power"
+      )
+      |> aggregateWindow(every: 5s, fn: mean, createEmpty: false)
+  `;
+
+  const result = {
+    temperature: [],
+    vibration: [],
+    voltage: [],
+    current: [],
+    power: []
+  };
+
+  await queryApi.queryRows(fluxQuery, {
+    next: (row, tableMeta) => {
+      const o = tableMeta.toObject(row);
+      const point = { time: o._time, value: o._value };
+
+      if (o._field === "temperature") result.temperature.push(point);
+      if (o._field === "accel_percent") result.vibration.push(point);
+      if (o._field === "voltage") result.voltage.push(point);
+      if (o._field === "current") result.current.push(point);
+      if (o._field === "power") result.power.push(point);
+    },
+    complete: () => res.json(result),
+    error: err => res.status(500).json(err)
+  });
 });
 
+//-----------------------------
 app.get("/api/status", async (req, res) => {
-    try {
-        // ทดสอบดึงข้อมูลสั้นๆ เพื่อเช็คว่าติดต่อ InfluxDB ได้จริงไหม
-        await queryApi.collectRows(`
-            from(bucket: "${INFLUX_BUCKET}")
-              |> range(start: -1m)
-              |> limit(n:1)
-        `);
-        res.json({ connected: true });
-    } catch (err) {
-        res.json({ connected: false, error: err.message });
-    }
+  try {
+    let isConnected = false;
+
+    await queryApi.queryRows('buckets()', {
+      next: () => { isConnected = true; },
+      error: (err) => {
+        console.error("❌ InfluxDB error:", err);
+        res.json({ connected: false });
+      },
+      complete: () => {
+        res.json({ connected: isConnected });
+      }
+    });
+
+  } catch (error) {
+    console.error("❌ InfluxDB connection failed:", error);
+    res.json({ connected: false });
+  }
 });
-app.listen(PORT, () => console.log(` Server running on port ${PORT}`));
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(` API Server running on port ${PORT}`);
+});
+
