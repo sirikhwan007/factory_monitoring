@@ -417,6 +417,7 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
     <script src="/factory_monitoring/admin/assets/js/SidebarAdmin.js"></script>
     <script src="/factory_monitoring/Manager/assets/js/SidebarManager.js"></script>
     <script src="/factory_monitoring/machine_list/js/machine_detail.js"></script>
+    <script src="/factory_monitoring/dashboard/dashboard.js"></script>
 
 </body>
 
