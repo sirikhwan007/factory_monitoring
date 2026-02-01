@@ -342,9 +342,21 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
                                     <hr>
 
                                     <div class="d-flex justify-content-end gap-2">
-                                        <a href="work_orders.php" class="btn btn-light border">ยกเลิก</a>
-                                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> บันทึกการซ่อม</button>
+                                        <a href="work_orders.php" class="btn btn-light border">กลับ</a>
+
+                                        <?php if ($row['status'] !== 'สำเร็จ' && $row['status'] !== 'ยกเลิก'): ?>
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fas fa-save"></i> บันทึกการซ่อม
+                                            </button>
+                                        <?php else: ?>
+                                            <button type="button" class="btn btn-secondary" disabled>
+                                                <i class="fas fa-lock"></i> งานนี้ถูก<?= $row['status'] ?>แล้ว (แก้ไขไม่ได้)
+                                            </button>
+                                        <?php endif; ?>
                                     </div>
+
+                                    <textarea class="form-control" name="repair_note" rows="4"
+                                        <?= ($row['status'] === 'สำเร็จ') ? 'readonly' : '' ?>><?= htmlspecialchars($row['repair_note'] ?? '') ?></textarea>
 
                                 </div>
                             </div>

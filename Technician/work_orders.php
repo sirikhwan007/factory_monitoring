@@ -302,10 +302,12 @@ $result = $stmt->get_result();
                     <?php
                     $no = 1;
                     while ($row = $result->fetch_assoc()):
+                        // 1. กำหนด Class ของสีตามสถานะ
                         $statusClass = match ($row['status']) {
                             'สำเร็จ' => 'success',
                             'กำลังซ่อม' => 'in-progress',
                             'ซ่อมไม่สำเร็จ' => 'failed',
+                            'ยกเลิก' => 'danger', // เพิ่ม: ถ้าสถานะเป็น 'ยกเลิก' ให้เป็นสีแดง (danger)
                             default => 'pending'
                         };
                         $isAssigned = !is_null($row['technician_id']);
@@ -328,23 +330,33 @@ $result = $stmt->get_result();
                                 </span>
                             </td>
                             <td class="text-center">
-    <?php if (!$isAssigned): ?>
-        <form method="post" action="actions/accept_job.php">
-            <input type="hidden" name="id" value="<?= $row['id'] ?>">
-            <button class="btn btn-success btn-sm" onclick="return confirm('ยืนยันรับงาน?')">
-                ✔ รับงาน
-            </button>
-        </form>
-    <?php else: ?>
-        <?php if ($row['technician_id'] == $current_user_id): ?>
-            <a href="work_detail.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">
-                <i class="fas fa-edit"></i> จัดการงาน
-            </a>
-        <?php else: ?>
-            <span class="badge bg-secondary">ช่างท่านอื่นรับแล้ว</span>
-        <?php endif; ?>
-    <?php endif; ?>
-</td>
+                                <?php if (!$isAssigned): ?>
+                                    <form method="post" action="actions/accept_job.php">
+                                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                        <button class="btn btn-success btn-sm" onclick="return confirm('ยืนยันรับงาน?')">
+                                            ✔ รับงาน
+                                        </button>
+                                    </form>
+                                <?php else: ?>
+                                    <?php if ($row['technician_id'] == $current_user_id): ?>
+
+                                        <?php if ($row['status'] === 'สำเร็จ'): ?>
+                                            <span class="badge bg-secondary"><i class="fas fa-check-circle"></i> ปิดงานแล้ว</span>
+
+                                        <?php elseif ($row['status'] === 'ยกเลิก'): ?>
+                                            <span class="badge bg-danger"><i class="fas fa-times-circle"></i> งานถูกยกเลิก</span>
+
+                                        <?php else: ?>
+                                            <a href="work_detail.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-edit"></i> จัดการงาน
+                                            </a>
+                                        <?php endif; ?>
+
+                                    <?php else: ?>
+                                        <span class="badge bg-dark">ช่างท่านอื่นรับแล้ว</span>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>

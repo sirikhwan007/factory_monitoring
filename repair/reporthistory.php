@@ -453,10 +453,15 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 
                                     <td class="text-center">
                                         <div class="action-cell">
-                                            <a href="edit_repair.php?id=<?= $row['id'] ?>"
-                                                class="btn btn-outline-primary btn-sm btn-action">
-                                                <i class="fas fa-edit"></i>แก้ไข
-                                            </a>
+                                            <?php if ($row['status'] === 'สำเร็จ'): ?>
+                                                <span class="badge bg-secondary">ปิดงานแล้ว</span>
+                                            <?php elseif ($row['status'] === 'ยกเลิก'): ?>
+                                                <span class="badge bg-danger">ยกเลิกงานแล้ว</span>
+                                            <?php else: ?>
+                                                <a href="edit_repair.php?id=<?= $row['id'] ?>" class="btn btn-outline-primary btn-sm btn-action">
+                                                    <i class="fas fa-edit"></i> แก้ไข
+                                                </a>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>
