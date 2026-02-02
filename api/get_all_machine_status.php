@@ -1,31 +1,50 @@
 <?php
-header("Content-Type: application/json");
+header('Content-Type: application/json');
+include "../config.php"; //
 
-include "../config.php";
-
-// ดึงรายชื่อเครื่องทั้งหมด
-$machines = $conn->query("SELECT machine_id FROM machines");
+$res = $conn->query("SELECT mac_address FROM machines");
+$machines = $res->fetch_all(MYSQLI_ASSOC);
 
 $active = 0;
-$stop = 0;
 $error = 0;
+$stop = 0;
 
-while ($m = $machines->fetch_assoc()) {
+// URL ของ API ภายนอกที่เก็บข้อมูล Real-time
+$api_base = "https://factory-monitoring.onrender.com/api/latest/";
 
-    $id = $m["machine_id"];
+foreach ($machines as $m) {
+    $mac = $m['mac_address'];
+    
+    // ดึงข้อมูลล่าสุดของแต่ละเครื่อง
+    $json = @file_get_contents($api_base . $mac);
+    if ($json) {
+        $data = json_decode($json, true);
+        
+        $temp  = $data['temperature'] ?? 0;
+        $vib   = $data['vibration'] ?? 0;
+        $cur   = $data['current'] ?? 0;
+        $volt  = $data['voltage'] ?? 0;
+        $power = $data['power'] ?? 0;
 
-    $statusApi = file_get_contents("http://localhost/factory_monitoring/api/get_machine_status.php?id=$id");
-    $statusData = json_decode($statusApi, true);
+        // ใช้เกณฑ์เดียวกับ machine.js และ machine_detail.js
+        $isDanger = ($temp >= 35 || $vib >= 15 || $cur >= 8 || $volt >= 300 || $power >= 20);
+        $isWarning = ($temp >= 34 || $vib >= 5 || $cur >= 5 || $volt >= 250 || $power >= 15);
+        $isRunning = ($power > 0.5);
 
-    if (!$statusData || !isset($statusData["status"])) continue;
-
-    if ($statusData["status"] === "active") $active++;
-    if ($statusData["status"] === "error")  $error++;
-    if ($statusData["status"] === "stop")   $stop++;
+        if ($isDanger || $isWarning) {
+            $error++;
+        } elseif ($isRunning) {
+            $active++;
+        } else {
+            $stop++;
+        }
+    } else {
+        $stop++; // ถ้าดึงข้อมูลไม่ได้ ให้ถือว่าหยุดทำงาน/ออฟไลน์
+    }
 }
 
 echo json_encode([
     "active" => $active,
-    "error" => $error,
-    "stop" => $stop
+    "error"  => $error,
+    "stop"   => $stop
 ]);

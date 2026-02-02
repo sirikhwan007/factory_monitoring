@@ -148,7 +148,7 @@ $conn->close();
 
       <div class="status-filter">
         <button onclick="filterStatus('all', this)" class="btn-filter btn-all active">เครื่องจักรทั้งหมด</button>
-        <button onclick="filterStatus('กำลังทำงานปกติ', this)" class="btn-filter btn-running">กำลังทำงาน</button>
+        <button onclick="filterStatus('กำลังทำงาน', this)" class="btn-filter btn-running">กำลังทำงาน</button>
         <button onclick="filterStatus('ผิดปกติ', this)" class="btn-filter btn-warning">ผิดปกติ</button>
         <button onclick="filterStatus('หยุดทำงาน', this)" class="btn-filter btn-stopped">หยุดทำงาน</button>
       </div>

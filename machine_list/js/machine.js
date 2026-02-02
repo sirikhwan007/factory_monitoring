@@ -88,7 +88,7 @@ async function updateMachineStatus(cardElement) {
         let color = "";
 
         if (isDanger) {
-            statusText = "อันตราย"; // หรือ "ผิดปกติ" ตามที่คุณต้องการ แต่ใช้สีแดง
+            statusText = "อันตราย"; 
             color = "#dc3545"; 
         } else if (isWarning) {
             statusText = "ผิดปกติ";
@@ -172,11 +172,7 @@ $(document).ready(function() {
         }
     }
 });
-
-// ฟังก์ชัน filterStatus เดิมที่คุณมี (ปรับปรุงให้รับ element เพื่อเปลี่ยนสีปุ่ม)
-
-
-// ในไฟล์ machine.js
+// เริ่มต้นทำงานเมื่อโหลด DOM เสร็จ
 document.addEventListener("DOMContentLoaded", () => {
     // 1. ตรวจสอบค่า status จาก URL Query String
     const urlParams = new URLSearchParams(window.location.search);
@@ -202,22 +198,48 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+function handleUrlFilter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const statusFilter = urlParams.get('status');
+
+    if (statusFilter) {
+        // ค้นหาปุ่มที่มีข้อความตรงกับ status ที่ส่งมา
+        const buttons = document.querySelectorAll('.btn-filter');
+        let targetBtn = null;
+
+        buttons.forEach(btn => {
+            if (statusFilter === 'all' && btn.classList.contains('btn-all')) {
+                targetBtn = btn;
+            } else if (btn.textContent.trim().includes(statusFilter)) {
+                targetBtn = btn;
+            }
+        });
+
+        if (targetBtn) {
+            // เรียกฟังก์ชันกรองข้อมูล
+            filterStatus(statusFilter, targetBtn);
+        }
+    }
+}
 
 // เริ่มต้นทำงานเมื่อโหลด DOM เสร็จ
 document.addEventListener("DOMContentLoaded", () => {
     initSearch();
 
     const machineCards = document.querySelectorAll(".machine-card");
+    
+    // สร้าง Promise array เพื่อรอให้การเช็คสถานะครั้งแรกเสร็จสิ้นก่อนค่อย Filter
+    const statusPromises = Array.from(machineCards).map(card => {
+        return updateMachineStatus(card); 
+    });
+
+    // เมื่อทุก Card อัปเดตสถานะรอบแรกเสร็จแล้ว (มี dataset.statusText แล้ว)
+    Promise.all(statusPromises).then(() => {
+        handleUrlFilter(); // ค่อยสั่ง Filter ตาม URL
+    });
+
+    // ตั้งเวลาอัปเดตต่อเนื่องทุก 5 วินาทีตามปกติ
     machineCards.forEach(card => {
-        const idText = card.querySelector(".machine-id").textContent;
-        const machineId = idText.replace("ID:", "").trim();
-        
-        // อัปเดตครั้งแรกทันที
-        updateMachineStatus(machineId);
-        console.log(machineId, { temp, vib, cur, volt, power, statusText });
-
-
-        // ตั้งเวลาอัปเดตทุก 5 วินาที
-        setInterval(() => updateMachineStatus(machineId), 5000);
+        setInterval(() => updateMachineStatus(card), 5000);
     });
 });
