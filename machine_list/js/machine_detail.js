@@ -1,38 +1,48 @@
 $(document).ready(function() {
     const API_BASE = "https://factory-monitoring.onrender.com";
-    const machineId = "<?= $machine['machine_id'] ?>";
 
     async function updateDetailStatus() {
+        // ตรวจสอบว่ามีการประกาศ MACHINE_MAC มาจากหน้า PHP หรือไม่
+        if (typeof MACHINE_MAC === 'undefined') return;
+
         try {
-            const res = await fetch(`${API_BASE}/api/latest/${machineId}`);
+            // ดึงข้อมูลล่าสุดผ่าน MAC Address เหมือนใน dashboard.js
+            const res = await fetch(`${API_BASE}/api/latest/${MACHINE_MAC}`);
             if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
 
+            if (!data || Object.keys(data).length === 0) return;
+
+            // --- ตรรกะการตัดสินใจ (Copy มาจาก Dashboard.js) ---
             const temp = data.temperature || 0;
             const vib = data.vibration || 0;
             const cur = data.current || 0;
             const volt = data.voltage || 0;
             const power = data.power || 0;
 
+            // เกณฑ์ Danger และ Warning ตามมาตรฐานหน้า Dashboard
             const isDanger = (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || power >= 20);
             const isWarning = (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15);
             const isRunning = (power > 0.5); 
 
             let statusText = "";
-            let statusColor = ""; // ตัวแปรเก็บสีตัวหนังสือ
+            let statusColor = "";
 
-            if (isDanger || isWarning) {
+            if (isDanger) {
+                statusText = "อันตราย";
+                statusColor = "#dc3545"; // สีแดง (bg-danger)
+            } else if (isWarning) {
                 statusText = "ผิดปกติ";
-                statusColor = "#ffc107"; // สีเหลือง
+                statusColor = "#ffc107"; // สีเหลือง (bg-warning)
             } else if (isRunning) {
                 statusText = "กำลังทำงาน";
-                statusColor = "#28a745"; // สีเขียว
+                statusColor = "#28a745"; // สีเขียว (bg-success)
             } else {
                 statusText = "หยุดทำงาน";
-                statusColor = "#dc3545"; // สีแดง
+                statusColor = "#6c757d"; // สีเทา (bg-secondary)
             }
 
-            // อัปเดตเฉพาะตัวหนังสือและสี
+            // อัปเดตการแสดงผลในหน้า machine_detail.php
             $('#detail-status-display')
                 .text(statusText)
                 .css('color', statusColor);
@@ -41,10 +51,11 @@ $(document).ready(function() {
             console.error("Error fetching status:", error);
             $('#detail-status-display')
                 .text("เชื่อมต่อผิดพลาด")
-                .css('color', '#6c757d');
+                .css('color', '#bbbbbb');
         }
     }
 
+    // เรียกทำงานทันทีและตั้ง Loop ทุก 5 วินาที
     updateDetailStatus();
     setInterval(updateDetailStatus, 5000);
 });

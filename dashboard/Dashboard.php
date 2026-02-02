@@ -262,7 +262,6 @@ $conn->close();
     <!-- JavaScript ภายนอก -->
     <script src="/factory_monitoring/dashboard/dashboard.js?v=<?php echo time(); ?>" defer></script>
     <script src="/factory_monitoring/admin/SidebarAdmin.js"></script>
-    <script src="/factory_monitoring/config.js"></script>
 
     <script>
       // เพิ่มบรรทัดนี้เพื่อส่งค่า MAC Address ให้ JavaScript

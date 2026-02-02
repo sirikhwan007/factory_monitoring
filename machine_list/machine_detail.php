@@ -229,8 +229,10 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                                         <th>Status:</th>
                                         <td>
                                             <span id="detail-status-display" style="font-weight: bold; font-size: 1rem;">
-                                                กำลังโหลดสถานะ...
+                                                กำลังตรวจสอบ...
                                             </span>
+                                            <input type="hidden" id="machine_mac_val" value="<?= htmlspecialchars($machine['mac_address']) ?>">
+                                            <input type="hidden" id="machine_id_val" value="<?= htmlspecialchars($machine['machine_id']) ?>">
                                         </td>
                                     </tr>
                                     <tr>
@@ -411,12 +413,17 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
             </div>
         </div>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        
+        const MACHINE_MAC = "<?php echo $machine['mac_address']; ?>";
+    </script>
+    <script src="/factory_monitoring/machine_list/js/machine_detail.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/factory_monitoring/admin/assets/js/SidebarAdmin.js"></script>
     <script src="/factory_monitoring/Manager/assets/js/SidebarManager.js"></script>
-    <script src="/factory_monitoring/machine_list/js/machine_detail.js"></script>
+
     <script src="/factory_monitoring/dashboard/dashboard.js"></script>
 
 </body>

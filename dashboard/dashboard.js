@@ -1,6 +1,6 @@
 // dashboard version0.1
 const urlParams = new URLSearchParams(window.location.search);
-//const API_BASE = "https://factory-monitoring.onrender.com";
+const API_BASE = "https://factory-monitoring.onrender.com";
 
 
 // --- 1. Plugin และ Utility Functions ---
@@ -290,15 +290,15 @@ if (statusEl) {
     if (isDanger) {
         // สถานะผิดปกติรุนแรง (เทียบเท่าไฟสีแดง)
         statusEl.className = "badge bg-danger";
-        statusEl.textContent = "ผิดปกติ (อันตราย)";
+        statusEl.textContent = "อันตราย";
     } else if (isWarning) {
         // สถานะเตือน (เทียบเท่าไฟสีเหลือง)
         statusEl.className = "badge bg-warning text-dark"; // ใช้ text-dark เพื่อให้ชัดเจนบนสีเหลือง
-        statusEl.textContent = "ผิดปกติ (เฝ้าระวัง)";
+        statusEl.textContent = "ผิดปกติ";
     } else if (isRunning) {
         // สถานะทำงานปกติ (เทียบเท่าไฟสีเขียว)
         statusEl.className = "badge bg-success";
-        statusEl.textContent = "กำลังทำงานปกติ";
+        statusEl.textContent = "กำลังทำงาน";
     } else {
         // สถานะหยุดทำงาน
         statusEl.className = "badge bg-secondary"; 
