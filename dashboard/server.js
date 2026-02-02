@@ -33,7 +33,7 @@ mqttClient.on("connect", () => {
 mqttClient.on("message", (topic, message) => {
     try {
         const payload = JSON.parse(message.toString());
-        const mac = payload.mac || "unknown";
+        const mac = (payload.mac || "unknown").toLowerCase();
         
         // 1. ดึงค่าจาก Payload
         const temp = payload.temperature || 0;
@@ -134,11 +134,12 @@ app.get("/api/latest/:mac", async (req, res) => {
 // =============================
 app.get("/api/history", async (req, res) => {
   const range = req.query.range || "1h";
+  //const mac = req.query.mac;
 
   const fluxQuery = `
     from(bucket: "${INFLUX_BUCKET}")
       |> range(start: -${range})
-      |> filter(fn: (r) => r["device"] == "${mac.toLowerCase()}")
+      
       |> filter(fn: (r) =>
         r["_measurement"] == "MPU6050" or
         r["_measurement"] == "DS18B20" or
@@ -186,7 +187,7 @@ app.get("/api/status", async (req, res) => {
     await queryApi.queryRows('buckets()', {
       next: () => { isConnected = true; },
       error: (err) => {
-        console.error("❌ InfluxDB error:", err);
+        console.error(" InfluxDB error:", err);
         res.json({ connected: false });
       },
       complete: () => {
@@ -195,7 +196,7 @@ app.get("/api/status", async (req, res) => {
     });
 
   } catch (error) {
-    console.error("❌ InfluxDB connection failed:", error);
+    console.error(" InfluxDB connection failed:", error);
     res.json({ connected: false });
   }
 });
