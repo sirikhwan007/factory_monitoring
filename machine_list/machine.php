@@ -113,11 +113,15 @@ $conn->close();
 
     /* ผิดปกติ - สีเหลือง */
     .btn-filter.btn-warning.active {
-      background-color: #ffc107;
-      color: #212529;
-      /* ตัวหนังสือสีเข้มเพื่อให้มองเห็นชัดบนพื้นเหลือง */
-      border-color: #ffc107;
-    }
+    background-color: #ffc107;
+    color: #212529;
+    border-color: #ffc107;
+}
+    .btn-filter.btn-danger-custom.active {
+    background-color: #fd7e14;
+    color: white;
+    border-color: #fd7e14;
+}
 
 
     .btn-filter.btn-stopped.active {
@@ -147,11 +151,12 @@ $conn->close();
 
 
       <div class="status-filter">
-        <button onclick="filterStatus('all', this)" class="btn-filter btn-all active">เครื่องจักรทั้งหมด</button>
-        <button onclick="filterStatus('กำลังทำงาน', this)" class="btn-filter btn-running">กำลังทำงาน</button>
-        <button onclick="filterStatus('ผิดปกติ', this)" class="btn-filter btn-warning">ผิดปกติ</button>
-        <button onclick="filterStatus('หยุดทำงาน', this)" class="btn-filter btn-stopped">หยุดทำงาน</button>
-      </div>
+    <button onclick="filterStatus('all', this)" class="btn-filter btn-all active">เครื่องจักรทั้งหมด</button>
+    <button onclick="filterStatus('กำลังทำงาน', this)" class="btn-filter btn-running">กำลังทำงาน</button>
+    <button onclick="filterStatus('ผิดปกติ', this)" class="btn-filter btn-warning">ผิดปกติ</button>
+    <button onclick="filterStatus('อันตราย', this)" class="btn-filter btn-danger-custom">อันตราย</button>
+    <button onclick="filterStatus('หยุดทำงาน', this)" class="btn-filter btn-stopped">หยุดทำงาน</button>
+</div>
 
       <div class="machine-header">
         <input type="text" id="searchInput" placeholder="ค้นหาเครื่องจักร..." class="search-input">

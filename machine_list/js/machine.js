@@ -198,16 +198,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+
 function handleUrlFilter() {
     const urlParams = new URLSearchParams(window.location.search);
     const statusFilter = urlParams.get('status');
 
     if (statusFilter) {
-        // ค้นหาปุ่มที่มีข้อความตรงกับ status ที่ส่งมา
         const buttons = document.querySelectorAll('.btn-filter');
         let targetBtn = null;
 
         buttons.forEach(btn => {
+            // เช็คว่าค่าจาก URL ตรงกับชื่อปุ่มหรือไม่ (รองรับทั้งภาษาไทยและอังกฤษ)
             if (statusFilter === 'all' && btn.classList.contains('btn-all')) {
                 targetBtn = btn;
             } else if (btn.textContent.trim().includes(statusFilter)) {
@@ -216,7 +217,6 @@ function handleUrlFilter() {
         });
 
         if (targetBtn) {
-            // เรียกฟังก์ชันกรองข้อมูล
             filterStatus(statusFilter, targetBtn);
         }
     }

@@ -18,13 +18,14 @@ if ($_SESSION['role'] !== 'Admin') {
 $page = 'dashboard';
 
 /* -----------------------------------------------------
-   🔹 MACHINE OVERVIEW
+    MACHINE OVERVIEW
 ----------------------------------------------------- */
-$total_machines  = $conn->query("SELECT COUNT(*) FROM machines")->fetch_row()[0];
 
+$total_machines  = $conn->query("SELECT COUNT(*) FROM machines")->fetch_row()[0];
+$total_danger = $conn->query("SELECT COUNT(*) FROM machines WHERE status='อันตราย'")->fetch_row()[0];
 
 /* -----------------------------------------------------
-   🔹 USER OVERVIEW
+    USER OVERVIEW
 ----------------------------------------------------- */
 $total_users     = $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0];
 $role_admin      = $conn->query("SELECT COUNT(*) FROM users WHERE role='Admin'")->fetch_row()[0];
@@ -37,7 +38,7 @@ $role_operator   = $conn->query("SELECT COUNT(*) FROM users WHERE role='Operator
 ----------------------------------------------------- */
 $sql_total = "SELECT COUNT(*) AS total FROM repair_requests";
 $total_repair = $conn->query($sql_total)->fetch_assoc()['total'];
-$total = $total_repair; // <-- วางบรรทัดนี้ถ้าตอนนี้ HTML เรียก $total
+$total = $total_repair;
 
 $sql_pending = "SELECT COUNT(*) AS pending FROM repair_requests WHERE status='pending'";
 $pending = $conn->query($sql_pending)->fetch_assoc()['pending'];
@@ -79,7 +80,31 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
+    <style>
+        @keyframes bell-ring {
+
+            0%,
+            100% {
+                transform: rotate(0);
+            }
+
+            20%,
+            60% {
+                transform: rotate(15deg);
+            }
+
+            40%,
+            80% {
+                transform: rotate(-15deg);
+            }
+        }
+
+        .ring-active {
+            animation: bell-ring 0.5s infinite;
+            color: #dc3545 !important;
+            /* สีแดงเมื่อมีปัญหา */
+        }
+    </style>
 </head>
 
 <body>
@@ -95,35 +120,50 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
             <div class="dashboard">
 
                 <!-- Machine Overview -->
-                <h4 class="mt-3 mb-3">ข้อมูลเครื่องจักร</h4>
-
-                <div class="row mb-4">
-                    <div class="col-md-3">
-                        <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
+                <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+                    <h4>ข้อมูลเครื่องจักร</h4>
+                    <div id="notification-bell" class="position-relative" style="cursor: pointer; font-size: 1.5rem;">
+                        <i class="fa-solid fa-bell text-secondary"></i>
+                        <span id="alert-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+                            !
+                        </span>
+                    </div>
+                </div>
+                <div class="row mb-4 g-3">
+                    <div class="col-lg col-md-4 col-6">
+                        <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
                             onclick="location.href='/factory_monitoring/machine_list/machine.php?status=all'">
                             <h5 class="text-muted">เครื่องจักรทั้งหมด</h5>
                             <h2 class="fw-bold text-primary"><?= $total_machines ?></h2>
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
+                    <div class="col-lg col-md-4 col-6">
+                        <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
                             onclick="location.href='/factory_monitoring/machine_list/machine.php?status=กำลังทำงาน'">
                             <h5 class="text-muted text-success">กำลังทำงาน</h5>
                             <h2 class="fw-bold text-success" id="activeCount">0</h2>
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
+                    <div class="col-lg col-md-4 col-6">
+                        <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
                             onclick="location.href='/factory_monitoring/machine_list/machine.php?status=ผิดปกติ'">
                             <h5 class="text-muted text-warning">ผิดปกติ</h5>
                             <h2 class="fw-bold text-warning" id="errorCount">0</h2>
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
+                    <div class="col-lg col-md-6 col-6">
+                        <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer; "
+                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=อันตราย'">
+                            <h5 class="text-muted">อันตราย</h5>
+                            <h2 class="fw-bold" style="color: #fd7e14;" id="dangerCount">0</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-lg col-md-6 col-12">
+                        <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
                             onclick="location.href='/factory_monitoring/machine_list/machine.php?status=หยุดทำงาน'">
                             <h5 class="text-muted text-danger">หยุดทำงาน</h5>
                             <h2 class="fw-bold text-danger" id="stopCount">0</h2>
@@ -266,6 +306,67 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                 });
             }
 
+            loadStatus();
+            setInterval(loadStatus, 5000);
+        });
+
+        $(document).ready(function() {
+            let alertCounter = 0;
+            let currentIssue = 'all';
+
+            function loadStatus() {
+                $.ajax({
+                    url: "/factory_monitoring/api/get_all_machine_status.php",
+                    method: "GET",
+                    dataType: "json",
+                    success: function(res) {
+                        // อัปเดตตัวเลขให้ตรงกับ ID ของแต่ละปุ่ม
+                        $("#activeCount").text(res.active);
+                        $("#errorCount").text(res.error);
+                        $("#dangerCount").text(res.danger); // ตรวจสอบว่า API ส่งค่า res.danger มาให้
+                        $("#stopCount").text(res.stop);
+
+                        // ตรวจสอบลำดับความสำคัญในการแจ้งเตือน
+                        if (parseInt(res.stop) > 0) {
+                            currentIssue = 'หยุดทำงาน';
+                            alertCounter += 5;
+                        } else if (parseInt(res.danger) > 0) {
+                            currentIssue = 'อันตราย';
+                            alertCounter += 5;
+                        } else if (parseInt(res.error) > 0) {
+                            currentIssue = 'ผิดปกติ';
+                            alertCounter += 5;
+                        } else {
+                            alertCounter = 0;
+                            currentIssue = 'all';
+                            resetBell();
+                        }
+
+                        if (alertCounter >= 10) {
+                            triggerBell();
+                        }
+                    },
+                    error: function() {
+                        console.error("ไม่สามารถดึงข้อมูลสถานะเครื่องจักรได้");
+                    }
+                });
+            }
+
+            function triggerBell() {
+                $("#notification-bell i").addClass("ring-active");
+                $("#alert-badge").removeClass("d-none");
+            }
+
+            function resetBell() {
+                $("#notification-bell i").removeClass("ring-active");
+                $("#alert-badge").addClass("d-none");
+            }
+
+            $("#notification-bell").on("click", function() {
+                window.location.href = "/factory_monitoring/machine_list/machine.php?status=" + encodeURIComponent(currentIssue);
+            });
+
+            // เริ่มทำงาน
             loadStatus();
             setInterval(loadStatus, 5000);
         });
