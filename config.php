@@ -1,10 +1,10 @@
 <?php
 date_default_timezone_set("Asia/Bangkok");
 
-$servername = "sql308.infinityfree.com";
-$username = "if0_40984053";
-$password = "0935160117";
-$dbname = "if0_40984053_factory_monitoring";
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "factory_monitoring";
 
 // สร้างการเชื่อมต่อ
 $conn = new mysqli($servername, $username, $password, $dbname);
