@@ -184,6 +184,7 @@ $conn->close();
   <script src="assets/js/SidebarManager.js"></script>
   <script src="/factory_monitoring/machine_list/js/machine.js"></script>
   <script src="/factory_monitoring/dashboard/dashboard.js"></script>
+  <script src="/factory_monitoring/config.js"></script>
   <script>
     <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
         <

@@ -2,7 +2,7 @@
  * การจัดการสถานะและการค้นหาเครื่องจักร
  */
 
-const API_BASE = "https://factory-monitoring.onrender.com";
+//const API_BASE = "https://factory-monitoring.onrender.com";
 
 // ฟังก์ชันสำหรับค้นหาเครื่องจักร
 function initSearch() {
@@ -62,41 +62,51 @@ async function updateMachineStatus(machineId) {
         const res = await fetch(`${API_BASE}/api/latest/${machineId}`);
         const data = await res.json();
 
-        const temp = data.temperature || 0;
-        const vib = data.vibration || 0;
-        const cur = data.current || 0;
-        const volt = data.voltage || 0;
-        const power = data.power || 0;
+        const temp  = Number(data.temperature) || 0;
+const vib   = Number(data.vibration) || 0;
+const cur   = Number(data.current) || 0;
+const volt  = Number(data.voltage) || 0;
+const power = Number(data.power) || 0;
+
 
         const isDanger = (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || power >= 20);
         const isWarning = (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15);
         const isRunning = (power > 0.5); 
 
-        const card = document.querySelector(`.machine-card`); 
+        const card = document.querySelector(`.machine-card[data-machine-id="${machineId}"]`);
+
         const statusElement = document.getElementById(`status-${machineId}`);
         
         let statusText = "";
-        let color = "";
+let color = "";
 
-        if (isDanger || isWarning) {
-            statusText = "ผิดปกติ"; // ยุบรวมเพื่อให้ Filter ง่ายขึ้น
-            color =  "#ffc107";
-        } else if (isRunning) {
-            statusText = "กำลังทำงานปกติ";
-            color = "#28a745";
-        } else {
-            statusText = "หยุดทำงาน";
-            color = "#dc3545";
-        }
+if (power <= 0.5) {
+    statusText = "หยุดทำงาน";
+    color = "#dc3545";
+} 
+else if (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || power >= 20) {
+    statusText = "ผิดปกติ";
+    color = "#dc3545";
+}
+else if (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15) {
+    statusText = "ผิดปกติ";
+    color = "#ffc107";
+}
+else {
+    statusText = "กำลังทำงานปกติ";
+    color = "#28a745";
+}
+
 
         // เก็บสถานะไว้ที่ตัว Card เพื่อใช้ในการกรอง (Filter)
         if (card) {
-            card.setAttribute('data-status-text', statusText);
-        }
+    card.dataset.statusText = statusText;
+}
 
         if (statusElement) {
-            statusElement.innerHTML = `สถานะ: <span style="font-weight: bold;">${statusText}</span>`;
-            statusElement.style.color = color;
+            statusElement.innerHTML = `สถานะ: <b>${statusText}</b>`;
+statusElement.style.color = color;
+
             
         }
 
@@ -107,26 +117,22 @@ async function updateMachineStatus(machineId) {
 
 
 function filterStatus(status, element) {
-    // 1. สลับไฮไลท์สีปุ่ม (Active Class)
-    const buttons = document.querySelectorAll('.btn-filter');
-    buttons.forEach(btn => btn.classList.remove('active'));
-    element.classList.add('active');
+    if (element) {
+        document.querySelectorAll(".btn-filter").forEach(b => b.classList.remove("active"));
+        element.classList.add("active");
+    }
 
-    // 2. กรองการ์ดเครื่องจักร
-    const cards = document.querySelectorAll('.machine-card');
-    cards.forEach(card => {
-        // ดึงข้อความจากส่วนสถานะของการ์ดนั้นๆ
-        const machineStatusText = card.querySelector('.machine-status').textContent || "";
-        
-        if (status === 'all') {
-            card.style.display = "block";
-        } else if (machineStatusText.includes(status)) {
+    document.querySelectorAll(".machine-card").forEach(card => {
+        const machineStatus = card.dataset.statusText || "";
+
+        if (status === "all" || machineStatus.includes(status)) {
             card.style.display = "block";
         } else {
             card.style.display = "none";
         }
     });
 }
+
 
 $(document).ready(function() {
     // 1. ดึงค่า status จาก URL
@@ -153,27 +159,7 @@ $(document).ready(function() {
 });
 
 // ฟังก์ชัน filterStatus เดิมที่คุณมี (ปรับปรุงให้รับ element เพื่อเปลี่ยนสีปุ่ม)
-function filterStatus(status, element) {
-    if(!element) return;
 
-    // เปลี่ยนสถานะปุ่ม Active
-    $(".btn-filter").removeClass("active");
-    $(element).addClass("active");
-
-    // กรองการ์ดเครื่องจักร
-    const cards = document.querySelectorAll('.machine-card');
-    cards.forEach(card => {
-        const machineStatusText = card.querySelector('.machine-status').textContent || "";
-        
-        if (status === 'all') {
-            card.style.display = "block";
-        } else if (machineStatusText.includes(status)) {
-            card.style.display = "block";
-        } else {
-            card.style.display = "none";
-        }
-    });
-}
 
 // ในไฟล์ machine.js
 document.addEventListener("DOMContentLoaded", () => {
@@ -213,6 +199,8 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // อัปเดตครั้งแรกทันที
         updateMachineStatus(machineId);
+        console.log(machineId, { temp, vib, cur, volt, power, statusText });
+
 
         // ตั้งเวลาอัปเดตทุก 5 วินาที
         setInterval(() => updateMachineStatus(machineId), 5000);

@@ -1,6 +1,6 @@
 // dashboard version0.1
 const urlParams = new URLSearchParams(window.location.search);
-const API_BASE = `${window.location.protocol}//${window.location.hostname}:5000`;
+//const API_BASE = "https://factory-monitoring.onrender.com";
 
 
 // --- 1. Plugin และ Utility Functions ---

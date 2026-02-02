@@ -7,8 +7,6 @@ import { InfluxDB, Point } from "@influxdata/influxdb-client";
 const app = express();
 app.use(cors({ origin: "*" }));
 
-
-/* //เชื่อมต่อ InfluxDB และ MQTT ด้วย render environment variables
 // --- Config (ตรวจสอบค่าเหล่านี้ใน Environment Variables ของ Render) ---
 const PORT = process.env.PORT || 5000;
 const INFLUX_URL = process.env.INFLUX_URL;
@@ -30,27 +28,7 @@ mqttClient.on("connect", () => {
     console.log(" MQTT Connected & Monitoring Started");
     mqttClient.subscribe("test/sensor/data"); 
 });
-*/
 
-// ตั้งค่าการเชื่อมต่อ InfluxDB
-const url = "https://influxdb-tcesenior.as2.pitunnel.net";
-const token = "mpiI63Hli-vbbRMj_GZk7sahDnsa2_fce8Gqb-sNzkSD1ibrPefDGfjsRJoxEphrORn9knZf0A59XqUivWLmTQ==";
-const org = "b79809a86d9bbee5";
-const bucket = "Motor-Monitoring";
-
-const influx = new InfluxDB({ url, token });
-const queryApi = influx.getQueryApi(org);
-const writeApi = influx.getWriteApi(org, bucket);
-
-// --- [2] ส่วนการเชื่อมต่อ MQTT (วางต่อจากตั้งค่า InfluxDB) ---
-const mqttClient = mqtt.connect("mqtt://10.76.56.38", {
-    username: "myuser",
-    password: "0935160117"
-});
-mqttClient.on("connect", () => {
-    console.log("✅ Connected to MQTT Broker");
-    mqttClient.subscribe("test/sensor/data"); // Subscribe รอรับข้อมูลจาก ESP32
-});
 // --- [ฟังก์ชัน LED และการบันทึกข้อมูลที่หายไป] ---
 mqttClient.on("message", (topic, message) => {
     try {
