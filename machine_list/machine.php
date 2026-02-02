@@ -17,7 +17,7 @@ if ($conn->connect_error) {
 
 // ดึงข้อมูลเครื่องจักร
 $machines = [];
-$sql = "SELECT machine_id, name, status, location, photo_url FROM machines";
+$sql = "SELECT machine_id, name, status, location, photo_url, mac_address FROM machines"; // เพิ่ม mac_address
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
   while ($row = $result->fetch_assoc()) {
@@ -98,38 +98,39 @@ $conn->close();
     }
 
     /* เครื่องจักรทั้งหมด - สีน้ำเงิน */
-.btn-filter.btn-all.active {
-    background-color: #0d6efd ;
-    color: white ;
-    border-color: #0d6efd ;
-}
+    .btn-filter.btn-all.active {
+      background-color: #0d6efd;
+      color: white;
+      border-color: #0d6efd;
+    }
 
-/* กำลังทำงาน - สีเขียว */
-.btn-filter.btn-running.active {
-    background-color: #28a745 ;
-    color: white ;
-    border-color: #28a745 ;
-}
+    /* กำลังทำงาน - สีเขียว */
+    .btn-filter.btn-running.active {
+      background-color: #28a745;
+      color: white;
+      border-color: #28a745;
+    }
 
-/* ผิดปกติ - สีเหลือง */
-.btn-filter.btn-warning.active {
-    background-color: #ffc107 ;
-    color: #212529 ; /* ตัวหนังสือสีเข้มเพื่อให้มองเห็นชัดบนพื้นเหลือง */
-    border-color: #ffc107 ;
-}
+    /* ผิดปกติ - สีเหลือง */
+    .btn-filter.btn-warning.active {
+      background-color: #ffc107;
+      color: #212529;
+      /* ตัวหนังสือสีเข้มเพื่อให้มองเห็นชัดบนพื้นเหลือง */
+      border-color: #ffc107;
+    }
 
 
-.btn-filter.btn-stopped.active {
-    background-color: #dc3545 ;
-    color: white ;
-    border-color: #dc3545 ;
-}
+    .btn-filter.btn-stopped.active {
+      background-color: #dc3545;
+      color: white;
+      border-color: #dc3545;
+    }
 
-/* Hover Effect (เลือกใช้สีเทาอ่อนสำหรับทุกปุ่มตอนยังไม่คลิก) */
-.btn-filter:hover:not(.active) {
-    background-color: #f8f9fa;
-    border-color: #adb5bd;
-}
+    /* Hover Effect (เลือกใช้สีเทาอ่อนสำหรับทุกปุ่มตอนยังไม่คลิก) */
+    .btn-filter:hover:not(.active) {
+      background-color: #f8f9fa;
+      border-color: #adb5bd;
+    }
   </style>
 </head>
 
@@ -161,13 +162,18 @@ $conn->close();
       <div class="machine-cards-wrapper">
         <?php if (count($machines) > 0): ?>
           <?php foreach ($machines as $m): ?>
-            <div class="machine-card" onclick="location.href='/factory_monitoring/dashboard/Dashboard.php?id=<?php echo $m['machine_id']; ?>'">
+            <div class="machine-card"
+              data-mac-address="<?php echo htmlspecialchars($m['mac_address']); ?>"
+              onclick="location.href='/factory_monitoring/dashboard/Dashboard.php?id=<?php echo $m['machine_id']; ?>'">
+
               <img src="/factory_monitoring/<?php echo $m['photo_url']; ?>" alt="รูปเครื่องจักร">
               <div class="machine-name"><?php echo htmlspecialchars($m['name']); ?></div>
               <div class="machine-id">ID: <?php echo htmlspecialchars($m['machine_id']); ?></div>
+
               <div class="machine-status" id="status-<?php echo $m['machine_id']; ?>">
-                กำลังโหลดสถานะ...
+                กำลังตรวจสอบ...
               </div>
+
               <div class="machine-location">ที่ตั้ง: <?php echo htmlspecialchars($m['location']); ?></div>
             </div>
           <?php endforeach; ?>
@@ -184,7 +190,6 @@ $conn->close();
   <script src="assets/js/SidebarManager.js"></script>
   <script src="/factory_monitoring/machine_list/js/machine.js"></script>
   <script src="/factory_monitoring/dashboard/dashboard.js"></script>
-  <script src="/factory_monitoring/config.js"></script>
   <script>
     <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
         <

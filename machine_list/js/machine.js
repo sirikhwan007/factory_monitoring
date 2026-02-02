@@ -2,7 +2,7 @@
  * การจัดการสถานะและการค้นหาเครื่องจักร
  */
 
-//const API_BASE = "https://factory-monitoring.onrender.com";
+const API_BASE = "https://factory-monitoring.onrender.com";
 
 // ฟังก์ชันสำหรับค้นหาเครื่องจักร
 function initSearch() {
@@ -57,65 +57,81 @@ function filterStatus(status) {
 }
 
 // ฟังก์ชันอัปเดตสถานะเครื่องจักรจาก API
-async function updateMachineStatus(machineId) {
+async function updateMachineStatus(cardElement) {
+    const macAddress = cardElement.getAttribute('data-mac-address');
+    const machineIdText = cardElement.querySelector('.machine-id').textContent;
+    const machineId = machineIdText.replace("ID:", "").trim();
+    const statusElement = document.getElementById(`status-${machineId}`);
+
+    if (!macAddress) return;
+
     try {
-        const res = await fetch(`${API_BASE}/api/latest/${machineId}`);
+        const res = await fetch(`${API_BASE}/api/latest/${macAddress}`);
+        if (!res.ok) throw new Error('Network error');
         const data = await res.json();
 
+        if (!data || Object.keys(data).length === 0) return;
+
+        // --- ตรรกะการตัดสินใจ (Copy มาจาก machine_detail.js) ---
         const temp  = Number(data.temperature) || 0;
-const vib   = Number(data.vibration) || 0;
-const cur   = Number(data.current) || 0;
-const volt  = Number(data.voltage) || 0;
-const power = Number(data.power) || 0;
+        const vib   = Number(data.vibration) || 0;
+        const cur   = Number(data.current) || 0;
+        const volt  = Number(data.voltage) || 0;
+        const power = Number(data.power) || 0;
 
-
+        // เกณฑ์ตามมาตรฐานหน้า Detail/Dashboard
         const isDanger = (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || power >= 20);
         const isWarning = (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15);
         const isRunning = (power > 0.5); 
 
-        const card = document.querySelector(`.machine-card[data-machine-id="${machineId}"]`);
-
-        const statusElement = document.getElementById(`status-${machineId}`);
-        
         let statusText = "";
-let color = "";
+        let color = "";
 
-if (power <= 0.5) {
-    statusText = "หยุดทำงาน";
-    color = "#dc3545";
-} 
-else if (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || power >= 20) {
-    statusText = "ผิดปกติ";
-    color = "#dc3545";
-}
-else if (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15) {
-    statusText = "ผิดปกติ";
-    color = "#ffc107";
-}
-else {
-    statusText = "กำลังทำงานปกติ";
-    color = "#28a745";
-}
+        if (isDanger) {
+            statusText = "อันตราย"; // หรือ "ผิดปกติ" ตามที่คุณต้องการ แต่ใช้สีแดง
+            color = "#dc3545"; 
+        } else if (isWarning) {
+            statusText = "ผิดปกติ";
+            color = "#ffc107";
+        } else if (isRunning) {
+            statusText = "กำลังทำงาน";
+            color = "#28a745";
+        } else {
+            statusText = "หยุดทำงาน";
+            color = "#6c757d";
+        }
 
 
         // เก็บสถานะไว้ที่ตัว Card เพื่อใช้ในการกรอง (Filter)
-        if (card) {
-    card.dataset.statusText = statusText;
-}
+        cardElement.dataset.statusText = statusText;
 
         if (statusElement) {
             statusElement.innerHTML = `สถานะ: <b>${statusText}</b>`;
-statusElement.style.color = color;
-
-            
+            statusElement.style.color = color;
         }
 
     } catch (error) {
-        console.error("Error:", error);
+        console.error(`Error fetching for ${macAddress}:`, error);
+        if (statusElement) {
+            statusElement.innerText = "เชื่อมต่อผิดพลาด";
+            statusElement.style.color = "#bbbbbb";
+        }
     }
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    initSearch(); // ฟังก์ชันค้นหาเดิมของคุณ
 
+    const machineCards = document.querySelectorAll(".machine-card");
+    
+    machineCards.forEach(card => {
+        // อัปเดตครั้งแรกทันที
+        updateMachineStatus(card);
+
+        // ตั้งเวลาอัปเดตทุก 5 วินาที
+        setInterval(() => updateMachineStatus(card), 5000);
+    });
+});
 function filterStatus(status, element) {
     if (element) {
         document.querySelectorAll(".btn-filter").forEach(b => b.classList.remove("active"));
@@ -132,7 +148,6 @@ function filterStatus(status, element) {
         }
     });
 }
-
 
 $(document).ready(function() {
     // 1. ดึงค่า status จาก URL
