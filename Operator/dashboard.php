@@ -14,6 +14,7 @@ $page = 'dashboard';
    🔹 MACHINE OVERVIEW
 ----------------------------------------------------- */
 $total_machines  = $conn->query("SELECT COUNT(*) FROM machines")->fetch_row()[0];
+$total_danger = $conn->query("SELECT COUNT(*) FROM machines WHERE status='อันตราย'")->fetch_row()[0];
 
 /* -----------------------------------------------------
    🔹 REPAIR OVERVIEW (ดึงจาก repair_history เพื่อให้อัพเดตตามหน้าประวัติ)
@@ -43,6 +44,30 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
     <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/dashboard.css">
     <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
+    <style>
+        @keyframes bell-ring {
+
+            0%,
+            100% {
+                transform: rotate(0);
+            }
+
+            20%,
+            60% {
+                transform: rotate(15deg);
+            }
+
+            40%,
+            80% {
+                transform: rotate(-15deg);
+            }
+        }
+
+        .ring-active {
+            animation: bell-ring 0.5s infinite;
+            color: #dc3545 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -61,37 +86,41 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                 <div class="dashboard">
                     <h2 class="mb-4">Operator</h2>
                     <!-- Machine Overview -->
-                    <h4 class="mt-3 mb-3">ข้อมูลเครื่องจักร</h4>
+                    <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+                        <h4>ข้อมูลเครื่องจักร</h4>
+                        <div id="notification-bell" class="position-relative" style="cursor: pointer; font-size: 1.5rem;">
+                            <i class="fa-solid fa-bell text-secondary"></i>
+                            <span id="alert-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">!</span>
+                        </div>
+                    </div>
 
-
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
-                                onclick="location.href='/factory_monitoring/machine_list/machine.php?status=all'">
+                    <div class="row mb-4 g-3">
+                        <div class="col-lg col-md-4 col-6">
+                            <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/factory_monitoring/machine_list/machine.php?status=all'">
                                 <h5 class="text-muted">เครื่องจักรทั้งหมด</h5>
                                 <h2 class="fw-bold text-primary"><?= $total_machines ?></h2>
                             </div>
                         </div>
-
-                        <div class="col-md-3">
-                            <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
-                                onclick="location.href='/factory_monitoring/machine_list/machine.php?status=กำลังทำงาน'">
+                        <div class="col-lg col-md-4 col-6">
+                            <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/factory_monitoring/machine_list/machine.php?status=กำลังทำงาน'">
                                 <h5 class="text-muted text-success">กำลังทำงาน</h5>
                                 <h2 class="fw-bold text-success" id="activeCount">0</h2>
                             </div>
                         </div>
-
-                        <div class="col-md-3">
-                            <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
-                                onclick="location.href='/factory_monitoring/machine_list/machine.php?status=ผิดปกติ'">
+                        <div class="col-lg col-md-4 col-6">
+                            <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/factory_monitoring/machine_list/machine.php?status=ผิดปกติ'">
                                 <h5 class="text-muted text-warning">ผิดปกติ</h5>
                                 <h2 class="fw-bold text-warning" id="errorCount">0</h2>
                             </div>
                         </div>
-
-                        <div class="col-md-3">
-                            <div class="card shadow-sm p-3 border-0 text-center" style="cursor:pointer;"
-                                onclick="location.href='/factory_monitoring/machine_list/machine.php?status=หยุดทำงาน'">
+                        <div class="col-lg col-md-6 col-6">
+                            <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/factory_monitoring/machine_list/machine.php?status=อันตราย'">
+                                <h5 class="text-muted" >อันตราย</h5>
+                                <h2 class="fw-bold" style="color: #fd7e14;" id="dangerCount">0</h2>
+                            </div>
+                        </div>
+                        <div class="col-lg col-md-6 col-12">
+                            <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/factory_monitoring/machine_list/machine.php?status=หยุดทำงาน'">
                                 <h5 class="text-muted text-danger">หยุดทำงาน</h5>
                                 <h2 class="fw-bold text-danger" id="stopCount">0</h2>
                             </div>
@@ -182,6 +211,8 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
             });
         });
         $(document).ready(function() {
+            let alertCounter = 0;
+            let currentIssue = 'all';
 
             function loadStatus() {
                 $.ajax({
@@ -189,15 +220,53 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                     method: "GET",
                     dataType: "json",
                     success: function(res) {
+                        // 1. อัปเดตตัวเลขบนหน้าจอ
                         $("#activeCount").text(res.active);
                         $("#errorCount").text(res.error);
+                        $("#dangerCount").text(res.danger);
                         $("#stopCount").text(res.stop);
+
+                        // 2. ตรวจสอบสถานะเพื่อแจ้งเตือน
+                        if (parseInt(res.stop) > 0) {
+                            currentIssue = 'หยุดทำงาน';
+                            alertCounter += 5;
+                        } else if (parseInt(res.danger) > 0) {
+                            currentIssue = 'อันตราย';
+                            alertCounter += 5;
+                        } else if (parseInt(res.error) > 0) {
+                            currentIssue = 'ผิดปกติ';
+                            alertCounter += 5;
+                        } else {
+                            alertCounter = 0;
+                            currentIssue = 'all';
+                            resetBell();
+                        }
+
+                        // 3. แจ้งเตือนเมื่อพบปัญหาเกิน 10 วินาที (2 รอบ Ajax)
+                        if (alertCounter >= 10) {
+                            triggerBell();
+                        }
                     }
                 });
             }
 
+            function triggerBell() {
+                $("#notification-bell i").addClass("ring-active");
+                $("#alert-badge").removeClass("d-none");
+            }
+
+            function resetBell() {
+                $("#notification-bell i").removeClass("ring-active");
+                $("#alert-badge").addClass("d-none");
+            }
+
+            // คลิกกระดิ่งเพื่อไปหน้าเครื่องจักรตามสถานะที่มีปัญหา
+            $("#notification-bell").on("click", function() {
+                window.location.href = "/factory_monitoring/machine_list/machine.php?status=" + encodeURIComponent(currentIssue);
+            });
+
             loadStatus();
-            setInterval(loadStatus, 5000);
+            setInterval(loadStatus, 5000); // อัปเดตทุก 5 วินาที
         });
     </script>
 </body>
