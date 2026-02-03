@@ -51,8 +51,8 @@ $profileImage = $user['profile_image'];
     <p class="role"><?php echo htmlspecialchars($user['role']); ?></p>
 
     <div class="info-box">
-        <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-        <p><strong>Phone:</strong> <?php echo htmlspecialchars($user['phone']); ?></p>
+        <p><strong>อีเมล์:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
+        <p><strong>เบอร์โทร:</strong> <?php echo htmlspecialchars($user['phone']); ?></p>
         <p><strong>สร้างเมื่อ:</strong> <?php echo htmlspecialchars($user['created_at']); ?></p>
     </div>
 
@@ -65,15 +65,15 @@ $profileImage = $user['profile_image'];
         <span class="close" onclick="closeEditModal()">&times;</span>
         <form class="label" action="profile_update.php" method="post" enctype="multipart/form-data">
             
-            <label>Username</label>
+            <label>ชื่อผู้ใช้</label>
             <input type="text" name="username" 
                    value="<?php echo htmlspecialchars($user['username']); ?>" required>
 
-            <label>Email</label>
+            <label>อีเมล์</label>
             <input type="email" name="email" 
                    value="<?php echo htmlspecialchars($user['email']); ?>" required>
 
-            <label>Phone</label>
+            <label>เบอร์โทร</label>
             <input type="text" name="phone" 
                    value="<?php echo htmlspecialchars($user['phone']); ?>" required>
 
@@ -84,7 +84,7 @@ $profileImage = $user['profile_image'];
             <label>ยืนยันรหัสผ่าน</label>
             <input type="password" name="confirm_password" placeholder="Confirm Password">
 
-            <label>Profile Image</label>
+            <label>รูปโปรไฟล์</label>
             <input type="file" name="profile_image">
 
             <button type="submit">บันทึก</button>

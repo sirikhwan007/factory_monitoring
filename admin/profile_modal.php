@@ -7,19 +7,19 @@
         <form action="profile_update.php" method="post" enctype="multipart/form-data" role="form">
             
             <div class="form-group">
-                <label for="username-input">Username</label>
+                <label for="username-input">ชื่อผู้ใช้</label>
                 <input type="text" id="username-input" name="username" 
                        value="<?php echo htmlspecialchars($user['username']); ?>" required>
             </div>
 
             <div class="form-group">
-                <label for="email-input">Email</label>
+                <label for="email-input">อีเมล์</label>
                 <input type="email" id="email-input" name="email" 
                        value="<?php echo htmlspecialchars($user['email']); ?>" required>
             </div>
 
             <div class="form-group">
-                <label for="phone-input">Phone</label>
+                <label for="phone-input">เบอร์โทร</label>
                 <input type="text" id="phone-input" name="phone" 
                        value="<?php echo htmlspecialchars($user['phone']); ?>" required>
             </div>
