@@ -86,3 +86,20 @@ function filterRole(role) {
         }
     });
 }
+
+
+function checkBinary(input) {
+    const val = input.value;
+    const warning = document.getElementById('id_warning');
+    
+    // ตรวจสอบว่ามีแต่เลข 0 และ 1 หรือไม่
+    const isBinary = /^[01]+$/.test(val) && val.length > 1;
+    
+    if (isBinary) {
+        warning.style.display = 'block';
+        input.style.borderColor = 'red';
+    } else {
+        warning.style.display = 'none';
+        input.style.borderColor = '';
+    }
+}

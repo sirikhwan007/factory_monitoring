@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "../config.php"; // เชื่อมฐานข้อมูล
+include "../config.php"; 
 
 $user_role = $_SESSION['role'] ?? 'Admin';
 
@@ -62,13 +62,11 @@ $sidebar_paths = [
 ];
 
 // เลือกไฟล์
-$sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
+$sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Admin'];
 
 $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 10");
 
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="th">
@@ -102,7 +100,6 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
         .ring-active {
             animation: bell-ring 0.5s infinite;
             color: #dc3545 !important;
-            /* สีแดงเมื่อมีปัญหา */
         }
     </style>
 </head>
@@ -273,8 +270,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                 <!-- RECENT ACTIVITY -->
                 <h4 class="mt-4 mb-3">กิจกรรมล่าสุด</h4>
                 <div class="card shadow-sm p-3" style="max-height: 300px; overflow-y: auto;">
-                    <ul class="list-group">
-
+                    <ul class="list-group" style="cursor:pointer;" onclick="location.href='/factory_monitoring/logs/logs.php'">
                         <?php while ($log = $recent_logs->fetch_assoc()): ?>
                             <li class="list-group-item">
                                 <strong><?= $log['role'] ?></strong> : <?= $log['action'] ?>
@@ -290,87 +286,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="/factory_monitoring/admin/assets/js/SidebarAdmin.js"></script>
-    <script>
-        $(document).ready(function() {
-
-            function loadStatus() {
-                $.ajax({
-                    url: "/factory_monitoring/api/get_all_machine_status.php",
-                    method: "GET",
-                    dataType: "json",
-                    success: function(res) {
-                        $("#activeCount").text(res.active);
-                        $("#errorCount").text(res.error);
-                        $("#stopCount").text(res.stop);
-                    }
-                });
-            }
-
-            loadStatus();
-            setInterval(loadStatus, 5000);
-        });
-
-        $(document).ready(function() {
-            let alertCounter = 0;
-            let currentIssue = 'all';
-
-            function loadStatus() {
-                $.ajax({
-                    url: "/factory_monitoring/api/get_all_machine_status.php",
-                    method: "GET",
-                    dataType: "json",
-                    success: function(res) {
-                        // อัปเดตตัวเลขให้ตรงกับ ID ของแต่ละปุ่ม
-                        $("#activeCount").text(res.active);
-                        $("#errorCount").text(res.error);
-                        $("#dangerCount").text(res.danger); // ตรวจสอบว่า API ส่งค่า res.danger มาให้
-                        $("#stopCount").text(res.stop);
-
-                        // ตรวจสอบลำดับความสำคัญในการแจ้งเตือน
-                        if (parseInt(res.stop) > 0) {
-                            currentIssue = 'หยุดทำงาน';
-                            alertCounter += 5;
-                        } else if (parseInt(res.danger) > 0) {
-                            currentIssue = 'อันตราย';
-                            alertCounter += 5;
-                        } else if (parseInt(res.error) > 0) {
-                            currentIssue = 'ผิดปกติ';
-                            alertCounter += 5;
-                        } else {
-                            alertCounter = 0;
-                            currentIssue = 'all';
-                            resetBell();
-                        }
-
-                        if (alertCounter >= 10) {
-                            triggerBell();
-                        }
-                    },
-                    error: function() {
-                        console.error("ไม่สามารถดึงข้อมูลสถานะเครื่องจักรได้");
-                    }
-                });
-            }
-
-            function triggerBell() {
-                $("#notification-bell i").addClass("ring-active");
-                $("#alert-badge").removeClass("d-none");
-            }
-
-            function resetBell() {
-                $("#notification-bell i").removeClass("ring-active");
-                $("#alert-badge").addClass("d-none");
-            }
-
-            $("#notification-bell").on("click", function() {
-                window.location.href = "/factory_monitoring/machine_list/machine.php?status=" + encodeURIComponent(currentIssue);
-            });
-
-            // เริ่มทำงาน
-            loadStatus();
-            setInterval(loadStatus, 5000);
-        });
-    </script>
+    <script src="/factory_monitoring/admin/assets/js/indexadmin.js"></script>
 
 </body>
 

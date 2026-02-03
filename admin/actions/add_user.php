@@ -19,6 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = trim($_POST['phone'] ?? '');
     $role = $_POST['role'] ?? '';
 
+    if (preg_match('/^[01]+$/', $user_id) && strlen($user_id) > 1) {
+        $response['error'] = 'รูปแบบไม่อนุญาต';
+        echo json_encode($response);
+        exit;
+    }
+
     if (!$user_id || !$username || !$password || !$email || !$role) {
         $response['error'] = 'กรุณากรอกข้อมูลให้ครบ';
         echo json_encode($response);

@@ -34,7 +34,13 @@
             <label>Profile Image</label>
             <input type="file" name="profile_image" accept="image/*">
             <label>User ID</label>
-            <input type="text" name="user_id" required placeholder="ใส่เลข ID ที่ต้องการ">
+            <input type="text"
+                name="user_id"
+                id="add_user_id"
+                required
+                placeholder="กรอก ID"
+                oninput="checkBinary(this)">
+            <small id="id_warning" style="color: red; display: none;">ไม่อนุญาตให้ใช้เพียง 0 และ 1</small>
             <label>Username</label>
             <input type="text" name="username" required placeholder="Username">
             <label>Password</label>
