@@ -55,7 +55,11 @@ $repairs  = $conn->query("
     <title>Manager Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<<<<<<< HEAD
     <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/dashboard.css">
+=======
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+>>>>>>> a2fd13eb70bafbc5244740b48ec218bef163ba6a
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
@@ -65,6 +69,7 @@ $repairs  = $conn->query("
 
         <section class="main p-4">
 
+<<<<<<< HEAD
 
             <h3>Manager Control Panel</h3>
             <p class="text-muted">ภาพรวมระบบโรงงาน</p>
@@ -90,6 +95,31 @@ foreach ($kpis as [$title, $value, $color, $link]): ?>
         </a>
     </div>
 <?php endforeach; ?>
+=======
+            <h3>Manager Control Panel</h3>
+            <p class="text-muted">ภาพรวมระบบโรงงาน</p>
+
+            <!-- KPI -->
+            <div class="row g-4 mb-4">
+                <?php
+                $kpis = [
+                    ['เครื่อง Online', "$onlineMachine / $totalMachine", 'success'],
+                    ['งานค้าง', "$pendingRepair งาน", 'danger'],
+                    ['แจ้งซ่อมวันนี้', "$repairToday งาน", 'warning'],
+                    ['งานเดือนนี้', "$monthRepair งาน", 'info'],
+                ];
+                foreach ($kpis as [$title, $value, $color]): ?>
+                    <div class="col-md-3">
+                        <div class="card kpi <?= $color ?>">
+                            <div class="card-body">
+                                <small><?= $title ?></small>
+                                <h3><?= $value ?></h3>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+>>>>>>> a2fd13eb70bafbc5244740b48ec218bef163ba6a
 
             <!-- GRAPH -->
             <div class="row g-4 mb-4">
@@ -136,7 +166,10 @@ foreach ($kpis as [$title, $value, $color, $link]): ?>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
+<<<<<<< HEAD
 
+=======
+>>>>>>> a2fd13eb70bafbc5244740b48ec218bef163ba6a
                         </tbody>
                     </table>
                 </div>
@@ -178,6 +211,10 @@ foreach ($kpis as [$title, $value, $color, $link]): ?>
                     </table>
                 </div>
             </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> a2fd13eb70bafbc5244740b48ec218bef163ba6a
         </section>
     </div>
 
