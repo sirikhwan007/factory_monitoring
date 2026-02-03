@@ -242,7 +242,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                             resetBell();
                         }
 
-                        // 3. แจ้งเตือนเมื่อพบปัญหาเกิน 10 วินาที (2 รอบ Ajax)
+                        // 3. แจ้งเตือนเมื่อพบปัญหาเกิน 10 วินาที
                         if (alertCounter >= 10) {
                             triggerBell();
                         }
