@@ -31,7 +31,7 @@ $task_name      = trim($_POST['task_name']);
 $interval_month = (int)$_POST['interval_month'];
 
 $technician_id = ($_POST['technician_id'] !== '')
-    ? (int)$_POST['technician_id']
+    ? $_POST['technician_id']
     : null;
 
 $last_maintenance = date('Y-m-d');
@@ -46,7 +46,7 @@ if ($technician_id === null) {
     ");
 
     $stmt->bind_param(
-        "sisss",
+        "ssiss",
         $machine_id,
         $task_name,
         $interval_month,
@@ -63,7 +63,7 @@ if ($technician_id === null) {
     ");
 
     $stmt->bind_param(
-        "ssiiss",
+        "ssisss",
         $machine_id,
         $task_name,
         $interval_month,
@@ -120,7 +120,6 @@ $techs = $conn->query("
     <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
     <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
     <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         body {
@@ -191,7 +190,11 @@ $techs = $conn->query("
     <div class="layout-wrapper">
 
         <!-- SIDEBAR -->
-        <?php include $sidebar_file; ?>
+        <?php
+        if ($sidebar_file && file_exists($sidebar_file)) {
+            include $sidebar_file;
+        }
+        ?>
 
         <!-- MAIN -->
         <div class="main-content">
@@ -249,11 +252,6 @@ $techs = $conn->query("
 
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="assets/js/SidebarAdmin.js"></script>
-  <script src="assets/js/SidebarManager.js"></script>
-  <script src="/factory_monitoring/machine_list/js/machine.js"></script>
-  <script src="/factory_monitoring/dashboard/dashboard.js"></script>
 
 </body>
 
