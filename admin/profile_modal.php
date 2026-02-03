@@ -24,7 +24,7 @@
                        value="<?php echo htmlspecialchars($user['phone']); ?>" required>
             </div>
 
-            <!-- 🔐 เพิ่มรหัสผ่านใหม่ -->
+            <!--  เพิ่มรหัสผ่านใหม่ -->
             <div class="form-group">
                 <label for="password-input">รหัสผ่านใหม่ (ไม่บังคับ)</label>
                 <input type="password" id="password-input" name="password" placeholder="New Password">
@@ -34,7 +34,7 @@
                 <label for="confirm-password-input">ยืนยันรหัสผ่าน</label>
                 <input type="password" id="confirm-password-input" name="confirm_password" placeholder="Confirm Password">
             </div>
-            <!-- 🔐 จบส่วนรหัสผ่าน -->
+            <!--  จบส่วนรหัสผ่าน -->
 
             <div class="form-group">
                 <label for="profile-image-input">รูปโปรไฟล์</label>

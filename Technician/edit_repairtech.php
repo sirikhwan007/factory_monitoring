@@ -59,17 +59,23 @@ $username_session = $_SESSION['username'] ?? 'ช่างเทคนิค';
         .main {
             display: flex;
             min-height: 100vh;
+            overflow: hidden;
         }
 
         .sidebar-wrapper {
-            width: 240px;
-            min-width: 240px;
-            flex-shrink: 0;
+            width: 250px;
+    min-width: 250px;
+    height: 100vh;
+    background: #fff;
+    border-right: 1px solid #ddd;
         }
 
         .content-container {
             flex: 1;
-            padding: 30px;
+    padding: 30px;
+    height: 100vh; 
+    overflow-y: auto; /* ให้เลื่อนขึ้นลงได้เฉพาะฝั่งเนื้อหา */
+    background: #f4f6f9;
         }
 
         .card-machine {
