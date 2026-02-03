@@ -62,6 +62,14 @@ $activePage = $activePage ?? '';
                 </a>
             </li>
 
+            <li>
+                <a href="/factory_monitoring/Technician/maintenance_tasks.php"
+                    class="<?php echo ($activePage === 'maintenance_tasks') ? 'sb-ul-active' : ''; ?>">
+                    <i class="fas fa-tools fontawesome"></i>
+                    <span class="sb-text">แผนบำรุงรักษา</span>
+                </a>
+            </li>
+
         </ul>
 
     </div>
