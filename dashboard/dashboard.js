@@ -213,15 +213,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
  async function loadHistory() {
   try {
-    const res = await fetch(`${API_BASE}/api/history?range=1h`);
+    const res = await fetch(
+      `${API_BASE}/api/history?range=1h&mac=${MACHINE_MAC}`
+    );
     const history = await res.json();
 
-    // วาดข้อมูลย้อนหลังลงในกราฟ
-    history.temperature.forEach(p => updateLineChart(tempChart, p.value, new Date(p.time), false));
-    history.vibration.forEach(p => updateLineChart(vibChart, p.value, new Date(p.time), false));
-    history.voltage.forEach(p => updateLineChart(voltChart, p.value, new Date(p.time), false));
-    history.current.forEach(p => updateLineChart(currChart, p.value, new Date(p.time), false));
-    history.power.forEach(p => updateLineChart(powChart, p.value, new Date(p.time), false));
+    history.temperature.forEach(p =>
+      updateLineChart(tempChart, p.value, new Date(p.time), false)
+    );
+    history.vibration.forEach(p =>
+      updateLineChart(vibChart, p.value, new Date(p.time), false)
+    );
+    history.voltage.forEach(p =>
+      updateLineChart(voltChart, p.value, new Date(p.time), false)
+    );
+    history.current.forEach(p =>
+      updateLineChart(currChart, p.value, new Date(p.time), false)
+    );
+    history.power.forEach(p =>
+      updateLineChart(powChart, p.value, new Date(p.time), false)
+    );
   } catch (err) {
     console.error("History load error:", err);
   }
