@@ -15,9 +15,10 @@ $repair_id = (int) $_GET['id'];
    ✔ ใช้ username จาก repair_history ตรง ๆ
 ================================ */
 $stmt = $conn->prepare("
-    SELECT r.*, m.location
+    SELECT r.*, m.location, u.username AS tech_name
     FROM repair_history r
     LEFT JOIN machines m ON r.machine_id = m.machine_id
+    LEFT JOIN users u ON r.technician_id = u.user_id 
     WHERE r.id = ?
 ");
 $stmt->bind_param("i", $repair_id);
@@ -244,6 +245,23 @@ $username_session = $_SESSION['username'] ?? 'ช่างเทคนิค';
                                         <?= nl2br(htmlspecialchars($row['repair_note'])) ?>
                                     </div>
                                 <?php endif; ?>
+
+                                <h5 class="text-muted mb-2 mt-3">
+    <i class="fas fa-user-cog"></i> ช่างผู้รับผิดชอบ
+</h5>
+
+<div class="p-3 bg-light rounded border mb-3">
+    <?php if (!empty($row['tech_name'])): ?>
+        <span class="fw-bold text-primary">
+            <i class="fas fa-user-check me-1"></i> 
+            <?= htmlspecialchars($row['tech_name']) ?>
+        </span>
+    <?php else: ?>
+        <span class="text-muted fst-italic">
+            <i class="fas fa-user-slash me-1"></i> ยังไม่ได้มอบหมายช่าง
+        </span>
+    <?php endif; ?>
+</div>
 
                                 <!-- ปุ่มกลับ -->
                                 <hr>

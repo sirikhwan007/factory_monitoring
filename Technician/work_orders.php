@@ -17,8 +17,9 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 /* ===============================
    2. ดึงงานซ่อม
 ================================ */
+// ดึงเฉพาะงานที่มีการระบุ ID ของช่างคนนี้ไว้เท่านั้น
 $sql = "SELECT * FROM repair_history
-        WHERE technician_id IS NULL OR technician_id = ?
+        WHERE technician_id = ?
         ORDER BY 
             CASE WHEN status = 'กำลังซ่อม' THEN 0 ELSE 1 END,
             report_time DESC";

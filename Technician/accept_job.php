@@ -22,13 +22,12 @@ $username  = $_SESSION['username'] ?? 'ช่างเทคนิค';
 // รับงานซ่อม
 // ===============================
 $sql = "UPDATE repair_history
-        SET technician_id = ?,
-            username = ?, 
-            status = 'กำลังซ่อม'
-        WHERE id = ?";
+        SET status = 'กำลังซ่อม',
+            username = ? 
+        WHERE id = ? AND technician_id = ?"; // เช็คทั้ง ID งาน และ ID ช่าง
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("isi", $user_id, $username, $repair_id);
+$stmt->bind_param("sii", $username, $repair_id, $user_id);
 
 if ($stmt->execute()) {
     // รับงานสำเร็จ → ไปหน้ารายละเอียดงาน
