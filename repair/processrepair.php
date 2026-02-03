@@ -8,21 +8,23 @@ $reporter      = $_POST['reporter'] ?? '';
 $position      = $_POST['position'] ?? '';
 $type          = $_POST['type'] ?? '';
 $detail        = $_POST['detail'] ?? '';
-// รับค่าช่าง ถ้าไม่มีให้เป็น null
+
+// --- เพิ่มบรรทัดนี้: รับค่า technician_id จากหน้า report.php ---
+$technician_id = !empty($_POST['technician_id']) ? (int)$_POST['technician_id'] : NULL;
 
 $report_time = date("Y-m-d H:i:s");
 $status      = 'รอดำเนินการ';
 
-// 2. ใช้ Prepared Statement เพื่อความปลอดภัยและรองรับ ID ยาว
+// 2. ใช้ Prepared Statement
 $sql = "INSERT INTO repair_history 
         (machine_id, reporter, position, type, detail, report_time, status, technician_id)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
 
-// "ssssssss" หมายถึงส่งค่าเป็น String ทั้งหมด 8 ตัว 
-// ถึงแม้ ID จะเป็นตัวเลข แต่ส่งแบบ String ("s") จะปลอดภัยที่สุดสำหรับเลข 11 หลัก
-$stmt->bind_param("ssssssss", 
+// --- แก้ไข bind_param ให้รองรับค่า INTEGER ของ technician_id ---
+// เปลี่ยนจาก "ssssssss" เป็น "sssssssi" (i คือ integer ตัวสุดท้าย)
+$stmt->bind_param("sssssssi", 
     $machine_id, 
     $reporter, 
     $position, 

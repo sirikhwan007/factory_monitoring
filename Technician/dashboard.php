@@ -18,10 +18,12 @@ $username = $_SESSION['username'];
 $pending_count = 0;
 $sql_pending = "SELECT COUNT(*) AS count 
                 FROM repair_history 
-                WHERE username = ? AND status = 'รอดำเนินการ'";
+                WHERE technician_id = ? AND status = 'รอดำเนินการ'";
+
 $stmt = $conn->prepare($sql_pending);
 if ($stmt) {
-    $stmt->bind_param("s", $username);
+    // ใช้ $_SESSION['user_id'] ซึ่งเป็นตัวเลข ID ของช่างที่ Login อยู่
+    $stmt->bind_param("i", $_SESSION['user_id']); 
     $stmt->execute();
     $result = $stmt->get_result();
     if ($row = $result->fetch_assoc()) {
