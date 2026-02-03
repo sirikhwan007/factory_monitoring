@@ -99,3 +99,23 @@ th {
         position: relative;
     }
 }
+
+/* KPI CLICKABLE */
+.kpi-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card.kpi {
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.card.kpi:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0,0,0,.12);
+}
+
+.card.kpi:active {
+    transform: translateY(-1px);
+}

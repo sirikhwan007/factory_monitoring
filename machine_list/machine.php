@@ -17,7 +17,7 @@ if ($conn->connect_error) {
 
 // ดึงข้อมูลเครื่องจักร
 $machines = [];
-$sql = "SELECT machine_id, name, status, location, photo_url FROM machines";
+$sql = "SELECT machine_id, name, status, location, photo_url, mac_address FROM machines";
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
   while ($row = $result->fetch_assoc()) {
@@ -31,6 +31,7 @@ $sidebar_paths = [
   'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
   'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
 ];
+
 
 // เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];

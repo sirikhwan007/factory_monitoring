@@ -20,8 +20,8 @@ $activePage = $activePage ?? '';
             <div class="sb-logo">
 
                 <img src="/factory_monitoring/admin/uploads/<?php echo htmlspecialchars($profileImage); ?>"
-                     class="profile-img"
-                     alt="Profile">
+                    class="profile-img"
+                    alt="Profile">
 
                 <div class="profile-info">
                     <span class="profile-name">
@@ -40,7 +40,7 @@ $activePage = $activePage ?? '';
 
             <li>
                 <a href="/factory_monitoring/Technician/dashboard.php"
-                   class="<?php echo ($activePage === 'dashboard') ? 'sb-ul-active' : ''; ?>">
+                    class="<?php echo ($activePage === 'dashboard') ? 'sb-ul-active' : ''; ?>">
                     <i class="fas fa-home fontawesome"></i>
                     <span class="sb-text">หน้าหลัก</span>
                 </a>
@@ -48,7 +48,7 @@ $activePage = $activePage ?? '';
 
             <li>
                 <a href="/factory_monitoring/Technician/work_orders.php"
-                   class="<?php echo ($activePage === 'work_orders') ? 'sb-ul-active' : ''; ?>">
+                    class="<?php echo ($activePage === 'work_orders') ? 'sb-ul-active' : ''; ?>">
                     <i class="fas fa-wrench fontawesome"></i>
                     <span class="sb-text">งานซ่อม</span>
                 </a>
@@ -56,11 +56,20 @@ $activePage = $activePage ?? '';
 
             <li>
                 <a href="/factory_monitoring/Technician/history_technician.php"
-                   class="<?php echo ($activePage === 'history') ? 'sb-ul-active' : ''; ?>">
+                    class="<?php echo ($activePage === 'history') ? 'sb-ul-active' : ''; ?>">
                     <i class="fas fa-clock fontawesome"></i>
                     <span class="sb-text">ประวัติการแจ้งซ่อม</span>
                 </a>
             </li>
+
+            <li>
+                <a href="/factory_monitoring/Technician/maintenance_tasks.php"
+                    class="<?php echo ($activePage === 'maintenance_tasks') ? 'sb-ul-active' : ''; ?>">
+                    <i class="fas fa-tools fontawesome"></i>
+                    <span class="sb-text">แผนบำรุงรักษา</span>
+                </a>
+            </li>
+
 
         </ul>
 

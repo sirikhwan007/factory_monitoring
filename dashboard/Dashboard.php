@@ -140,6 +140,13 @@ $conn->close();
                     style="padding: 4px 8px; font-size: 12px; background-color:#ff8c00; border-color:#ff8c00; width: fit-content;">
                     <i class="fa-solid fa-clipboard"></i> แจ้งซ่อม
                   </a>
+                  <a href="/factory_monitoring/machine_list/maintenance_plan.php?machine_id=<?= urlencode($machine['machine_id']) ?>"
+                    class="btn btn-primary btn-sm"
+                    style="padding: 4px 8px; font-size: 12px; background-color:#00CC99; border-color:#00CC99; width: fit-content;"
+                    onclick="event.stopPropagation(); window.location.href=this.href; return false;">
+                    <i class="fa-solid fa-calendar-check"></i> แผนซ่อมตามรอบ
+                  </a>
+
 
                   <?php if ($doc): ?>
                     <a href="/factory_monitoring/<?= $doc['file_path'] ?>"
@@ -261,6 +268,7 @@ $conn->close();
       // เพิ่มบรรทัดนี้เพื่อส่งค่า MAC Address ให้ JavaScript
       const MACHINE_MAC = "<?php echo $machine['mac_address']; ?>";
     </script>
+
 </body>
 
 </html>

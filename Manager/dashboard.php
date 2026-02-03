@@ -72,23 +72,24 @@ $repairs  = $conn->query("
             <!-- KPI -->
             <div class="row g-4 mb-4">
                 <?php
-                $kpis = [
-                    ['เครื่อง Online', "$onlineMachine / $totalMachine", 'success'],
-                    ['งานค้าง', "$pendingRepair งาน", 'danger'],
-                    ['แจ้งซ่อมวันนี้', "$repairToday งาน", 'warning'],
-                    ['งานเดือนนี้', "$monthRepair งาน", 'info'],
-                ];
-                foreach ($kpis as [$title, $value, $color]): ?>
-                    <div class="col-md-3">
-                        <div class="card kpi <?= $color ?>">
-                            <div class="card-body">
-                                <small><?= $title ?></small>
-                                <h3><?= $value ?></h3>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+$kpis = [
+    ['เครื่อง Online', "$onlineMachine / $totalMachine", 'success', '/factory_monitoring/machine_list/machine.php'],
+    ['งานค้าง', "$pendingRepair งาน", 'danger', '/factory_monitoring/repair/list.php?status=pending'],
+    ['แจ้งซ่อมวันนี้', "$repairToday งาน", 'warning', '/factory_monitoring/repair/list.php?today=1'],
+    ['งานเดือนนี้', "$monthRepair งาน", 'info', '/factory_monitoring/repair/report_month.php'],
+];
+foreach ($kpis as [$title, $value, $color, $link]): ?>
+    <div class="col-md-3">
+        <a href="<?= $link ?>" class="kpi-link">
+            <div class="card kpi <?= $color ?>">
+                <div class="card-body">
+                    <small><?= $title ?></small>
+                    <h3><?= $value ?></h3>
+                </div>
             </div>
+        </a>
+    </div>
+<?php endforeach; ?>
 
             <!-- GRAPH -->
             <div class="row g-4 mb-4">
