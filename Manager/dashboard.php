@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Manager') {
 
 /* ================= KPI ================= */
 $totalMachine   = $conn->query("SELECT COUNT(*) c FROM machines")->fetch_assoc()['c'];
-$onlineMachine  = $conn->query("SELECT COUNT(*) c FROM machines WHERE status='online'")->fetch_assoc()['c'];
+
 $repairToday    = $conn->query("SELECT COUNT(*) c FROM repair_history WHERE DATE(report_time)=CURDATE()")->fetch_assoc()['c'];
 $pendingRepair  = $conn->query("SELECT COUNT(*) c FROM repair_history WHERE status IN ('รอดำเนินการ','กำลังซ่อม')")->fetch_assoc()['c'];
 $monthRepair    = $conn->query("
@@ -19,6 +19,7 @@ $monthRepair    = $conn->query("
     WHERE MONTH(report_time)=MONTH(CURDATE())
       AND YEAR(report_time)=YEAR(CURDATE())
 ")->fetch_assoc()['c'];
+$machines_sql = $conn->query("SELECT machine_id, name, mac_address FROM machines ORDER BY machine_id");
 
 /* ================= GRAPH DATA ================= */
 $statusLabels = $statusCounts = [];
@@ -73,10 +74,11 @@ $repairs  = $conn->query("
             <div class="row g-4 mb-4">
                 <?php
                 $kpis = [
-                    ['เครื่อง Online', "$onlineMachine / $totalMachine", 'success'],
-                    ['งานค้าง', "$pendingRepair งาน", 'danger'],
-                    ['แจ้งซ่อมวันนี้', "$repairToday งาน", 'warning'],
-                    ['งานเดือนนี้', "$monthRepair งาน", 'info'],
+                    // แก้ไขบรรทัดนี้: ใส่โครงสร้าง HTML ที่มี ID เพื่อให้ JS เข้าไปเขียนค่าได้
+                    ['เครื่อง Online', '<span id="onlineCount">0</span> / ' . $totalMachine, 'success'],
+                    ['งานค้าง', $pendingRepair . " งาน", 'danger'],
+                    ['แจ้งซ่อมวันนี้', $repairToday . " งาน", 'warning'],
+                    ['งานเดือนนี้', $monthRepair . " งาน", 'info'],
                 ];
                 foreach ($kpis as [$title, $value, $color]): ?>
                     <div class="col-md-3">
@@ -124,18 +126,15 @@ $repairs  = $conn->query("
                             </tr>
                         </thead>
                         <tbody>
-                            <?php while ($m = $machines->fetch_assoc()): ?>
-                                <tr>
+                            <?php while ($m = $machines_sql->fetch_assoc()): ?>
+                                <tr class="machine-row" data-mac="<?= htmlspecialchars($m['mac_address']) ?>" data-id="<?= $m['machine_id'] ?>">
                                     <td><?= $m['machine_id'] ?></td>
                                     <td><?= htmlspecialchars($m['name']) ?></td>
-                                    <td>
-                                        <?= $m['status'] == 'online'
-                                            ? '<span class="badge bg-success">Online</span>'
-                                            : '<span class="badge bg-danger">Offline</span>' ?>
+                                    <td class="status-cell">
+                                        <span class="badge bg-secondary">กำลังโหลด...</span>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
-
                         </tbody>
                     </table>
                 </div>
@@ -180,6 +179,7 @@ $repairs  = $conn->query("
         </section>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- CHART SCRIPT -->
     <script>
         new Chart(statusChart, {
@@ -222,6 +222,70 @@ $repairs  = $conn->query("
                 },
                 cutout: '65%'
             }
+        });
+
+
+        const API_BASE = "https://factory-monitoring.onrender.com";
+
+        async function updateAllStatuses() {
+            let onlineCount = 0;
+            const rows = document.querySelectorAll('.machine-row');
+
+            for (let row of rows) {
+                const mac = row.getAttribute('data-mac');
+                const id = row.getAttribute('data-id');
+                const statusCell = row.querySelector('.status-cell');
+
+                try {
+                    const res = await fetch(`${API_BASE}/api/latest/${mac}`);
+                    const data = await res.json();
+
+                    if (!data || Object.keys(data).length === 0) throw new Error();
+
+                    const temp = Number(data.temperature) || 0;
+                    const vib = Number(data.vibration) || 0;
+                    const cur = Number(data.current) || 0;
+                    const volt = Number(data.voltage) || 0;
+                    const pow = Number(data.power) || 0;
+
+                    // Logic การตัดสินใจเดียวกับ Dashboard/Machine List
+                    const isDanger = (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || pow >= 20);
+                    const isWarning = (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || pow >= 15);
+                    const isRunning = (pow > 0.5);
+
+                    let statusText = "";
+                    let badgeClass = "";
+
+                    if (isDanger) {
+                        statusText = "อันตราย";
+                        badgeClass = "bg-danger";
+                    } else if (isWarning) {
+                        statusText = "ผิดปกติ";
+                        badgeClass = "bg-warning text-dark";
+                    } else if (isRunning) {
+                        statusText = "กำลังทำงาน";
+                        badgeClass = "bg-success";
+                        onlineCount++; // นับเฉพาะเครื่องที่กำลังทำงานปกติ
+                    } else {
+                        statusText = "หยุดทำงาน";
+                        badgeClass = "bg-secondary";
+                    }
+
+                    statusCell.innerHTML = `<span class="badge ${badgeClass}">${statusText}</span>`;
+
+                } catch (error) {
+                    statusCell.innerHTML = `<span class="badge bg-dark">Offline</span>`;
+                }
+            }
+
+            // อัปเดตตัวเลข KPI ด้านบน
+            document.getElementById('onlineCount').innerText = onlineCount;
+        }
+
+        // อัปเดตครั้งแรกและตั้งเวลาทุก 5 วินาที
+        $(document).ready(function() {
+            updateAllStatuses();
+            setInterval(updateAllStatuses, 5000);
         });
     </script>
 
