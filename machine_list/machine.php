@@ -1,5 +1,6 @@
 <?php
 session_start();
+include __DIR__ . "/../config.php";
 
 // เช็กล็อกอิน
 if (!isset($_SESSION['user_id'])) {
@@ -9,11 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_role = $_SESSION['role'] ?? 'Operator';
 
-// เชื่อมต่อฐานข้อมูล
-$conn = new mysqli("localhost", "root", "", "factory_monitoring");
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
+
 
 // ดึงข้อมูลเครื่องจักร
 $machines = [];
