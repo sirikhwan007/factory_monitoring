@@ -143,12 +143,14 @@ $conn->close();
                     <i class="fa-solid fa-clipboard"></i> แจ้งซ่อม
                   </a>
 
+                  <?php if ($user_role !== 'Operator'): ?>
                   <a href="/factory_monitoring/machine_list/maintenance_plan.php?machine_id=<?= urlencode($machine['machine_id']) ?>"
                     class="btn btn-primary btn-sm"
                     style="padding: 4px 8px; font-size: 12px; background-color:#00CC99; border-color:#00CC99; width: fit-content;"
                     onclick="event.stopPropagation(); window.location.href=this.href; return false;">
                     <i class="fa-solid fa-calendar-check"></i> แผนซ่อมตามรอบ
                   </a>
+                  <?php endif; ?>
 
                   <?php if ($doc): ?>
                     <a href="/factory_monitoring/<?= $doc['file_path'] ?>"
