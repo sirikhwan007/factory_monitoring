@@ -106,9 +106,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
 <body>
 
-    <div class="btn-hamburger">
-        <i class="fa-solid fa-bars"></i>
-    </div>
+    <div class="btn-hamburger"><i class="fa-solid fa-bars"></i></div>
 
     <section class="main">
 
