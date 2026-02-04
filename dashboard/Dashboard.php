@@ -71,13 +71,19 @@ $conn->close();
   <style>
     .dashboard {
       margin-left: 250px;
+      transition: all 0.3s ease;
+    }
+    @media (max-width: 991px) {
+      .dashboard {
+        margin-left: 0; /* จอเล็กไม่ต้องเว้นที่ซ้าย */
+        padding: 15px;  /* ลด padding ให้เนื้อหาเต็มจอมากขึ้น */
+        border-radius: 0; /* จอเล็กไม่ต้องโค้งเยอะก็ได้ */
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="btn-hamburger"><i class="fa-solid fa-bars"></i></div>
-
 
   <section class="main">
 
