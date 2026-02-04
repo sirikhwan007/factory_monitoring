@@ -112,14 +112,6 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li> 
 
-         <!--   <li>  
-                    <a href="/factory_monitoring/Manager/maintenance_schedule.php"
-                        class="<?= $currentPage === 'maintenance_schedule.php' ? 'active' : '' ?>">
-                        <i class="fas fa-file-lines"></i>
-                        <span>ประวัติการบำรุงรักษา</span>
-                    </a>
-                </li>  -->
-
             </ul>
         </div>
 
