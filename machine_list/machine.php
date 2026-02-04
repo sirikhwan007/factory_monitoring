@@ -58,7 +58,8 @@ $conn->close();
       border-radius: 20px;
       padding: 30px;
       margin: 0px;
-      margin-left: 250px;
+      margin-left: 250px; /* Desktop */
+      transition: all 0.3s ease;
     }
 
     /* บังคับกลุ่มปุ่มให้เรียงแนวนอน */
@@ -127,17 +128,23 @@ $conn->close();
       border-color: #dc3545;
     }
 
-    /* Hover Effect (เลือกใช้สีเทาอ่อนสำหรับทุกปุ่มตอนยังไม่คลิก) */
+    
     .btn-filter:hover:not(.active) {
       background-color: #f8f9fa;
       border-color: #adb5bd;
+    }
+    
+    @media (max-width: 991px) {
+      .dashboard {
+        margin-left: 0; /* จอเล็กไม่ต้องเว้นที่ซ้าย */
+        padding: 15px;  /* ลด padding ให้เนื้อหาเต็มจอมากขึ้น */
+        border-radius: 0; /* จอเล็กไม่ต้องโค้งเยอะก็ได้ */
+      }
     }
   </style>
 </head>
 
 <body>
-
-  <div class="btn-hamburger"><i class="fa-solid fa-bars"></i></div>
 
   <section class="main">
 

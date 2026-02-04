@@ -1,14 +1,38 @@
-/* --- General & Typography --- */
 body {
     font-family: 'Kanit', sans-serif;
-    
+    background-color: #f8fafd;
     color: #333;
+    line-height: 1.6;
+    margin: 0;
     overflow-x: hidden;
 }
 
 .main {
-    padding: 1.5rem 2.5rem 1.5rem 1rem; /* เพิ่ม padding ให้สมดุล */
+    display: flex;
     width: 100%;
+    min-height: 100vh;
+    padding: 0;
+}
+
+.sidebar-wrapper {
+    width: 250px;
+    min-width: 250px;
+    flex-shrink: 0;
+    background: #fff;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    z-index: 1000;
+    transition: left 0.3s ease;
+}
+
+.repair-history-container {
+    flex-grow: 1;
+    width: calc(100% - 250px);
+    padding: 30px;
+    overflow-x: auto;
 }
 
 .page-title {
@@ -26,132 +50,248 @@ body {
     font-size: 2.5rem;
 }
 
-/* --- Table Container --- */
 .table-wrapper {
-    background: #ffffff;
+    background: #fff;
     border-radius: 15px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0);
-    padding: 25px; /* เพิ่ม padding ภายในการ์ด */
-    margin-right: 0; /* เพิ่มระยะห่างขอบขวา */
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    padding: 30px;
     overflow-x: auto;
 }
 
-/* --- Table Styles --- */
 .repair-table {
     width: 100%;
-    min-width: 1100px;
+    min-width: 1200px;
     border-collapse: separate;
-    border-spacing: 0 12px; /* เพิ่มระยะห่างระหว่างแถว */
+    border-spacing: 0 10px;
 }
 
 .repair-table thead th {
     background-color: #e9f0f7;
     color: #4a6c8e;
-    padding: 18px 15px;
+    padding: 18px 20px;
     font-size: 14px;
     font-weight: 600;
-    text-align: center; /* ปรับหัวตารางให้อยู่กลางทั้งหมด */
-    border: none;
+    text-align: center;
     text-transform: uppercase;
     white-space: nowrap;
-}
-
-/* คอลัมน์รายละเอียดให้ชิดซ้ายเพื่อให้อ่านง่าย */
-.repair-table thead th:nth-child(6) {
-    text-align: left;
-}
-
-.repair-table thead th:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
-.repair-table thead th:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
-
-.repair-table tbody td {
-    background-color: #fff;
-    padding: 15px;
-    font-size: 14px;
-    color: #555;
-    vertical-align: middle;
-    text-align: center; /* ปรับเนื้อหาให้อยู่กลางทั้งหมด */
     border: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
-/* ยกเว้นคอลัมน์รายละเอียดให้ชิดซ้าย */
+.repair-table thead th:nth-child(6),
 .repair-table tbody td.detail-cell {
     text-align: left;
 }
 
-.repair-table tbody tr:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+.repair-table thead th:first-child,
+.repair-table tbody td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
-.repair-table tbody tr td:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
-.repair-table tbody tr td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
+.repair-table thead th:last-child,
+.repair-table tbody td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
 
-/* --- Detail Column --- */
+.repair-table tbody td {
+    background-color: #fff;
+    padding: 15px 20px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.repair-table tbody tr {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.repair-table tbody tr:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
 .detail-cell {
     max-width: 250px;
-    min-width: 200px;
+    min-width: 150px;
     white-space: normal;
     word-wrap: break-word;
-    line-height: 1.5;
+    line-height: 1.4;
+    font-size: 13px;
+    color: #666;
 }
 
-/* --- Status Badges --- */
 .status-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 12px;        /* ลด Padding เล็กน้อยเพื่อให้ประหยัดพื้นที่ */
+    padding: 6px 12px;
     border-radius: 8px;
     font-size: 13px;
     font-weight: 500;
     gap: 5px;
-    min-width: 100px;         /* กำหนดความกว้างขั้นต่ำให้เท่าๆ กัน */
-    margin-bottom: 0;         /* ป้องกัน Margin ล่างเดิมที่อาจทำให้เบี้ยว */
+    min-width: 100px;
+    white-space: nowrap;
 }
 
-.status-badge.pending { 
-    background-color: #fff9e6; 
-    color: #f39c12; 
-    border: 1px solid #f39c12; 
+.status-badge.pending {
+    background-color: #fff8e1;
+    color: #ffc107;
+    border: 1px solid #ffc107;
 }
 
-/* --- Action Buttons --- */
+.status-badge.success {
+    background-color: #e6ffed;
+    color: #28a745;
+    border: 1px solid #28a745;
+}
+
+.status-badge.in-progress {
+    background-color: #e0f2f7;
+    color: #17a2b8;
+    border: 1px solid #17a2b8;
+}
+
+.status-badge.failed {
+    background-color: #ffe6e6;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.status-badge.cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
 .action-cell {
     display: flex;
-    flex-direction: row;      /* บังคับให้เรียงเป็นแนวนอน */
-    align-items: center;      /* จัดให้อยู่กึ่งกลางแนวตั้งพร้อมกัน */
-    justify-content: center;  /* จัดให้อยู่กึ่งกลางแนวนอนของคอลัมน์ */
-    gap: 8px;                 /* ระยะห่างระหว่างสถานะและปุ่ม */
-    white-space: nowrap;      /* ป้องกันการตัดบรรทัด */
-    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
 }
 
 .btn-action {
-    margin: 0;                /* ลบ margin ส่วนเกินออก */
     padding: 6px 15px;
     font-size: 13px;
-    height: 35px;             /* กำหนดความสูงให้ใกล้เคียงกับ Badge */
+    height: 35px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-action.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-action.btn-success {
+    background-color: #28a745;
+    color: #fff;
 }
 
 .btn-action:hover {
-    background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
-/* --- Date & Time --- */
 .datetime-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     line-height: 1.4;
+    white-space: nowrap;
 }
 
-.datetime-date { font-weight: 500; color: #444; display: block; }
-.datetime-time { font-size: 12px; color: #888; }
+.datetime-date {
+    font-weight: 500;
+    color: #495057;
+}
 
-/* --- Responsive --- */
+.datetime-time {
+    font-size: 12px;
+    color: #888;
+}
+
+.btn-hamburger {
+    display: block;
+}
+
+.sidebar-overlay {
+    display: block;
+}
+
 @media (max-width: 992px) {
-    .main { padding: 1.2rem; }
-    .table-wrapper { padding: 15px; margin-right: 0; }
+    .main {
+        flex-direction: column;
+    }
+    .sidebar-wrapper * {
+        display: block !important; 
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .sidebar-wrapper a,
+    .sidebar-wrapper .nav-link { 
+        display: flex !important;           /* ใช้ Flexbox */
+        flex-direction: row !important;     /* บังคับเรียงแนวนอน (ซ้ายไปขวา) */
+        align-items: center !important;     /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+        justify-content: flex-start !important; /* ชิดซ้าย */
+        text-align: left !important;        /* ข้อความชิดซ้าย */
+        padding: 10px 20px !important;      /* เพิ่มระยะห่างรอบๆ ให้กดง่ายขึ้น */
+    }
+
+    .sidebar-wrapper {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        width: 250px;
+        height: 100vh;
+        z-index: 2000;
+        background-color: #fff;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+    }
+
+    .sidebar-wrapper.active {
+        left: 0;
+    }
+
+    .repair-history-container {
+        width: 100%;
+        padding: 60px 15px 15px;
+    }
+
+    .btn-hamburger {
+        display: flex;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        width: 35px;
+        height: 35px;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        z-index: 3000;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 1900;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
 }

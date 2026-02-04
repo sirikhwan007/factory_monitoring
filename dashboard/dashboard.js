@@ -202,6 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const voltChart = createLineChart(document.getElementById("voltChart"), "Voltage", "#60a5fa");
   const currChart = createLineChart(document.getElementById("currChart"), "Current", "#34d399");
   const powChart = createLineChart(document.getElementById("powChart"), "Power", "#a78bfa");
+  const enegyChart = createLineChart(document.getElementById("enegyChart"), "Energy", "#f472b6");
 
   // สร้าง Gauge
   const tempGauge = createGauge(document.getElementById("tempGauge"), 100);
@@ -209,6 +210,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const voltGauge = createGauge(document.getElementById("voltGauge"), 400);
   const currGauge = createGauge(document.getElementById("currGauge"), 50);
   const powGauge = createGauge(document.getElementById("powGauge"), 1000);
+  const energyGauge = createGauge(document.getElementById("energyGauge"), 5000);
 
 
  async function loadHistory() {
@@ -232,6 +234,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     history.power.forEach(p =>
       updateLineChart(powChart, p.value, new Date(p.time), false)
+    );
+    history.energy.forEach(p =>
+      updateLineChart(enegyChart, p.value, new Date(p.time), false)
     );
   } catch (err) {
     console.error("History load error:", err);
@@ -281,6 +286,7 @@ async function checkInfluxStatus() {
       const elVolt = document.getElementById("volt"); if(elVolt) elVolt.textContent = data.voltage?.toFixed(2) ?? "--";
       const elCurr = document.getElementById("curr"); if(elCurr) elCurr.textContent = data.current?.toFixed(2) ?? "--";
       const elPow = document.getElementById("pow"); if(elPow) elPow.textContent = data.power?.toFixed(2) ?? "--";
+      const elEnergy = document.getElementById("energy"); if(elEnergy) elEnergy.textContent = data.energy?.toFixed(2) ?? "--";
 
       // อัปเดตสถานะเครื่องจักรตาม Power (W)
       // ในฟังก์ชัน fetchData()
@@ -292,10 +298,11 @@ if (statusEl) {
     const cur = data.current || 0;
     const volt = data.voltage || 0;
     const power = data.power || 0;
+    const energy = data.energy || 0;
 
     // กำหนดเงื่อนไข Danger และ Warning
-    const isDanger = (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || power >= 20);
-    const isWarning = (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15);
+    const isDanger = (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || power >= 20 || energy >= 1000);
+    const isWarning = (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15 || energy >= 800);
     const isRunning = (power > 0.5); // เช็คว่าเครื่องเปิดอยู่หรือไม่
 
     if (isDanger) {
@@ -326,6 +333,7 @@ if (statusEl) {
       updateLineChart(voltChart, data.voltage, now, false);
       updateLineChart(currChart, data.current, now, false);
       updateLineChart(powChart, data.power, now, false);
+      updateLineChart(enegyChart, data.energy, now, false);
 
       // อัปเดต Gauge
       updateGauge(tempGauge, data.temperature, 100);
@@ -333,6 +341,7 @@ if (statusEl) {
       updateGauge(voltGauge, data.voltage, 400);
       updateGauge(currGauge, data.current, 50);
       updateGauge(powGauge, data.power, 1000);
+      updateGauge(energyGauge, data.energy, 5000);
 
     } catch (err) {
       console.error("❌ Fetch error:", err);
@@ -383,7 +392,10 @@ async function show24hHistory() {
                         datasets: [
                             { label: 'Temp (°C)', data: history.temperature.map(p => p.value), borderColor: '#f87171', tension: 0.2, pointRadius: 0 },
                             { label: 'Vib (g)', data: history.vibration.map(p => p.value), borderColor: '#facc15', tension: 0.2, pointRadius: 0 },
-                            { label: 'Power (W)', data: history.power.map(p => p.value), borderColor: '#a78bfa', tension: 0.2, pointRadius: 0 }
+                            { label: 'Power (W)', data: history.power.map(p => p.value), borderColor: '#a78bfa', tension: 0.2, pointRadius: 0 },
+                            { label: 'Energy (Wh)', data: history.energy.map(p => p.value), borderColor: '#f472b6', tension: 0.2, pointRadius: 0 },
+                            { label: 'Volt (V)', data: history.voltage.map(p => p.value), borderColor: '#60a5fa', tension: 0.2, pointRadius: 0 },
+                            { label: 'Curr (A)', data: history.current.map(p => p.value), borderColor: '#34d399', tension: 0.2, pointRadius: 0 }
                         ]
                     },
                     options: {
