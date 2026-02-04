@@ -57,320 +57,10 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
     <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
+    <link rel="stylesheet" href="/factory_monitoring/repair/css/reporthistory.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        /* --- General & Typography --- */
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: #f8fafd;
-            color: #333;
-            line-height: 1.6;
-            margin: 0;
-            overflow-x: hidden;
-            /* ป้องกันสกรอลแนวนอนทั้งหน้า */
-        }
-
-        /* --- [แก้ไขส่วน Layout หลัก] --- */
-        .main {
-            display: flex;
-            /* จัดเรียงซ้าย-ขวา */
-            width: 100%;
-            min-height: 100vh;
-            /* ความสูงเต็มจอ */
-            padding: 0 !important;
-            /* ลบ padding เดิมออกเพื่อไม่ให้เบี้ยว */
-        }
-
-        /* --- [เพิ่ม Class สำหรับ Sidebar Wrapper] --- */
-        .sidebar-wrapper {
-            width: 250px;
-            /* ความกว้างคงที่ของ Sidebar */
-            min-width: 250px;
-            /* ห้ามหดเล็กกว่านี้ */
-            flex-shrink: 0;
-            /* สำคัญ! ห้ามบีบ Sidebar เมื่อหน้าจอเล็ก */
-            background: #fff;
-            /* หรือสีเดียวกับ Sidebar ของคุณ */
-            height: 100vh;
-            /* สูงเต็มจอ */
-            position: sticky;
-            /* ให้ติดอยู่กับที่ */
-            top: 0;
-            overflow-y: auto;
-            /* ถ้า Sidebar ยาวให้เลื่อนได้ */
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-            z-index: 1000;
-            transition: all 0.3s;
-        }
-
-        /* --- [แก้ไขส่วน Content ด้านขวา] --- */
-        .repair-history-container {
-            flex-grow: 1;
-            /* ให้กินพื้นที่ที่เหลือทั้งหมด */
-            padding: 30px;
-            width: calc(100% - 250px);
-            /* ความกว้าง = 100% - ความกว้าง Sidebar */
-            overflow-x: auto;
-            /* ให้ตารางเลื่อนแนวนอนได้ในกรอบนี้ */
-        }
-
-        .page-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 15px;
-        }
-
-        .page-title i {
-            color: #3498db;
-            font-size: 2.5rem;
-        }
-
-        /* --- Table Container --- */
-        .table-wrapper {
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            padding: 30px;
-            overflow-x: auto;
-        }
-
-        /* --- Table Styles (คงเดิม) --- */
-        .repair-table {
-            width: 100%;
-            min-width: 1200px;
-            /* ลดลงหน่อยเพื่อให้พอดีกับจอ Laptop ทั่วไป */
-            border-collapse: separate;
-            border-spacing: 0 10px;
-        }
-
-        .repair-table thead th {
-            background-color: #e9f0f7;
-            color: #4a6c8e;
-            padding: 18px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: left;
-            border: none;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-
-        .repair-table thead th:first-child {
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px;
-        }
-
-        .repair-table thead th:last-child {
-            border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
-        }
-
-        .repair-table tbody td {
-            background-color: #fff;
-            padding: 15px 20px;
-            font-size: 14px;
-            color: #555;
-            vertical-align: middle;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .repair-table tbody tr {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-
-        .repair-table tbody tr:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            z-index: 2;
-        }
-
-        .repair-table tbody tr td:first-child {
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px;
-        }
-
-        .repair-table tbody tr td:last-child {
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
-        }
-
-        .repair-table th.text-center,
-        .repair-table td.text-center {
-            text-align: center;
-        }
-
-        .detail-cell {
-            max-width: 250px;
-            min-width: 150px;
-            white-space: normal;
-            word-wrap: break-word;
-            line-height: 1.4;
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        /* --- Badges & Buttons (คงเดิม) --- */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 7px 14px;
-            border-radius: 25px;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: capitalize;
-            gap: 6px;
-            white-space: nowrap;
-        }
-
-        .status-badge i {
-            font-size: 12px;
-        }
-
-        .status-badge.success {
-            background-color: #e6ffed;
-            color: #28a745;
-            border: 1px solid #28a745;
-        }
-
-        .status-badge.pending {
-            background-color: #fff8e1;
-            color: #ffc107;
-            border: 1px solid #ffc107;
-        }
-
-        .status-badge.in-progress {
-            background-color: #e0f2f7;
-            color: #17a2b8;
-            border: 1px solid #17a2b8;
-        }
-
-        .status-badge.failed {
-            background-color: #ffe6e6;
-            color: #dc3545;
-            border: 1px solid #dc3545;
-        }
-
-        .type-tag {
-            background-color: #f0f4f7;
-            color: #6c757d;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: 500;
-            display: inline-block;
-            white-space: nowrap;
-        }
-
-        .action-cell {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .btn-action {
-            padding: 8px 15px;
-            font-size: 13px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            border: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            white-space: nowrap;
-        }
-
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-action.btn-primary {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .btn-action.btn-success {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .datetime-display {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 14px;
-            white-space: nowrap;
-        }
-
-        .datetime-date {
-            font-weight: 500;
-            color: #495057;
-        }
-
-        .datetime-time {
-            font-size: 12px;
-            color: #888;
-        }
-
-        /* --- Responsive Adjustments --- */
-        /* สำหรับหน้าจอ Mobile (เล็กกว่า 992px) */
-        @media (max-width: 992px) {
-            .sidebar-wrapper {
-                position: absolute;
-                /* เปลี่ยนเป็นลอยเหนือเนื้อหา */
-                left: -250px;
-                /* ซ่อนไปทางซ้าย */
-            }
-
-            .sidebar-wrapper.active {
-                left: 0;
-                /* แสดงเมื่อมี class active (ต้องใช้ JS เปิดปิด) */
-            }
-
-            .repair-history-container {
-                width: 100%;
-                /* เนื้อหาเต็มจอ */
-                padding: 15px;
-            }
-
-            .btn-hamburger {
-                display: block;
-                /* แสดงปุ่มเมนูบนมือถือ */
-                position: fixed;
-                top: 15px;
-                left: 15px;
-                z-index: 1001;
-                background: #fff;
-                padding: 10px;
-                border-radius: 5px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                cursor: pointer;
-            }
-        }
-
-        .status-badge.cancelled {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        /* ซ่อนปุ่ม hamburger บนจอใหญ่ */
-        @media (min-width: 993px) {
-            .btn-hamburger {
-                display: none;
-            }
-        }
-    </style>
+    
 </head>
 
 <body>
@@ -509,6 +199,23 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             $('.btn-assign').click(function() {
                 var repairId = $(this).data('id');
                 $('#modal_repair_id').val(repairId);
+            });
+        });
+
+        $(document).ready(function() {
+            // เมื่อกดปุ่ม Hamburger
+
+
+            // เมื่อกดที่ฉากหลัง (Overlay) ให้ปิดเมนู
+
+
+            // (Optional) เมื่อกดเมนูข้างใน Sidebar (ถ้าเป็นลิงก์ในหน้าเดียวกัน) ให้ปิด Sidebar ด้วย
+            $('.sidebar-wrapper a').click(function() {
+                // ถ้าไม่ใช่ dropdown toggle ให้ปิด sidebar
+                if (!$(this).hasClass('dropdown-toggle')) {
+                    $('.sidebar-wrapper').removeClass('active');
+                    $('.sidebar-overlay').removeClass('active');
+                }
             });
         });
     </script>
