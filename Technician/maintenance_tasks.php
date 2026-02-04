@@ -140,76 +140,126 @@ $tasks = $stmt->get_result();
 
     <style>
         body {
-            margin: 0;
-            background: #f4f6f9;
-            font-family: 'Sarabun', sans-serif;
-        }
+        margin: 0;
+        background: #f4f6f9;
+        font-family: 'Sarabun', sans-serif;
+        overflow-x: hidden;
+    }
 
-        .layout-wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
+    .layout-wrapper {
+        display: flex;
+        min-height: 100vh;
+        transition: all 0.3s;
+    }
 
+    /* เนื้อหาหลัก */
+    .main-content {
+        flex: 1;
+        padding: 20px;
+        width: 100%;
+        margin-left: 250px; /* ระยะสำหรับ Desktop */
+        transition: margin-left 0.3s ease;
+    }
+
+    .card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+    }
+
+    /* จัดการปุ่มและ Header */
+    .header-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    /* ปุ่ม Hamburger สำหรับมือถือ (ปกติซ่อนไว้) */
+    .menu-toggle {
+        display: none;
+        background: #334155;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.2rem;
+    }
+
+    /* รายละเอียดงาน */
+    .task {
+        padding: 16px 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        flex-direction: column; /* เรียงลงมาในมือถือ */
+        gap: 8px;
+    }
+
+    .task:last-child {
+        border-bottom: none;
+    }
+
+    .badge {
+        display: inline-block;
+        width: fit-content;
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge.normal { background: #e6f4ea; color: #1e7e34; }
+    .badge.warning { background: #fff4e5; color: #b45309; }
+    .badge.overdue { background: #fdecea; color: #b91c1c; }
+
+    button[type="submit"] {
+        width: 100%; /* ปุ่มเต็มความกว้างในมือถือเพื่อให้กดง่าย */
+        max-width: 200px;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        background: #22c55e;
+        color: #fff;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    button[disabled] {
+        background: #9ca3af;
+        cursor: not-allowed;
+    }
+
+    /* ========== RESPONSIVE MOBILE ========== */
+    @media (max-width: 768px) {
         .main-content {
-            margin-left: 250px;
-            padding: 30px;
-            width: 100%;
+            margin-left: 0; /* เอาขอบออกเพื่อให้เต็มจอ */
+            padding: 15px;
         }
 
-        .card {
-            background: #fff;
-            padding: 24px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+        .menu-toggle {
+            display: block; /* โชว์ปุ่มเปิดเมนู */
         }
 
-        .task {
-            padding: 16px 0;
-            border-bottom: 1px solid #eee;
+        /* ซ่อน Sidebar ไว้ข้างนอก (ต้องดู class ในไฟล์ Sidebar ของคุณด้วย) */
+        aside, .sidebar { 
+            position: fixed;
+            left: -250px;
+            z-index: 1000;
+            height: 100%;
+            transition: 0.3s;
         }
 
-        .task:last-child {
-            border-bottom: none;
+        /* เมื่อมีการเปิดเมนู */
+        .sidebar.active {
+            left: 0;
         }
 
-        .badge {
-            display: inline-block;
-            margin-top: 6px;
-            padding: 5px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+        h2 {
+            font-size: 1.4rem;
         }
-
-        .badge.normal {
-            background: #e6f4ea;
-            color: #1e7e34;
-        }
-
-        .badge.warning {
-            background: #fff4e5;
-            color: #b45309;
-        }
-
-        .badge.overdue {
-            background: #fdecea;
-            color: #b91c1c;
-        }
-
-        button {
-            margin-top: 8px;
-            padding: 6px 16px;
-            border: none;
-            border-radius: 6px;
-            background: #22c55e;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        button[disabled] {
-            background: #9ca3af;
-            cursor: not-allowed;
-        }
+    }
     </style>
 </head>
 
@@ -219,11 +269,16 @@ $tasks = $stmt->get_result();
         <?php if ($sidebar_file && file_exists($sidebar_file)) include $sidebar_file; ?>
 
         <div class="main-content">
-            <h2>🛠 งานซ่อมของฉัน</h2>
+            <div class="header-section">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h2 style="margin:0;">🛠 งานซ่อมของฉัน</h2>
+            </div>
 
             <div class="card">
                 <?php if ($tasks->num_rows === 0): ?>
-                    <p> ยังไม่มีงาน</p>
+                    <p style="text-align:center; color:#666;">ยังไม่มีงานในขณะนี้</p>
                 <?php else: ?>
                     <?php while ($t = $tasks->fetch_assoc()): ?>
                         <div class="task">
@@ -237,7 +292,7 @@ $tasks = $stmt->get_result();
                                     : ($t['status'] === 'warning' ? 'ใกล้ถึงรอบ' : 'ยังไม่ถึงรอบ') ?>
                             </span>
 
-                            <form method="post">
+                            <form method="post" >
                                 <input type="hidden" name="finish_id" value="<?= $t['id'] ?>">
                                 <button type="submit" <?= $t['status'] === 'normal' ? 'disabled' : '' ?>>
                                     ✔ งานเสร็จแล้ว
@@ -250,5 +305,14 @@ $tasks = $stmt->get_result();
         </div>
     </div>
 </body>
+<script>
+        function toggleSidebar() {
+            // ปรับ Selector ให้ตรงกับ class หลักของ Sidebar ในไฟล์ php ที่คุณ include มา
+            const sidebar = document.querySelector('aside') || document.querySelector('.sidebar');
+            if(sidebar) {
+                sidebar.classList.toggle('active');
+            }
+        }
+    </script>
 
 </html>
