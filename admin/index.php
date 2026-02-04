@@ -105,8 +105,11 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 </head>
 
 <body>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <div class="btn-hamburger"><i class="fa-solid fa-bars"></i></div>
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
+        <i class="fa-solid fa-bars"></i>
+    </div>
 
     <section class="main">
 
@@ -287,7 +290,23 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="/factory_monitoring/admin/assets/js/SidebarAdmin.js"></script>
     <script src="/factory_monitoring/admin/assets/js/indexadmin.js"></script>
+    <script>
+        $(document).ready(function() {
+    // ฟังก์ชันปิด Sidebar เมื่อคลิกที่ Overlay
+    $('.sidebar-overlay').click(function() {
+        $('.sidebar').removeClass('active');
+        $(this).removeClass('active');
+    });
 
+    // ปิด Sidebar เมื่อคลิก Link ภายใน (ยกเว้นที่มี dropdown)
+    $('.sidebar a').click(function() {
+        if (!$(this).hasClass('dropdown-toggle')) {
+            $('.sidebar').removeClass('active');
+            $('.sidebar-overlay').removeClass('active');
+        }
+    });
+});
+    </script>
 </body>
 
 </html>

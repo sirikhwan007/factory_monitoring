@@ -203,13 +203,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
         });
 
         $(document).ready(function() {
-            // เมื่อกดปุ่ม Hamburger
-
-
-            // เมื่อกดที่ฉากหลัง (Overlay) ให้ปิดเมนู
-
-
-            // (Optional) เมื่อกดเมนูข้างใน Sidebar (ถ้าเป็นลิงก์ในหน้าเดียวกัน) ให้ปิด Sidebar ด้วย
             $('.sidebar-wrapper a').click(function() {
                 // ถ้าไม่ใช่ dropdown toggle ให้ปิด sidebar
                 if (!$(this).hasClass('dropdown-toggle')) {
