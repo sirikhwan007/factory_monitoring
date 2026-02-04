@@ -73,11 +73,15 @@ $conn->close();
       margin-left: 250px;
       transition: all 0.3s ease;
     }
+
     @media (max-width: 991px) {
       .dashboard {
-        margin-left: 0; /* จอเล็กไม่ต้องเว้นที่ซ้าย */
-        padding: 15px;  /* ลด padding ให้เนื้อหาเต็มจอมากขึ้น */
-        border-radius: 0; /* จอเล็กไม่ต้องโค้งเยอะก็ได้ */
+        margin-left: 0;
+        /* จอเล็กไม่ต้องเว้นที่ซ้าย */
+        padding: 15px;
+        /* ลด padding ให้เนื้อหาเต็มจอมากขึ้น */
+        border-radius: 0;
+        /* จอเล็กไม่ต้องโค้งเยอะก็ได้ */
       }
     }
   </style>
@@ -150,12 +154,12 @@ $conn->close();
                   </a>
 
                   <?php if ($user_role !== 'Operator'): ?>
-                  <a href="/factory_monitoring/machine_list/maintenance_plan.php?machine_id=<?= urlencode($machine['machine_id']) ?>"
-                    class="btn btn-primary btn-sm"
-                    style="padding: 4px 8px; font-size: 12px; background-color:#00CC99; border-color:#00CC99; width: fit-content;"
-                    onclick="event.stopPropagation(); window.location.href=this.href; return false;">
-                    <i class="fa-solid fa-calendar-check"></i> แผนซ่อมตามรอบ
-                  </a>
+                    <a href="/factory_monitoring/machine_list/maintenance_plan.php?machine_id=<?= urlencode($machine['machine_id']) ?>"
+                      class="btn btn-primary btn-sm"
+                      style="padding: 4px 8px; font-size: 12px; background-color:#00CC99; border-color:#00CC99; width: fit-content;"
+                      onclick="event.stopPropagation(); window.location.href=this.href; return false;">
+                      <i class="fa-solid fa-calendar-check"></i> แผนซ่อมตามรอบ
+                    </a>
                   <?php endif; ?>
 
                   <?php if ($doc): ?>
@@ -265,6 +269,24 @@ $conn->close();
               <div class="card-body">
                 <h5 class="card-title">Power (W)</h5>
                 <canvas id="powChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card: Energy -->
+        <div class="card mb-3 shadow-sm">
+          <div class="row g-0 align-items-center">
+            <div class="col-auto p-3">
+              <div class="gauge-container">
+                <canvas id="energyGauge"></canvas>
+                <div class="value" id="energy">--</div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card-body">
+                <h5 class="card-title">Energy (Wh)</h5>
+                <canvas id="enegyChart"></canvas>
               </div>
             </div>
           </div>
