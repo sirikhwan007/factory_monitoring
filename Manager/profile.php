@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-/* ===== LOAD OPERATOR DATA ===== */
+/* ===== LOAD USER DATA ===== */
 $user_id = $_SESSION['user_id'];
 
 $stmt = $conn->prepare("
@@ -24,7 +24,6 @@ $result = $stmt->get_result();
 
 /* ===== DATA GUARD ===== */
 if ($result->num_rows === 0) {
-    // session มี แต่ user ไม่มี → state พัง
     session_destroy();
     header("Location: /factory_monitoring/login.php");
     exit();
@@ -39,46 +38,38 @@ $profileImage = (!empty($op['profile_image']))
     : $uploadPath . "default_profile.png";
 ?>
 
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>Operator Profile</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Profile</title> <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- CSS -->
     <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/profile.css">
 
-    <!-- FontAwesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+          
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
 <div class="profile-container">
 
-    <!-- ===== PROFILE IMAGE ===== -->
     <img src="<?= $profileImage ?>"
          class="profile-img"
          onerror="this.src='/factory_monitoring/Manager/uploads/default_profile.png'">
 
     <h2><?= htmlspecialchars($op['username']) ?></h2>
-    <p class="role">Operator</p>
-
-    <!-- ===== INFO ===== -->
-    <div class="info-box">
+    <p class="role">Manager</p> <div class="info-box">
         <p><strong>Email:</strong> <?= htmlspecialchars($op['email']) ?></p>
         <p><strong>Phone:</strong> <?= htmlspecialchars($op['phone']) ?></p>
     </div>
 
-    <!-- ===== ACTION ===== -->
     <button class="btn-edit" onclick="openPasswordModal()">
         <i class="fa-solid fa-key"></i> เปลี่ยนรหัสผ่าน
     </button>
 </div>
 
-<!-- ===== CHANGE PASSWORD MODAL ===== -->
 <div id="passwordModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closePasswordModal()">&times;</span>
@@ -100,17 +91,38 @@ $profileImage = (!empty($op['profile_image']))
 </div>
 
 <script>
-function openPasswordModal() {
-    document.getElementById("passwordModal").style.display = "flex";
-}
-function closePasswordModal() {
-    document.getElementById("passwordModal").style.display = "none";
-}
-window.onclick = function(e) {
-    const modal = document.getElementById("passwordModal");
-    if (e.target === modal) modal.style.display = "none";
-}
+    function openPasswordModal() {
+        document.getElementById("passwordModal").style.display = "flex";
+    }
+    function closePasswordModal() {
+        document.getElementById("passwordModal").style.display = "none";
+    }
+    window.onclick = function(e) {
+        const modal = document.getElementById("passwordModal");
+        if (e.target === modal) modal.style.display = "none";
+    }
 </script>
+
+<?php if (isset($_SESSION['status'])): ?>
+    <script>
+        Swal.fire({
+            icon: '<?= $_SESSION['status']; ?>',
+            title: '<?= $_SESSION['status'] == "success" ? "สำเร็จ" : "แจ้งเตือน"; ?>',
+            text: '<?= $_SESSION['message']; ?>',
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#3085d6'
+        }).then((result) => {
+            // ถ้า Error ให้เด้ง Modal กลับมาเพื่อให้กรอกใหม่ได้ง่าย
+            <?php if($_SESSION['status'] == 'error'): ?>
+                openPasswordModal();
+            <?php endif; ?>
+        });
+    </script>
+    <?php 
+    unset($_SESSION['status']);
+    unset($_SESSION['message']);
+    ?>
+<?php endif; ?>
 
 </body>
 </html>
