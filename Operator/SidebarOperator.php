@@ -30,7 +30,7 @@ $activePage = $activePage ?? '';
         <ul class="op-ul">
             <!-- Dashboard -->
             <li>
-                <a href="/factory_monitoring/operator/dashboard.php"
+                <a href="/factory_monitoring/Operator/dashboard.php"
                    class="<?= $activePage === 'dashboard' ? 'active' : '' ?>">
                     <i class="fa-solid fa-home"></i>
                     <span class="sb-text">หน้าหลัก</span>

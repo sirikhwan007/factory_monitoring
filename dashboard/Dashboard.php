@@ -1,5 +1,6 @@
 <?php
 session_start();
+include __DIR__ . "/../config.php";
 
 if (!isset($_SESSION['user_id'])) {
   header("Location: /factory_monitoring/login.php");
@@ -12,11 +13,7 @@ $machine_id = $_GET['id'] ?? null;
 if (!$machine_id) {
   die("ไม่พบเครื่องจักรที่เลือก");
 }
-// เชื่อมต่อฐานข้อมูล
-$conn = new mysqli("localhost", "root", "", "factory_monitoring");
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
+
 // ดึงข้อมูลเครื่องจักร
 $stmt = $conn->prepare("SELECT * FROM machines WHERE machine_id = ?");
 $stmt->bind_param("s", $machine_id);
