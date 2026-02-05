@@ -76,6 +76,8 @@ $profileImage = !empty($op['profile_image'])
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 function openPasswordModal() {
     document.getElementById("passwordModal").style.display = "flex";
@@ -87,7 +89,37 @@ window.onclick = function(e) {
     const modal = document.getElementById("passwordModal");
     if (e.target === modal) modal.style.display = "none";
 }
+
+
 </script>
+<?php if (isset($_SESSION['success'])): ?>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'สำเร็จ!',
+            text: '<?= $_SESSION['success']; ?>',
+            confirmButtonText: 'ตกลง'
+        });
+    </script>
+    <?php unset($_SESSION['success']); // ลบ session ทิ้งเมื่อแสดงแล้ว ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'ผิดพลาด!',
+            text: '<?= $_SESSION['error']; ?>',
+            confirmButtonText: 'ลองใหม่'
+        }).then((result) => {
+            // เปิด Modal ค้างไว้เพื่อให้กรอกใหม่ได้เลย
+            if (result.isConfirmed) {
+                openPasswordModal();
+            }
+        });
+    </script>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
 
 </body>
 </html>
