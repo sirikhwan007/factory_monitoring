@@ -27,6 +27,7 @@ $sidebar_paths = [
   'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
   'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
   'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
+  'Technician' => __DIR__ . '/../Technician/SidebarTechnician.php',
 ];
 
 // เลือกไฟล์
@@ -48,6 +49,7 @@ $conn->close();
   <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
   <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
   <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
+  <link rel="stylesheet" href="/factory_monitoring/Technician/assets/css/sidebar_technician.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>

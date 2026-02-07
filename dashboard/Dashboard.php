@@ -36,6 +36,7 @@ $sidebar_paths = [
   'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
   'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
   'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
+  'Technician' => __DIR__ . '/../Technician/SidebarTechnician.php',
 ];
 // เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
@@ -57,6 +58,7 @@ $conn->close();
   <link rel="stylesheet" href="/factory_monitoring/dashboard/dashboard.css">
   <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
   <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
+  <link rel="stylesheet" href="/factory_monitoring/Technician/assets/css/sidebar_technician.css">
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -130,7 +132,7 @@ $conn->close();
 
                 <div class="action-buttons-container position-absolute top-0 end-0 d-flex flex-column align-items-end gap-2">
 
-                  <?php if ($user_role !== 'Operator'): ?>
+                  <?php if ($user_role !== 'Operator' && $user_role !== 'Technician'): ?>
                     <a href="/factory_monitoring/editmachine/machine_edit.php?id=<?= $machine['machine_id'] ?>"
                       class="btn btn-warning btn-sm"
                       style="padding: 4px 8px; font-size: 12px; width: fit-content;">
@@ -144,13 +146,15 @@ $conn->close();
                     </a>
                   <?php endif; ?>
 
+                  <?php if ($user_role !== 'Technician'): ?>
                   <a href="/factory_monitoring/repair/report.php?machine_id=<?= $machine['machine_id'] ?>"
                     class="btn btn-warning btn-sm"
                     style="padding: 4px 8px; font-size: 12px; background-color:#ff8c00; border-color:#ff8c00; width: fit-content;">
                     <i class="fa-solid fa-clipboard"></i> แจ้งซ่อม
                   </a>
+                  <?php endif; ?>
 
-                  <?php if ($user_role !== 'Operator'): ?>
+                  <?php if ($user_role !== 'Operator' && $user_role !== 'Technician'): ?>
                     <a href="/factory_monitoring/machine_list/maintenance_plan.php?machine_id=<?= urlencode($machine['machine_id']) ?>"
                       class="btn btn-primary btn-sm"
                       style="padding: 4px 8px; font-size: 12px; background-color:#00CC99; border-color:#00CC99; width: fit-content;"
