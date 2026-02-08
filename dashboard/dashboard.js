@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const voltChart = createLineChart(document.getElementById("voltChart"), "Voltage", "#60a5fa");
   const currChart = createLineChart(document.getElementById("currChart"), "Current", "#34d399");
   const powChart = createLineChart(document.getElementById("powChart"), "Power", "#a78bfa");
-  const enegyChart = createLineChart(document.getElementById("enegyChart"), "Energy", "#f472b6");
+const energyChart = createLineChart(document.getElementById("energyChart"), "Energy", "#f472b6");
 
   // สร้าง Gauge
   const tempGauge = createGauge(document.getElementById("tempGauge"), 100);
@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       updateLineChart(powChart, p.value, new Date(p.time), false)
     );
     history.energy.forEach(p =>
-      updateLineChart(enegyChart, p.value, new Date(p.time), false)
+      updateLineChart(energyChart, p.value, new Date(p.time), false)
     );
   } catch (err) {
     console.error("History load error:", err);
@@ -333,7 +333,7 @@ if (statusEl) {
       updateLineChart(voltChart, data.voltage, now, false);
       updateLineChart(currChart, data.current, now, false);
       updateLineChart(powChart, data.power, now, false);
-      updateLineChart(enegyChart, data.energy, now, false);
+      updateLineChart(energyChart, data.energy, now, false);
 
       // อัปเดต Gauge
       updateGauge(tempGauge, data.temperature, 100);

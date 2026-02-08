@@ -287,7 +287,7 @@ $conn->close();
             <div class="col">
               <div class="card-body">
                 <h5 class="card-title">Energy (Wh)</h5>
-                <canvas id="enegyChart"></canvas>
+                <canvas id="energyChart"></canvas>
               </div>
             </div>
           </div>
