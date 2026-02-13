@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // สร้าง Gauge
   const tempGauge = createGauge(document.getElementById("tempGauge"), 100);
-  const vibGauge = createGauge(document.getElementById("vibGauge"), 10);
+  const vibGauge = createGauge(document.getElementById("vibGauge"), 100);
   const voltGauge = createGauge(document.getElementById("voltGauge"), 400);
   const currGauge = createGauge(document.getElementById("currGauge"), 50);
   const powGauge = createGauge(document.getElementById("powGauge"), 1000);
