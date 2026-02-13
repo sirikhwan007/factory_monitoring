@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const voltChart = createLineChart(document.getElementById("voltChart"), "Voltage", "#60a5fa");
   const currChart = createLineChart(document.getElementById("currChart"), "Current", "#34d399");
   const powChart = createLineChart(document.getElementById("powChart"), "Power", "#a78bfa");
-const energyChart = createLineChart(document.getElementById("energyChart"), "Energy", "#f472b6");
+  const energyChart = createLineChart(document.getElementById("energyChart"), "Energy", "#f472b6");
 
   // สร้าง Gauge
   const tempGauge = createGauge(document.getElementById("tempGauge"), 100);
