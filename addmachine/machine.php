@@ -1,3 +1,18 @@
+<?php
+include "../config.php";
+session_start();
+
+$user_role = $_SESSION['role'] ?? 'Operator';
+$sidebar_paths = [
+    'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
+    'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
+    'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
+];
+
+// เลือกไฟล์
+$sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
+?>
+
 <!DOCTYPE html>
 <html lang="th">
 
@@ -9,13 +24,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="/factory_monitoring/addmachine/machine.css">
     <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
+    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    
+
 </head>
 
 <body>
@@ -23,7 +40,7 @@
 
     <section class="main">
 
-        <?php include __DIR__ . '/../admin/SidebarAdmin.php'; ?>
+        <?php include $sidebar_file; ?>
         <div class="dashboard">
             <div class="container my-5">
                 <div class="card shadow-lg border-0">
