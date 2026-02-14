@@ -27,16 +27,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             switch ($user['role']) {
                 case 'Admin':
-                    header("Location: /factory_monitoring/admin/index.php");
+                    header("Location: /admin/index.php");
                     break;
                 case 'Manager':
-                    header("Location: /factory_monitoring/Manager/dashboard.php");
+                    header("Location: /Manager/dashboard.php");
                     break;
                 case 'Technician':
-                    header("Location: /factory_monitoring/Technician/dashboard.php");
+                    header("Location: /Technician/dashboard.php");
                     break;
                 case 'Operator':
-                    header("Location: /factory_monitoring/Operator/dashboard.php");
+                    header("Location: /Operator/dashboard.php");
                     break;
                 default:
                     header("Location: login.php");
@@ -274,7 +274,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="container">
 
         <div class="left">
-            <img src="/factory_monitoring/uploads/login-illustration.png" alt="Login Illustration">
+            <img src="/uploads/login-illustration.png" alt="Login Illustration">
 
             <h3>Industrial Motor Machine Monitoring System</h3>
             <p>ระบบตรวจสอบการทำงานของมอเตอร์เครื่องจักรอุตสาหกรรม</p>
