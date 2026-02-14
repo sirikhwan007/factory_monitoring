@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-$profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
+$profileImage = $_SESSION['profile_image'] ?? 'default.png';
 $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 ?>
