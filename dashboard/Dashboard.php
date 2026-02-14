@@ -214,7 +214,7 @@ $conn->close();
             </div>
             <div class="col">
               <div class="card-body">
-                <h5 class="card-title">Vibration (g)</h5>
+                <h5 class="card-title">Vibration (%)</h5>
                 <canvas id="vibChart"></canvas>
               </div>
             </div>
@@ -287,7 +287,7 @@ $conn->close();
             <div class="col">
               <div class="card-body">
                 <h5 class="card-title">Energy (Wh)</h5>
-                <canvas id="enegyChart"></canvas>
+                <canvas id="energyChart"></canvas>
               </div>
             </div>
           </div>
