@@ -182,7 +182,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col">
                         <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=รอดำเนินการ'">
+                            onclick="location.href='/repair/reporthistory.php?status=รอดำเนินการ'">
                             <h6 class="text-muted">รอดำเนินการ</h6>
                             <h2 class="fw-bold text-warning"><?= $pending ?></h2>
                         </div>
@@ -190,7 +190,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col">
                         <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=กำลังซ่อม'">
+                            onclick="location.href='/repair/reporthistory.php?status=กำลังซ่อม'">
                             <h6 class="text-muted">กำลังซ่อม</h6>
                             <h2 class="fw-bold text-info"><?= $in_progress ?></h2>
                         </div>
@@ -198,7 +198,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col">
                         <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=สำเร็จ'">
+                            onclick="location.href='/repair/reporthistory.php?status=สำเร็จ'">
                             <h6 class="text-muted">เสร็จสิ้น</h6>
                             <h2 class="fw-bold text-success"><?= $completed ?></h2>
                         </div>
@@ -206,7 +206,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col">
                         <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=ยกเลิก'">
+                            onclick="location.href='/repair/reporthistory.php?status=ยกเลิก'">
                             <h6 class="text-muted">ยกเลิก</h6>
                             <h2 class="fw-bold text-danger"><?= $cancelled ?></h2>
                         </div>
@@ -221,7 +221,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                 <div class="row g-3">
 
                     <div class="col">
-                        <a href="/factory_monitoring/admin/users.php?role=all" class="text-decoration-none">
+                        <a href="//admin/users.php?role=all" class="text-decoration-none">
                             <div class="card shadow-sm p-3 text-center h-100">
                                 <h6>ทั้งหมด</h6>
                                 <div class="display-6 fw-bold text-primary"><?= $total_users ?></div>
@@ -230,7 +230,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                     </div>
 
                     <div class="col">
-                        <a href="/factory_monitoring/admin/users.php?role=Admin" class="text-decoration-none">
+                        <a href="/admin/users.php?role=Admin" class="text-decoration-none">
                             <div class="card shadow-sm p-3 text-center h-100">
                                 <h6>Admin</h6>
                                 <div class="display-6 fw-bold text-danger"><?= $role_admin ?></div>
@@ -239,7 +239,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                     </div>
 
                     <div class="col">
-                        <a href="/factory_monitoring/admin/users.php?role=Manager" class="text-decoration-none">
+                        <a href="/admin/users.php?role=Manager" class="text-decoration-none">
                             <div class="card shadow-sm p-3 text-center h-100">
                                 <h6>Manager</h6>
                                 <div class="display-6 fw-bold text-info"><?= $role_manager ?></div>
@@ -248,7 +248,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                     </div>
 
                     <div class="col">
-                        <a href="/factory_monitoring/admin/users.php?role=Technician" class="text-decoration-none">
+                        <a href="/admin/users.php?role=Technician" class="text-decoration-none">
                             <div class="card shadow-sm p-3 text-center h-100">
                                 <h6>Technician</h6>
                                 <div class="display-6 fw-bold text-success"><?= $role_technician ?></div>
@@ -257,7 +257,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                     </div>
 
                     <div class="col">
-                        <a href="/factory_monitoring/admin/users.php?role=Operator" class="text-decoration-none">
+                        <a href="/admin/users.php?role=Operator" class="text-decoration-none">
                             <div class="card shadow-sm p-3 text-center h-100">
                                 <h6>Operator</h6>
                                 <div class="display-6 fw-bold text-warning"><?= $role_operator ?></div>
@@ -270,7 +270,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                 <!-- RECENT ACTIVITY -->
                 <h4 class="mt-4 mb-3">กิจกรรมล่าสุด</h4>
                 <div class="card shadow-sm p-3" style="max-height: 300px; overflow-y: auto;">
-                    <ul class="list-group" style="cursor:pointer;" onclick="location.href='/factory_monitoring/logs/logs.php'">
+                    <ul class="list-group" style="cursor:pointer;" onclick="location.href='//logs/logs.php'">
                         <?php while ($log = $recent_logs->fetch_assoc()): ?>
                             <li class="list-group-item">
                                 <strong><?= $log['role'] ?></strong> : <?= $log['action'] ?>
@@ -284,9 +284,9 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
         </div>
     </section>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="/factory_monitoring/admin/assets/js/SidebarAdmin.js"></script>
-    <script src="/factory_monitoring/admin/assets/js/indexadmin.js"></script>
+    <script src="https:/code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="/admin/assets/js/SidebarAdmin.js"></script>
+    <script src="/admin/assets/js/indexadmin.js"></script>
 
 </body>
 
