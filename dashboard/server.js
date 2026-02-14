@@ -28,6 +28,9 @@ mqttClient.on("connect", () => {
     console.log(" MQTT Connected & Monitoring Started");
     mqttClient.subscribe("test/sensor/data"); 
 });
+// --- ตัวแปรเก็บสถานะอุปกรณ์ ---
+const deviceAlertState = {};
+
 
 // --- [ฟังก์ชัน LED และการบันทึกข้อมูลที่หายไป] ---
 mqttClient.on("message", (topic, message) => {
@@ -42,6 +45,7 @@ mqttClient.on("message", (topic, message) => {
         const volt = pzem.voltage || 0;
         const cur = pzem.current || 0;
         const power = pzem.power || 0;
+        const energy = pzem.energy || 0;
 
         // 2. บันทึกลง InfluxDB
         const points = [];
@@ -56,6 +60,9 @@ mqttClient.on("message", (topic, message) => {
             if (volt) p.floatField("voltage", volt);
             if (cur) p.floatField("current", cur);
             if (power) p.floatField("power", power);
+            if (typeof energy === 'number') {
+              p.floatField("energy", energy);
+          }
             points.push(p);
         }
 
@@ -65,8 +72,34 @@ mqttClient.on("message", (topic, message) => {
         }
 
         // 3. Logic ควบคุมไฟ LED (Alert System)
-        let danger = (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || power >= 20);
-        let warning = (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || power >= 15);
+        let danger = (temp >= 80 || vib >= 80 || cur >= 8 || volt >= 300 || power >= 1200 || energy >= 3000);
+        let warning = (temp >= 60 || vib >= 50 || cur >= 5 || volt >= 250 || power >= 900 || energy >= 2500);
+
+        // สร้าง State ให้ Mac นี้ถ้ายังไม่มี
+        if (!deviceAlertState[mac]) {
+            deviceAlertState[mac] = { dangerCount: 0, warningCount: 0 };
+        }
+
+        if (danger) {
+            deviceAlertState[mac].dangerCount++; // ถ้าเกินเกณฑ์ ให้บวกเพิ่ม
+        } else {
+            deviceAlertState[mac].dangerCount = 0; // ถ้ากลับมาปกติ ให้รีเซ็ตเป็น 0 ทันที
+        }
+
+        // --- Logic นับ Warning ---
+        if (warning) {
+            deviceAlertState[mac].warningCount++;
+        } else {
+            deviceAlertState[mac].warningCount = 0;
+        }
+
+        console.log(`Dev: ${mac} | DangerCount: ${deviceAlertState[mac].dangerCount} | WarningCount: ${deviceAlertState[mac].warningCount}`);
+
+        // --- ตัดสินใจเปลี่ยนสีไฟ (Threshold > 4) ---
+        // จะติดก็ต่อเมื่อนับได้เกิน 4 ครั้งต่อเนื่อง (ครั้งที่ 5 เป็นต้นไปถึงจะติด)
+        let finalDanger = deviceAlertState[mac].dangerCount > 2;
+        let finalWarning = deviceAlertState[mac].warningCount > 2;
+
 
         let ledStates = {
             green:  { pin: 33, value: (!danger && !warning) ? 1 : 0 },
@@ -91,7 +124,7 @@ app.get("/api/latest/:mac", async (req, res) => {
         |> range(start: -10m)
         |> filter(fn: (r) => r["device"] == "${mac.toLowerCase()}")
         |> filter(fn: (r) => r["_measurement"] == "DS18B20" or r["_measurement"] == "MPU6050" or r["_measurement"] == "PZEM004T")
-        |> filter(fn: (r) => r["_field"] == "temperature" or r["_field"] == "accel_percent" or r["_field"] == "voltage" or r["_field"] == "current" or r["_field"] == "power")
+        |> filter(fn: (r) => r["_field"] == "temperature" or r["_field"] == "accel_percent" or r["_field"] == "voltage" or r["_field"] == "current" or r["_field"] == "power" or r["_field"] == "energy")
         |> last() 
     `;
 
@@ -135,11 +168,17 @@ app.get("/api/latest/:mac", async (req, res) => {
 app.get("/api/history", async (req, res) => {
   const range = req.query.range || "1h";
   //const mac = req.query.mac;
+  const mac = req.query.mac;
+
+  if (!mac) {
+    return res.status(400).json({ error: "MAC address is required" });
+  }
 
   const fluxQuery = `
     from(bucket: "${INFLUX_BUCKET}")
       |> range(start: -${range})
       
+      |> filter(fn: (r) => r["device"] == "${mac.toLowerCase()}")
       |> filter(fn: (r) =>
         r["_measurement"] == "MPU6050" or
         r["_measurement"] == "DS18B20" or
@@ -150,7 +189,8 @@ app.get("/api/history", async (req, res) => {
         r["_field"] == "accel_percent" or
         r["_field"] == "voltage" or
         r["_field"] == "current" or
-        r["_field"] == "power"
+        r["_field"] == "power" or
+        r["_field"] == "energy"
       )
       |> aggregateWindow(every: 5s, fn: mean, createEmpty: false)
   `;
@@ -160,7 +200,8 @@ app.get("/api/history", async (req, res) => {
     vibration: [],
     voltage: [],
     current: [],
-    power: []
+    power: [],
+    energy: []
   };
 
   await queryApi.queryRows(fluxQuery, {
@@ -173,6 +214,7 @@ app.get("/api/history", async (req, res) => {
       if (o._field === "voltage") result.voltage.push(point);
       if (o._field === "current") result.current.push(point);
       if (o._field === "power") result.power.push(point);
+      if (o._field === "energy") result.energy.push(point);
     },
     complete: () => res.json(result),
     error: err => res.status(500).json(err)
@@ -187,7 +229,7 @@ app.get("/api/status", async (req, res) => {
     await queryApi.queryRows('buckets()', {
       next: () => { isConnected = true; },
       error: (err) => {
-        console.error(" InfluxDB error:", err);
+        console.error("❌ InfluxDB error:", err);
         res.json({ connected: false });
       },
       complete: () => {
@@ -196,7 +238,7 @@ app.get("/api/status", async (req, res) => {
     });
 
   } catch (error) {
-    console.error(" InfluxDB connection failed:", error);
+    console.error("❌ InfluxDB connection failed:", error);
     res.json({ connected: false });
   }
 });
