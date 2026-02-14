@@ -16,10 +16,10 @@ const INFLUX_ORG = process.env.INFLUX_ORG;
 const INFLUX_BUCKET = process.env.INFLUX_BUCKET;
 
 const dbConfig = {
-    host: 'localhost',   // หรือ IP ของ Database Server
-    user: 'root',        // User ของ Database
-    password: '',        // Password ของ Database
-    database: 'factory_monitoring'
+    host: 'bft7bcehnrmpxwyzktj4-mysql.services.clever-cloud.com',   // หรือ IP ของ Database Server
+    user: 'urqpet8hr9e140i5',        // User ของ Database
+    password: 'kHolbtlLF8xcItzwe1Qc',        // Password ของ Database
+    database: 'bft7bcehnrmpxwyzktj4'        // ชื่อ Database ที่ต้องการเชื่อมต่อ
 };
 
 const influx = new InfluxDB({ url: INFLUX_URL, token: INFLUX_TOKEN });
