@@ -6,12 +6,12 @@ $user_role = $_SESSION['role'] ?? 'Admin';
 
 // เช็กล็อกอิน
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 // ตรวจสิทธิ์แอดมิน
 if ($_SESSION['role'] !== 'Admin') {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 // ตั้งค่าหน้าปัจจุบัน
@@ -76,7 +76,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factory Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
+    <link rel="stylesheet" href="/admin/assets/css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         @keyframes bell-ring {
@@ -129,7 +129,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                 <div class="row mb-4 g-3">
                     <div class="col-lg col-md-4 col-6">
                         <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=all'">
+                            onclick="location.href='/machine_list/machine.php?status=all'">
                             <h5 class="text-muted">เครื่องจักรทั้งหมด</h5>
                             <h2 class="fw-bold text-primary"><?= $total_machines ?></h2>
                         </div>
@@ -137,7 +137,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col-lg col-md-4 col-6">
                         <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=กำลังทำงาน'">
+                            onclick="location.href='/machine_list/machine.php?status=กำลังทำงาน'">
                             <h5 class="text-muted text-success">กำลังทำงาน</h5>
                             <h2 class="fw-bold text-success" id="activeCount">0</h2>
                         </div>
@@ -145,7 +145,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col-lg col-md-4 col-6">
                         <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=ผิดปกติ'">
+                            onclick="location.href='/machine_list/machine.php?status=ผิดปกติ'">
                             <h5 class="text-muted text-warning">ผิดปกติ</h5>
                             <h2 class="fw-bold text-warning" id="errorCount">0</h2>
                         </div>
@@ -153,7 +153,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col-lg col-md-6 col-6">
                         <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer; "
-                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=อันตราย'">
+                            onclick="location.href='/machine_list/machine.php?status=อันตราย'">
                             <h5 class="text-muted">อันตราย</h5>
                             <h2 class="fw-bold" style="color: #fd7e14;" id="dangerCount">0</h2>
                         </div>
@@ -161,7 +161,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col-lg col-md-6 col-12">
                         <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=หยุดทำงาน'">
+                            onclick="location.href='/machine_list/machine.php?status=หยุดทำงาน'">
                             <h5 class="text-muted text-danger">หยุดทำงาน</h5>
                             <h2 class="fw-bold text-danger" id="stopCount">0</h2>
                         </div>
@@ -174,7 +174,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col">
                         <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=all'">
+                            onclick="location.href='/repair/reporthistory.php?status=all'">
                             <h6 class="text-muted">ทั้งหมด</h6>
                             <h2 class="fw-bold text-primary"><?= $total ?></h2>
                         </div>
