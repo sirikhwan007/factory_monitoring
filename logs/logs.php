@@ -76,7 +76,7 @@ $conn->close();
                             <?php if (count($logs) > 0): ?>
                                 <?php foreach ($logs as $log): ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($log['log_id']) ?></td>
+                                        <td><?= htmlspecialchars($log['log_id'] ?? '') ?></td>
                                         <td><?= htmlspecialchars($log['username'] ?? 'ไม่ระบุ') ?></td>
 
                                         <td>
@@ -89,7 +89,8 @@ $conn->close();
                                             };
                                             ?>
                                             <span class="badge bg-<?= $roleColor ?> badge-role">
-                                                <?= htmlspecialchars($log['role']) ?>
+                                                <?= htmlspecialchars($log['role'] ?? '') ?>
+
                                             </span>
                                         </td>
 
@@ -103,7 +104,8 @@ $conn->close();
                                             };
                                             ?>
                                             <span class="badge bg-<?= $actionColor ?> badge-action">
-                                                <?= htmlspecialchars($log['action']) ?>
+                                                <?= htmlspecialchars($log['action'] ?? '') ?>
+
                                             </span>
                                         </td>
 
@@ -164,7 +166,7 @@ $conn->close();
                                             ?>
                                             <span class="d-none" data-desc="<?= htmlspecialchars($displayText, ENT_QUOTES, 'UTF-8') ?>"></span>
                                         </td>
-                                        <td><?= htmlspecialchars($log['created_at']) ?></td>
+                                        <td><?= htmlspecialchars($log['created_at'] ?? '') ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
