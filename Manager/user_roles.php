@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit;
 }
 
@@ -13,7 +13,7 @@ require_once __DIR__ . '/../config.php';
 <head>
     <meta charset="UTF-8">
     <title>พนักงานหน้างาน | Factory Monitoring</title>
-    <link rel="stylesheet" href="/factory_monitoring/manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="/manager/assets/css/Sidebar.css">
 
     <style>
 /* ===== Layout ===== */
@@ -192,9 +192,9 @@ tbody tr:hover {
         ?>
             <tr>
                 <td>
-                    <img src="/factory_monitoring/admin/uploads/<?= htmlspecialchars($image) ?>"
+                    <img src="/admin/uploads/<?= htmlspecialchars($image) ?>"
                          class="profile-img"
-                         onerror="this.src='/factory_monitoring/admin/uploads/default.png'">
+                         onerror="this.src='/admin/uploads/default.png'">
                 </td>
                 <td><?= htmlspecialchars($row['username']) ?></td>
                 <td><?= htmlspecialchars($row['email']) ?></td>

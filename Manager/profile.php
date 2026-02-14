@@ -4,7 +4,7 @@ require_once "../config.php";
 
 /* ===== AUTH GUARD ===== */
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 
@@ -25,14 +25,14 @@ $result = $stmt->get_result();
 /* ===== DATA GUARD ===== */
 if ($result->num_rows === 0) {
     session_destroy();
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 
 $op = $result->fetch_assoc();
 
 /* ===== PROFILE IMAGE ===== */
-$uploadPath = "/factory_monitoring/Manager/uploads/";
+$uploadPath = "/Manager/uploads/";
 $profileImage = (!empty($op['profile_image']))
     ? $uploadPath . htmlspecialchars($op['profile_image'])
     : $uploadPath . "default_profile.png";
@@ -44,7 +44,7 @@ $profileImage = (!empty($op['profile_image']))
     <meta charset="UTF-8">
     <title>Manager Profile</title> <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/profile.css">
+    <link rel="stylesheet" href="/Operator/assets/css/profile.css">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -57,7 +57,7 @@ $profileImage = (!empty($op['profile_image']))
 
     <img src="<?= $profileImage ?>"
          class="profile-img"
-         onerror="this.src='/factory_monitoring/Manager/uploads/default_profile.png'">
+         onerror="this.src='/Manager/uploads/default_profile.png'">
 
     <h2><?= htmlspecialchars($op['username']) ?></h2>
     <p class="role">Manager</p> <div class="info-box">

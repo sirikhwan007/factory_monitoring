@@ -4,7 +4,7 @@ require_once "../config.php"; // ตรวจสอบ path ของ config ใ
 
 /* ===== 1. Auth Guard (ตรวจสอบสิทธิ์) ===== */
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Technician') {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 

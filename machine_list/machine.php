@@ -4,7 +4,7 @@ include __DIR__ . "/../config.php";
 
 // เช็กล็อกอิน
 if (!isset($_SESSION['user_id'])) {
-  header("Location: /factory_monitoring/login.php");
+  header("Location: /login.php");
   exit();
 }
 
@@ -45,11 +45,11 @@ $conn->close();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>รายการเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/factory_monitoring/machine_list/css/machine_list.css">
-  <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
-  <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
-  <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
-  <link rel="stylesheet" href="/factory_monitoring/Technician/assets/css/sidebar_technician.css">
+  <link rel="stylesheet" href="/machine_list/css/machine_list.css">
+  <link rel="stylesheet" href="/admin/assets/css/index.css">
+  <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
+  <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
+  <link rel="stylesheet" href="/Technician/assets/css/sidebar_technician.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
@@ -175,9 +175,9 @@ $conn->close();
           <?php foreach ($machines as $m): ?>
             <div class="machine-card"
               data-mac-address="<?php echo htmlspecialchars($m['mac_address']); ?>"
-              onclick="location.href='/factory_monitoring/dashboard/Dashboard.php?id=<?php echo $m['machine_id']; ?>'">
+              onclick="location.href='/dashboard/Dashboard.php?id=<?php echo $m['machine_id']; ?>'">
 
-              <img src="/factory_monitoring/<?php echo $m['photo_url']; ?>" alt="รูปเครื่องจักร">
+              <img src="/<?php echo $m['photo_url']; ?>" alt="รูปเครื่องจักร">
               <div class="machine-name"><?php echo htmlspecialchars($m['name']); ?></div>
               <div class="machine-id">ID: <?php echo htmlspecialchars($m['machine_id']); ?></div>
 
@@ -199,8 +199,8 @@ $conn->close();
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="assets/js/SidebarAdmin.js"></script>
   <script src="assets/js/SidebarManager.js"></script>
-  <script src="/factory_monitoring/machine_list/js/machine.js"></script>
-  <script src="/factory_monitoring/dashboard/dashboard.js"></script>
+  <script src="/machine_list/js/machine.js"></script>
+  <script src="/dashboard/dashboard.js"></script>
   <script>
     <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
         <

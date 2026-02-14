@@ -22,10 +22,10 @@ $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
     <title>รายการเครื่องจักร</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="/factory_monitoring/addmachine/machine.css">
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
-    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
-    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
+    <link rel="stylesheet" href="/addmachine/machine.css">
+    <link rel="stylesheet" href="/admin/assets/css/index.css">
+    <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link rel="stylesheet"
@@ -48,7 +48,7 @@ $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
                         <h2 class="mb-0">เพิ่มข้อมูลเครื่องจักรใหม่</h2>
                     </div>
                     <div class="card-body p-4">
-                        <form action="/factory_monitoring/addmachine/machine_save.php" method="POST" enctype="multipart/form-data" class="row g-3">
+                        <form action="/addmachine/machine_save.php" method="POST" enctype="multipart/form-data" class="row g-3">
                             <div class="col-md-6">
                                 <label for="machine_id" class="form-label">Machine ID <span class="text-danger">*</span>:</label>
                                 <input type="text" id="machine_id" name="machine_id" class="form-control" required>
@@ -142,7 +142,7 @@ $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
                 </div>
             </div>
         </div>
-        <script src="/factory_monitoring/admin/SidebarAdmin.js"></script>
+        <script src="/admin/SidebarAdmin.js"></script>
         <script>
             document.getElementById('photo').addEventListener('change', function() {
                 const fileNameSpan = document.getElementById('file-name');

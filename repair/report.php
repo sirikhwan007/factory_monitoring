@@ -103,11 +103,11 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
     <title>แจ้งซ่อมเครื่องจักร</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
-    <link rel="stylesheet" href="/factory_monitoring/repair/css/report.css">
-    <link rel="stylesheet" href="/factory_monitoring/dashboard/dashboard.css">
-    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
-    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
+    <link rel="stylesheet" href="/admin/assets/css/index.css">
+    <link rel="stylesheet" href="/repair/css/report.css">
+    <link rel="stylesheet" href="/dashboard/dashboard.css">
+    <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         .dashboard {
@@ -246,7 +246,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
     </section>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="/factory_monitoring/admin/SidebarAdmin.js"></script>
+    <script src="/admin/SidebarAdmin.js"></script>
 
 </body>
 

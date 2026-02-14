@@ -42,9 +42,9 @@ if (!$machine) {
   <title>ลบเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
-  <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
-  <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
+  <link rel="stylesheet" href="/admin/assets/css/index.css">
+  <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
+  <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     .dashboard {
@@ -66,7 +66,7 @@ if (!$machine) {
             <h2 class="mb-0">ยืนยันการลบเครื่องจักร</h2>
           </div>
           <div class="card-body p-4">
-            <form id="delete-form" action="/factory_monitoring/deletemachine/machine_save_delete.php" method="POST" onsubmit="return confirmDelete();">
+            <form id="delete-form" action="/deletemachine/machine_save_delete.php" method="POST" onsubmit="return confirmDelete();">
 
 
               <input type="hidden" name="machine_id" value="<?= $machine['machine_id'] ?>">
@@ -74,7 +74,7 @@ if (!$machine) {
               <!-- รูปเครื่องจักร -->
               <div class="text-center mb-4">
                 <?php if (!empty($machine['photo_url'])): ?>
-                  <img src="/factory_monitoring/<?= $machine['photo_url'] ?>" style="max-width:200px;" class="img-thumbnail">
+                  <img src="/<?= $machine['photo_url'] ?>" style="max-width:200px;" class="img-thumbnail">
                 <?php else: ?>
                   <p class="text-muted">ไม่มีรูปภาพ</p>
                 <?php endif; ?>
@@ -134,7 +134,7 @@ if (!$machine) {
                 </div>
 
                 <div class="col-12 mt-4 d-flex justify-content-center gap-3">
-                  <a href="/factory_monitoring/machine_list/machines.php" class="btn btn-secondary btn-lg">
+                  <a href="/machine_list/machines.php" class="btn btn-secondary btn-lg">
                     <i class="fas fa-arrow-left me-2"></i> ยกเลิก
                   </a>
                   <button type="button" id="delete-btn" class="btn btn-danger btn-lg">
@@ -149,7 +149,7 @@ if (!$machine) {
     </div>
   </section>
 
-  <script src="/factory_monitoring/admin/SidebarAdmin.js"></script>
+  <script src="/admin/SidebarAdmin.js"></script>
   <script>
     document.getElementById('delete-btn').addEventListener('click', function() {
       const reason = document.getElementById('delete_reason').value.trim();

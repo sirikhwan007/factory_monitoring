@@ -4,7 +4,7 @@ require_once "../config.php";
 
 /* ================= AUTH ================= */
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Manager') {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 

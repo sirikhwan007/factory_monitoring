@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config.php';
 
 /* ================= AUTH ================= */
 if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['Admin', 'Manager'])) {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 
@@ -117,9 +117,9 @@ $techs = $conn->query("
     <meta charset="UTF-8">
     <title>แผนซ่อมตามรอบ | <?= htmlspecialchars($machine_id) ?></title>
 
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
-    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
-    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
+    <link rel="stylesheet" href="/admin/assets/css/index.css">
+    <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>

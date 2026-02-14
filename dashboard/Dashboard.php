@@ -3,7 +3,7 @@ session_start();
 include __DIR__ . "/../config.php";
 
 if (!isset($_SESSION['user_id'])) {
-  header("Location: /factory_monitoring/login.php");
+  header("Location: /login.php");
   exit();
 }
 // ตรวจสอบ Role ของผู้ใช้งาน (ดึงจาก session ที่คุณตั้งไว้ตอน Login)
@@ -54,11 +54,11 @@ $conn->close();
   <title>Motor Monitoring Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
-  <link rel="stylesheet" href="/factory_monitoring/dashboard/dashboard.css">
-  <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
-  <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
-  <link rel="stylesheet" href="/factory_monitoring/Technician/assets/css/sidebar_technician.css">
+  <link rel="stylesheet" href="/admin/assets/css/index.css">
+  <link rel="stylesheet" href="/dashboard/dashboard.css">
+  <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
+  <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
+  <link rel="stylesheet" href="/Technician/assets/css/sidebar_technician.css">
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -102,12 +102,12 @@ $conn->close();
           <div class="card mb-3 shadow-sm p-3">
             <div class="row g-3 align-items-center">
               <!-- รูปเครื่องจักร -->
-              <div class="col-md-4 text-center" onclick="location.href='/factory_monitoring/machine_list/machine_detail.php?id=<?php echo $machine['machine_id']; ?>'" style="cursor: pointer;">
+              <div class="col-md-4 text-center" onclick="location.href='/machine_list/machine_detail.php?id=<?php echo $machine['machine_id']; ?>'" style="cursor: pointer;">
                 <?php
                 // ตรวจสอบว่ามีข้อมูลชื่อไฟล์รูปภาพหรือไม่
                 $imgSrc = !empty($machine['photo_url'])
-                  ? "/factory_monitoring/" . $machine['photo_url']
-                  : "/factory_monitoring/assets/default-machine.png";
+                  ? "/" . $machine['photo_url']
+                  : "/assets/default-machine.png";
                 ?>
                 <img src="<?php echo $imgSrc; ?>"
                   alt="รูปเครื่องจักร"
@@ -133,13 +133,13 @@ $conn->close();
                 <div class="action-buttons-container position-absolute top-0 end-0 d-flex flex-column align-items-end gap-2">
 
                   <?php if ($user_role !== 'Operator' && $user_role !== 'Technician'): ?>
-                    <a href="/factory_monitoring/editmachine/machine_edit.php?id=<?= $machine['machine_id'] ?>"
+                    <a href="/editmachine/machine_edit.php?id=<?= $machine['machine_id'] ?>"
                       class="btn btn-warning btn-sm"
                       style="padding: 4px 8px; font-size: 12px; width: fit-content;">
                       <i class="fa-solid fa-pen-to-square"></i> แก้ไขข้อมูลเครื่องจักร
                     </a>
 
-                    <a href="/factory_monitoring/deletemachine/machine_delete.php?id=<?= $machine['machine_id'] ?>"
+                    <a href="/deletemachine/machine_delete.php?id=<?= $machine['machine_id'] ?>"
                       class="btn btn-danger btn-sm"
                       style="padding: 4px 8px; font-size: 12px; width: fit-content;">
                       <i class="fa-solid fa-trash"></i> ลบเครื่องจักร
@@ -147,7 +147,7 @@ $conn->close();
                   <?php endif; ?>
 
                   <?php if ($user_role !== 'Technician'): ?>
-                  <a href="/factory_monitoring/repair/report.php?machine_id=<?= $machine['machine_id'] ?>"
+                  <a href="/repair/report.php?machine_id=<?= $machine['machine_id'] ?>"
                     class="btn btn-warning btn-sm"
                     style="padding: 4px 8px; font-size: 12px; background-color:#ff8c00; border-color:#ff8c00; width: fit-content;">
                     <i class="fa-solid fa-clipboard"></i> แจ้งซ่อม
@@ -155,7 +155,7 @@ $conn->close();
                   <?php endif; ?>
 
                   <?php if ($user_role !== 'Operator' && $user_role !== 'Technician'): ?>
-                    <a href="/factory_monitoring/machine_list/maintenance_plan.php?machine_id=<?= urlencode($machine['machine_id']) ?>"
+                    <a href="/machine_list/maintenance_plan.php?machine_id=<?= urlencode($machine['machine_id']) ?>"
                       class="btn btn-primary btn-sm"
                       style="padding: 4px 8px; font-size: 12px; background-color:#00CC99; border-color:#00CC99; width: fit-content;"
                       onclick="event.stopPropagation(); window.location.href=this.href; return false;">
@@ -164,7 +164,7 @@ $conn->close();
                   <?php endif; ?>
 
                   <?php if ($doc): ?>
-                    <a href="/factory_monitoring/<?= $doc['file_path'] ?>"
+                    <a href="/<?= $doc['file_path'] ?>"
                       class="btn btn-success btn-sm"
                       style="padding: 4px 8px; font-size: 12px; width: fit-content;"
                       target="_blank">
@@ -298,8 +298,8 @@ $conn->close();
     </div>
 
     <!-- JavaScript ภายนอก -->
-    <script src="/factory_monitoring/dashboard/dashboard.js?v=<?php echo time(); ?>" defer></script>
-    <script src="/factory_monitoring/admin/SidebarAdmin.js"></script>
+    <script src="/dashboard/dashboard.js?v=<?php echo time(); ?>" defer></script>
+    <script src="/admin/SidebarAdmin.js"></script>
 
     <script>
       // เพิ่มบรรทัดนี้เพื่อส่งค่า MAC Address ให้ JavaScript

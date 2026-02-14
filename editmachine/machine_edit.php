@@ -49,10 +49,10 @@ $current_datasheet = $doc['file_path'] ?? "";
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>แก้ไขข้อมูลเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
-  <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
-  <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
-  <link rel="stylesheet" href="/factory_monitoring/editmachine/edit.css">
+  <link rel="stylesheet" href="/admin/assets/css/index.css">
+  <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
+  <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
+  <link rel="stylesheet" href="/editmachine/edit.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -134,7 +134,7 @@ $current_datasheet = $doc['file_path'] ?? "";
                 <div class="text-center">
                   <p class="fw-bold mb-2">รูปปัจจุบัน</p>
                   <?php if (!empty($machine['photo_url'])): ?>
-                    <img src="/factory_monitoring/<?= $machine['photo_url'] ?>" style="max-width:200px;" class="img-thumbnail">
+                    <img src="/<?= $machine['photo_url'] ?>" style="max-width:200px;" class="img-thumbnail">
                   <?php else: ?>
                     <p class="text-muted">ไม่มีรูปภาพ</p>
                   <?php endif; ?>
@@ -171,7 +171,7 @@ $current_datasheet = $doc['file_path'] ?? "";
                   <?php if (!empty($current_datasheet)): ?>
                     <p>
                       ไฟล์ปัจจุบัน:
-                      <a href="/factory_monitoring/<?= $current_datasheet ?>" target="_blank">
+                      <a href="/<?= $current_datasheet ?>" target="_blank">
                         <?= basename($current_datasheet) ?>
                       </a>
                     </p>
@@ -208,7 +208,7 @@ $current_datasheet = $doc['file_path'] ?? "";
       </div>
     </div>
 
-    <script src="/factory_monitoring/admin/SidebarAdmin.js"></script>
+    <script src="/admin/SidebarAdmin.js"></script>
     <script>
       document.getElementById('photo').addEventListener('change', function() {
         const preview = document.getElementById('image-preview');

@@ -113,7 +113,7 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>รายละเอียดงานซ่อม #<?= $repair_id ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/factory_monitoring/Technician/assets/css/sidebar_technician.css">
+    <link rel="stylesheet" href="/Technician/assets/css/sidebar_technician.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -368,7 +368,7 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/factory_monitoring/Technician/assets/js/SidebarOperator.js"></script>
+    <script src="/Technician/assets/js/SidebarOperator.js"></script>
 
 </body>
 

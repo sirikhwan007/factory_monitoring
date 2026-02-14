@@ -5,7 +5,7 @@ require_once "../config.php";
 // 1. Check Auth & Role (ตรวจสอบว่าเป็น Manager หรือไม่)
 // ควรตรวจสอบ Role ด้วยเพื่อความปลอดภัย (สมมติว่า Role ใน DB คือ 'Manager')
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 

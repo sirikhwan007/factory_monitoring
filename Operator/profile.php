@@ -4,7 +4,7 @@ require_once "../config.php";
 
 /* ===== Auth Guard ===== */
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Operator') {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 
@@ -21,8 +21,8 @@ $stmt->execute();
 $op = $stmt->get_result()->fetch_assoc();
 
 $profileImage = !empty($op['profile_image'])
-    ? "/factory_monitoring/admin/uploads/" . $op['profile_image']
-    : "/factory_monitoring/admin/uploads/default.png";
+    ? "/admin/uploads/" . $op['profile_image']
+    : "/admin/uploads/default.png";
 ?>
 <!DOCTYPE html>
 <html lang="th">
@@ -32,7 +32,7 @@ $profileImage = !empty($op['profile_image'])
     <title>Operator Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS -->
-    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/profile.css">
+    <link rel="stylesheet" href="/Operator/assets/css/profile.css">
 
     <!-- FontAwesome -->
     <link rel="stylesheet"

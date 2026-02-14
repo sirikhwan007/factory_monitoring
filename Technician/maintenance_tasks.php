@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config.php';
 
 /* ================= AUTH ================= */
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 
@@ -136,7 +136,7 @@ $tasks = $stmt->get_result();
     <title>งานซ่อมของฉัน</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
+    <link rel="stylesheet" href="/admin/assets/css/index.css">
 
     <style>
         body {

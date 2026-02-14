@@ -7,7 +7,7 @@ if (session_status() == PHP_SESSION_NONE) {
 require_once "../config.php";
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit;
 }
 
@@ -39,13 +39,13 @@ $profileImage = $user['profile_image'];
 <head>
     <meta charset="UTF-8">
     <title>โปรไฟล์ผู้ใช้</title>
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/profile.css">
+    <link rel="stylesheet" href="/admin/assets/css/profile.css">
 </head>
 <body>
 
 <div class="profile-container">
 
-    <img src="/factory_monitoring/admin/uploads/<?php echo htmlspecialchars($profileImage); ?>" class="profile-img-card">
+    <img src="/admin/uploads/<?php echo htmlspecialchars($profileImage); ?>" class="profile-img-card">
 
     <h2><?php echo htmlspecialchars($user['username']); ?></h2>
     <p class="role"><?php echo htmlspecialchars($user['role']); ?></p>

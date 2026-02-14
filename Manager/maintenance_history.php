@@ -3,12 +3,12 @@ session_start();
 
 // ===== AUTH =====
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 
 if ($_SESSION['role'] !== 'Manager') {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 

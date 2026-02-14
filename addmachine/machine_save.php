@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {
-        header("Location: /factory_monitoring/addmachine/machine.php?error=duplicate_id");
+        header("Location: /addmachine/machine.php?error=duplicate_id");
         exit();
     }
     $stmt->close();
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {
-        header("Location: /factory_monitoring/addmachine/machine.php?error=duplicate_mac");
+        header("Location: /addmachine/machine.php?error=duplicate_mac");
         exit();
     }
     $stmt->close();
@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $allowed = ["pdf", "doc", "docx", "xls", "xlsx", "txt"];
 
         if (!in_array($ds_extension, $allowed)) {
-            header("Location: /factory_monitoring/addmachine/machine.php?error=invalid_file");
+            header("Location: /addmachine/machine.php?error=invalid_file");
             exit();
         }
 
@@ -194,13 +194,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->commit();
 
         // ส่งกลับไปที่หน้า machine.php พร้อมแนบสถานะ success ไปทาง URL
-        header("Location: /factory_monitoring/machine_list/machine.php?status=success");
+        header("Location: /machine_list/machine.php?status=success");
         exit;
     } catch (Exception $e) {
         $conn->rollback();
 
         // ส่งกลับไปหน้าเดิมพร้อมแจ้ง Error (หรือจะใช้ die แบบเดิมที่คุณเคยใช้ก็ได้ครับ)
-        header("Location: /factory_monitoring/addmachine/machine.php?status=error&message=" . urlencode($e->getMessage()));
+        header("Location: /addmachine/machine.php?status=error&message=" . urlencode($e->getMessage()));
         exit;
     }
 }

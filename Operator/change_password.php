@@ -4,7 +4,7 @@ require_once "../config.php"; // ตรวจสอบว่า path config ถ�
 
 // 1. ตรวจสอบสิทธิ์ว่าเป็น Operator จริงหรือไม่
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Operator') {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 

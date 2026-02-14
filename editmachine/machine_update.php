@@ -290,7 +290,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->commit();
 
         // ส่งกลับไปที่หน้าแก้ไขเดิม พร้อมแจ้งสถานะ updated
-        header("Location: /factory_monitoring/machine_list/machine.php?id=$machine_id_new&status=updated");
+        header("Location: /machine_list/machine.php?id=$machine_id_new&status=updated");
         exit;
 
     } catch (Exception $e) {
