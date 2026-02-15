@@ -41,24 +41,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $stmt->close();
 
-    // ----------------------------
-    // Upload รูปภาพ
-    // ----------------------------
-    $photo_url = null;
-    if (!empty($_FILES["photo"]["name"])) {
-
-        $target_dir = "../uploads/machines/";
-        if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0777, true);
-        }
-
-        $extension = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
-        $new_name = $machine_id . "_" . time() . "." . $extension;
-        $target_file = $target_dir . $new_name;
-
-        if (move_uploaded_file($_FILES["photo"]["tmp_name"], $target_file)) {
-            $photo_url = "uploads/machines/" . $new_name;
-        }
+    
+    // Upload รูปภาพแบบ Base64 ลง Database
+    $photo_url = null; 
+    
+    // เช็คว่ามีการเลือกไฟล์และไม่มี Error
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === 0) {
+        // 1. อ่านไฟล์ออกมาเป็น Binary Data
+        $fileData = file_get_contents($_FILES['photo']['tmp_name']);
+        
+        // 2. ดึงประเภทไฟล์ (เช่น image/jpeg, image/png)
+        $fileType = $_FILES['photo']['type'];
+        
+        // 3. แปลงเป็น Base64
+        $base64 = base64_encode($fileData);
+        
+        // 4. สร้าง string พร้อมใช้ (Data URI)
+        $photo_url = 'data:' . $fileType . ';base64,' . $base64;
     }
 
     // ----------------------------

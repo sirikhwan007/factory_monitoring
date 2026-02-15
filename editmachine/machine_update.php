@@ -49,21 +49,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // ----------------------------
     // อัปโหลดรูปใหม่ (ถ้ามี)
     // ----------------------------
-    $photo_url = $old_photo;
+    $photo_url = $old_photo; // ใช้รูปเดิมไปก่อน
+    
+    // ถ้ามีการอัปโหลดรูปใหม่
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === 0) {
-        $uploadDir = "../uploads/machines/";
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-
-        $extension = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
-        $new_name = $machine_id_new . "_" . time() . "." . $extension;
-        $target_file = $uploadDir . $new_name;
-
-        if (move_uploaded_file($_FILES["photo"]["tmp_name"], $target_file)) {
-            if (!empty($old_photo) && file_exists("../" . $old_photo)) {
-                unlink("../" . $old_photo);
-            }
-            $photo_url = "uploads/machines/" . $new_name;
-        }
+        $fileData = file_get_contents($_FILES['photo']['tmp_name']);
+        $fileType = $_FILES['photo']['type'];
+        $base64 = base64_encode($fileData);
+        
+        // แทนที่รูปเดิมด้วยรูปใหม่
+        $photo_url = 'data:' . $fileType . ';base64,' . $base64;
     }
 
     // ----------------------------
