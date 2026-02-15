@@ -41,6 +41,115 @@ $profileImage = $user['profile_image'];
     <meta charset="UTF-8">
     <title>โปรไฟล์ผู้ใช้</title>
     <link rel="stylesheet" href="/admin/assets/css/profile.css">
+    <style>
+        /* CSS จัดหน้าโปรไฟล์ */
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .profile-container {
+            background: white;
+            width: 400px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        /* --- ส่วนที่เพิ่มใหม่เพื่อแก้รูปใหญ่เกิน --- */
+        .profile-img {
+            width: 150px;        /* กำหนดความกว้าง */
+            height: 150px;       /* กำหนดความสูง */
+            object-fit: cover;   /* ตัดส่วนเกินออกไม่ให้รูปเบี้ยว */
+            border-radius: 50%;  /* ทำเป็นวงกลม */
+            border: 4px solid #ececec; /* ขอบรูปสีเทาจางๆ */
+            margin-bottom: 15px;
+        }
+        /* ------------------------------------- */
+
+        h2 { margin: 10px 0 5px; color: #333; }
+        .role { color: #777; font-size: 0.9rem; margin-bottom: 20px; }
+
+        .info-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        .info-box p { margin: 8px 0; color: #555; }
+        .info-box strong { color: #333; min-width: 80px; display: inline-block;}
+
+        .btn-edit {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .btn-edit:hover { background-color: #2980b9; }
+
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 999; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+        }
+        .close:hover { color: #000; }
+
+        form label { display: block; text-align: left; margin-top: 10px; font-weight: bold; font-size: 0.9rem;}
+        form input { 
+            width: 100%; 
+            padding: 10px; 
+            margin-top: 5px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            box-sizing: border-box; /* สำคัญ: เพื่อไม่ให้ padding ดันกล่องล้น */
+        }
+        form button {
+            width: 100%;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px;
+            margin-top: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        form button:hover { background-color: #27ae60; }
+    </style>
 </head>
 
 <body>
