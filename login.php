@@ -25,6 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION['username'] = $user['username'];
             $_SESSION['role']     = $user['role'];
 
+            $_SESSION['profile_image'] = !empty($user['profile_image']) ? $user['profile_image'] : 'default.png';
+
             switch ($user['role']) {
                 case 'Admin':
                     header("Location: /admin/index.php");

@@ -14,7 +14,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <a href="/admin/profile.php" class="profile-btn">
       <div class="sb-logo">
         <?php
-        // เช็คว่าเป็น Base64 หรือไม่ ถ้าใช่ให้แสดงเลย ถ้าไม่ใช่ให้เติม Path
         $showImg = (strpos($profileImage, 'data:') === 0)
           ? $profileImage
           : "/admin/uploads/" . $profileImage;
