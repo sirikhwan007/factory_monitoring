@@ -164,7 +164,7 @@ $conn->close();
                   <?php endif; ?>
 
                   <?php if ($doc): ?>
-                    <a href="/<?= $doc['file_path'] ?>"
+                    <a href="<?= $doc['file_path'] ?>"
                       class="btn btn-success btn-sm"
                       style="padding: 4px 8px; font-size: 12px; width: fit-content;"
                       target="_blank">

@@ -93,38 +93,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_document_url  = null;
     $new_document_type = null;
 
-    if (!empty($_FILES["datasheet"]["name"])) {
+    if (!empty($_FILES["datasheet"]["name"]) && $_FILES["datasheet"]["error"] === 0) {
 
-        $target_dir = "../uploads/datasheets/";
-        if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
-
+        // 1. ตรวจสอบนามสกุลไฟล์
         $ext = strtolower(pathinfo($_FILES["datasheet"]["name"], PATHINFO_EXTENSION));
         $allowed = ["pdf", "doc", "docx", "xlsx", "xls", "txt"];
 
         if (!in_array($ext, $allowed)) {
-    // ส่งกลับไปหน้าแก้ไข พร้อมแจ้งว่าไฟล์ไม่ถูกต้อง
-    header("Location: machine_edit.php?id=$machine_id_old&error=invalid_file");
-    exit();
-}
-
-        // สร้างชื่อใหม่ (ชื่อไฟล์จริง + machine_id)
-        $base = pathinfo($_FILES["datasheet"]["name"], PATHINFO_FILENAME);
-        $clean = preg_replace('/[^A-Za-z0-9_\-]/', '_', $base);
-        $new_document_name = $machine_id_new . "_" . $clean . "." . $ext;
-
-        $target_file = $target_dir . $new_document_name;
-
-        if (move_uploaded_file($_FILES["datasheet"]["tmp_name"], $target_file)) {
-
-            // ลบไฟล์เก่า
-            if ($old_doc && file_exists("../" . $old_doc['file_path'])) {
-                unlink("../" . $old_doc['file_path']);
-            }
-
-            $document_uploaded = true;
-            $new_document_url  = "uploads/datasheets/" . $new_document_name;
-            $new_document_type = $ext;
+            // ถ้าไฟล์ผิดประเภท ดีดกลับไปหน้าเดิม
+            header("Location: machine_edit.php?id=$machine_id_old&error=invalid_file");
+            exit();
         }
+
+        // 2. อ่านไฟล์เป็น Binary Data
+        $fileData = file_get_contents($_FILES["datasheet"]["tmp_name"]);
+        
+        // 3. แปลงเป็น Base64 String
+        $mimeType = $_FILES["datasheet"]["type"];
+        $base64 = base64_encode($fileData);
+        
+        // กำหนดค่าตัวแปรสำหรับลง Database
+        $new_document_url = 'data:' . $mimeType . ';base64,' . $base64; // เก็บเนื้อหาไฟล์ที่นี่
+        $new_document_name = $_FILES["datasheet"]["name"];              // ชื่อไฟล์เดิม
+        $new_document_type = $ext;                                      // นามสกุล
+
+        $document_uploaded = true;
+        
+        // หมายเหตุ: ไม่ต้องสั่งลบไฟล์เก่า (unlink) แล้ว เพราะเราไม่ได้เก็บเป็นไฟล์
     }
     // ----------------------------
     // UPDATE/INSERT Datasheet

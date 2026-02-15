@@ -68,43 +68,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $datasheet_name = null;
     $datasheet_type = null;
 
-    if (!empty($_FILES["datasheet"]["name"])) {
+    if (!empty($_FILES["datasheet"]["name"]) && $_FILES["datasheet"]["error"] === 0) {
 
-        $target_dir = "../uploads/datasheets/";
-        if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0777, true);
-        }
-
-        $ds_extension = strtolower(pathinfo($_FILES["datasheet"]["name"], PATHINFO_EXTENSION));
-
-        // อนุญาตไฟล์
-        $allowed = ["pdf", "doc", "docx", "xls", "xlsx", "txt"];
-
-        if (!in_array($ds_extension, $allowed)) {
-            header("Location: /addmachine/machine.php?error=invalid_file");
-            exit();
-        }
-
-        // ใช้ชื่อไฟล์จริง
-        $original_name = pathinfo($_FILES["datasheet"]["name"], PATHINFO_FILENAME);
-
-        // ลบอักขระที่ไม่ปลอดภัย เช่น ช่องว่าง, เครื่องหมายพิเศษ
-        $clean_name = preg_replace('/[^A-Za-z0-9_\-]/', '_', $original_name);
-
-        // กำหนดชื่อใหม่โดยใช้ชื่อไฟล์จริง + machine_id
-        $new_ds_name = $machine_id . "_" . $clean_name . "." . $ds_extension;
-
-
-        $target_ds_file = $target_dir . $new_ds_name;
-
-        if (move_uploaded_file($_FILES["datasheet"]["tmp_name"], $target_ds_file)) {
-            $datasheet_uploaded = true;
-
-            // สำหรับบันทึกลง DB
-            $datasheet_name = $new_ds_name;
-            $datasheet_path = "uploads/datasheets/" . $new_ds_name;
-            $datasheet_type = $ds_extension;
-        }
+        // 1. อ่านไฟล์เป็น Binary
+        $fileData = file_get_contents($_FILES["datasheet"]["tmp_name"]);
+        
+        // 2. ข้อมูลไฟล์
+        $mimeType = $_FILES["datasheet"]["type"]; // เช่น application/pdf
+        $originalName = $_FILES["datasheet"]["name"];
+        
+        // 3. แปลงเป็น Base64
+        $base64 = base64_encode($fileData);
+        
+        // 4. สร้าง String ที่พร้อมใช้งาน (Data URI)
+        $datasheet_path = 'data:' . $mimeType . ';base64,' . $base64;
+        
+        // เก็บชื่อและนามสกุลไว้เหมือนเดิม
+        $datasheet_name = $originalName; 
+        $datasheet_type = pathinfo($originalName, PATHINFO_EXTENSION);
+        
+        $datasheet_uploaded = true;
     }
 
     // ----------------------------
