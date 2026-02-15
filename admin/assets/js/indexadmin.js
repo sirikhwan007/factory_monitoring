@@ -2,7 +2,7 @@ $(document).ready(function() {
 
             function loadStatus() {
                 $.ajax({
-                    url: "/factory_monitoring/api/get_all_machine_status.php",
+                    url: "/api/get_all_machine_status.php",
                     method: "GET",
                     dataType: "json",
                     success: function(res) {
@@ -23,7 +23,7 @@ $(document).ready(function() {
 
             function loadStatus() {
                 $.ajax({
-                    url: "/factory_monitoring/api/get_all_machine_status.php",
+                    url: "/api/get_all_machine_status.php",
                     method: "GET",
                     dataType: "json",
                     success: function(res) {
@@ -70,7 +70,7 @@ $(document).ready(function() {
             }
 
             $("#notification-bell").on("click", function() {
-                window.location.href = "/factory_monitoring/machine_list/machine.php?status=" + encodeURIComponent(currentIssue);
+                window.location.href = "/machine_list/machine.php?status=" + encodeURIComponent(currentIssue);
             });
 
             // เริ่มทำงาน
