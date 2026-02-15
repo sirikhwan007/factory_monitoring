@@ -201,7 +201,7 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                             <div class="col-md-5">
                                 <?php
                                 $imgSrc = !empty($machine['photo_url'])
-                                    ? "/" . $machine['photo_url']
+                                    ? $machine['photo_url']
                                     : "/assets/default-machine.png";
                                 ?>
                                 <img src="<?php echo $imgSrc; ?>"
