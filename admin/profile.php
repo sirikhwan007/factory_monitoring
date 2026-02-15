@@ -36,79 +36,88 @@ $profileImage = $user['profile_image'];
 ?>
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <title>โปรไฟล์ผู้ใช้</title>
     <link rel="stylesheet" href="/admin/assets/css/profile.css">
 </head>
+
 <body>
 
-<div class="profile-container">
+    <div class="profile-container">
 
-    <img src="/admin/uploads/<?php echo htmlspecialchars($profileImage); ?>" class="profile-img-card">
+        <?php
+        // เช็คว่าเป็น Base64 หรือไม่ ถ้าใช่ให้แสดงเลย ถ้าไม่ใช่ให้เติม Path
+        $showImg = (strpos($profileImage, 'data:') === 0)
+            ? $profileImage
+            : "/admin/uploads/" . $profileImage;
+        ?>
+        <img src="<?php echo $showImg; ?>" class="profile-img">
 
-    <h2><?php echo htmlspecialchars($user['username']); ?></h2>
-    <p class="role"><?php echo htmlspecialchars($user['role']); ?></p>
+        <h2><?php echo htmlspecialchars($user['username']); ?></h2>
+        <p class="role"><?php echo htmlspecialchars($user['role']); ?></p>
 
-    <div class="info-box">
-        <p><strong>อีเมล์:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-        <p><strong>เบอร์โทร:</strong> <?php echo htmlspecialchars($user['phone']); ?></p>
-        <p><strong>สร้างเมื่อ:</strong> <?php echo htmlspecialchars($user['created_at']); ?></p>
+        <div class="info-box">
+            <p><strong>อีเมล์:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
+            <p><strong>เบอร์โทร:</strong> <?php echo htmlspecialchars($user['phone']); ?></p>
+            <p><strong>สร้างเมื่อ:</strong> <?php echo htmlspecialchars($user['created_at']); ?></p>
+        </div>
+
+        <button class="btn-edit" onclick="openEditModal()">แก้ไขข้อมูล</button>
     </div>
 
-    <button class="btn-edit" onclick="openEditModal()">แก้ไขข้อมูล</button>
-</div>
+    <!-- Modal แก้ไขข้อมูล -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <form class="label" action="profile_update.php" method="post" enctype="multipart/form-data">
 
-<!-- Modal แก้ไขข้อมูล -->
-<div id="editModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeEditModal()">&times;</span>
-        <form class="label" action="profile_update.php" method="post" enctype="multipart/form-data">
-            
-            <label>ชื่อผู้ใช้</label>
-            <input type="text" name="username" 
-                   value="<?php echo htmlspecialchars($user['username']); ?>" required>
+                <label>ชื่อผู้ใช้</label>
+                <input type="text" name="username"
+                    value="<?php echo htmlspecialchars($user['username']); ?>" required>
 
-            <label>อีเมล์</label>
-            <input type="email" name="email" 
-                   value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                <label>อีเมล์</label>
+                <input type="email" name="email"
+                    value="<?php echo htmlspecialchars($user['email']); ?>" required>
 
-            <label>เบอร์โทร</label>
-            <input type="text" name="phone" 
-                   value="<?php echo htmlspecialchars($user['phone']); ?>" required>
+                <label>เบอร์โทร</label>
+                <input type="text" name="phone"
+                    value="<?php echo htmlspecialchars($user['phone']); ?>" required>
 
-            <!-- เพิ่มรหัสผ่าน -->
-            <label>รหัสผ่านใหม่ (ถ้าไม่เปลี่ยนให้เว้นว่าง)</label>
-            <input type="password" name="password" placeholder="New Password">
+                <!-- เพิ่มรหัสผ่าน -->
+                <label>รหัสผ่านใหม่ (ถ้าไม่เปลี่ยนให้เว้นว่าง)</label>
+                <input type="password" name="password" placeholder="New Password">
 
-            <label>ยืนยันรหัสผ่าน</label>
-            <input type="password" name="confirm_password" placeholder="Confirm Password">
+                <label>ยืนยันรหัสผ่าน</label>
+                <input type="password" name="confirm_password" placeholder="Confirm Password">
 
-            <label>รูปโปรไฟล์</label>
-            <input type="file" name="profile_image">
+                <label>รูปโปรไฟล์</label>
+                <input type="file" name="profile_image">
 
-            <button type="submit">บันทึก</button>
-        </form>
+                <button type="submit">บันทึก</button>
+            </form>
+        </div>
     </div>
-</div>
 
-<script>
-// เปิด modal
-function openEditModal() {
-    document.getElementById("editModal").style.display = "flex";
-}
-// ปิด modal
-function closeEditModal() {
-    document.getElementById("editModal").style.display = "none";
-}
-// ปิด modal เมื่อคลิกนอก modal-content
-window.onclick = function(event) {
-    const modal = document.getElementById("editModal");
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-</script>
+    <script>
+        // เปิด modal
+        function openEditModal() {
+            document.getElementById("editModal").style.display = "flex";
+        }
+        // ปิด modal
+        function closeEditModal() {
+            document.getElementById("editModal").style.display = "none";
+        }
+        // ปิด modal เมื่อคลิกนอก modal-content
+        window.onclick = function(event) {
+            const modal = document.getElementById("editModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 
 </body>
+
 </html>
