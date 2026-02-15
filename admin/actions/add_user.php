@@ -59,16 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // อัปโหลดรูป (ถ้ามี)
-    $profile_image = 'default.png'; // default
+    $profile_image = 'default.png'; // ค่าเริ่มต้น
+
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
-        $ext = pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION);
-        $profile_image = uniqid() . '.' . $ext;
-        $upload_path = __DIR__ . '/../uploads/' . $profile_image;
-        if (!move_uploaded_file($_FILES['profile_image']['tmp_name'], $upload_path)) {
-            $response['error'] = 'ไม่สามารถอัปโหลดรูปได้';
-            echo json_encode($response);
-            exit;
-        }
+        $fileData = file_get_contents($_FILES['profile_image']['tmp_name']);
+        $type = $_FILES['profile_image']['type'];
+        $base64 = base64_encode($fileData);
+        
+        // สร้าง Base64 String (ตัวอย่าง: data:image/png;base64,.....)
+        $profile_image = 'data:' . $type . ';base64,' . $base64;
     }
 
     // เพิ่มผู้ใช้ใหม่พร้อมรูป

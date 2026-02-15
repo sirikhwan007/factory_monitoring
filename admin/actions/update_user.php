@@ -36,30 +36,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
 
             // ถ้ามีรูปใหม่
+            // ถ้ามีการอัปโหลดรูปใหม่
             if (!empty($_FILES['profile_image']['name']) 
                 && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
 
-                // เอารูปเก่าออกก่อน
-                $old = $conn->query("SELECT profile_image FROM users WHERE user_id='$user_id'")
-                            ->fetch_assoc()['profile_image'];
+                // 1. อ่านไฟล์รูปภาพออกมา
+                $fileData = file_get_contents($_FILES['profile_image']['tmp_name']);
+                $type = $_FILES['profile_image']['type'];
+                
+                // 2. แปลงเป็น Base64
+                $base64 = base64_encode($fileData);
+                $newImage = 'data:' . $type . ';base64,' . $base64;
 
-                if ($old && $old !== 'default.png') {
-                    $oldPath = $uploadDir . $old;
-                    if (file_exists($oldPath)) unlink($oldPath);
-                }
-
-                // อัปโหลดรูปใหม่
-                $ext = strtolower(pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION));
-                $filename = uniqid('user_') . "." . $ext;
-                $targetPath = $uploadDir . $filename;
-
-                if (!move_uploaded_file($_FILES['profile_image']['tmp_name'], $targetPath)) {
-                    throw new Exception("อัปโหลดรูปไม่สำเร็จ");
-                }
-
-                // อัปเดตชื่อไฟล์ใน DB
+                // 3. อัปเดตลง Database (ทับข้อมูลเดิมไปเลย ไม่ต้องสั่งลบไฟล์เก่า)
                 $stmt = $conn->prepare("UPDATE users SET profile_image=? WHERE user_id=?");
-                $stmt->bind_param("ss", $filename, $user_id);
+                $stmt->bind_param("ss", $newImage, $user_id);
+                
                 if (!$stmt->execute()) throw new Exception($stmt->error);
                 $stmt->close();
             }

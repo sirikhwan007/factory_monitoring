@@ -19,9 +19,12 @@ $activePage = $activePage ?? '';
         <a href="/Technician/profile.php" class="profile-btn">
             <div class="sb-logo">
 
-                <img src="/admin/uploads/<?php echo htmlspecialchars($profileImage); ?>"
-                    class="profile-img"
-                    alt="Profile">
+                <?php
+                $showImg = (strpos($profileImage, 'data:') === 0)
+                    ? $profileImage
+                    : "/admin/uploads/" . $profileImage;
+                ?>
+                <img src="<?php echo $showImg; ?>" class="profile-img" alt="Profile">
 
                 <div class="profile-info">
                     <span class="profile-name">

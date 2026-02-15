@@ -16,9 +16,15 @@ $activePage = $activePage ?? '';
     <div class="op-top">
         <a href="/operator/profile.php" class="op-profile-btn">
             <div class="op-logo">
-                 <img src="/admin/uploads/<?php echo htmlspecialchars($profileImage); ?>"
-                     class="op-profile-img"
-                     alt="Profile">
+                <?php
+                // เช็คว่าเป็น Base64 หรือไม่ ถ้าใช่ให้แสดงเลย ถ้าไม่ใช่ให้เติม Path
+                $showImg = (strpos($profileImage, 'data:') === 0)
+                    ? $profileImage
+                    : "/admin/uploads/" . $profileImage;
+                ?>
+                <img src="<?php echo $showImg; ?>" class="profile-img" alt="Profile">
+                class="op-profile-img"
+                alt="Profile">
 
                 <div class="op-profile-info">
                     <span class="op-profile-name"><?= htmlspecialchars($username) ?></span>
@@ -31,7 +37,7 @@ $activePage = $activePage ?? '';
             <!-- Dashboard -->
             <li>
                 <a href="/Operator/dashboard.php"
-                   class="<?= $activePage === 'dashboard' ? 'active' : '' ?>">
+                    class="<?= $activePage === 'dashboard' ? 'active' : '' ?>">
                     <i class="fa-solid fa-home"></i>
                     <span class="sb-text">หน้าหลัก</span>
                 </a>
@@ -39,7 +45,7 @@ $activePage = $activePage ?? '';
             <!-- Machines -->
             <li>
                 <a href="/machine_list/machine.php"
-                   class="<?= $activePage === 'machines' ? 'active' : '' ?>">
+                    class="<?= $activePage === 'machines' ? 'active' : '' ?>">
                     <i class="fa-solid fa-industry"></i>
                     <span class="sb-text">เครื่องจักรทั้งหมด</span>
                 </a>
@@ -48,7 +54,7 @@ $activePage = $activePage ?? '';
             <!-- History -->
             <li>
                 <a href="/repair/reporthistory.php"
-                   class="<?= $activePage === 'history' ? 'active' : '' ?>">
+                    class="<?= $activePage === 'history' ? 'active' : '' ?>">
                     <i class="fa-solid fa-clock"></i>
                     <span class="sb-text">รายการแจ้งซ่อม</span>
                 </a>

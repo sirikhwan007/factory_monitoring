@@ -20,15 +20,16 @@ $stmt->bind_param("s", $user_id);
 $stmt->execute();
 $op = $stmt->get_result()->fetch_assoc();
 
-$profileImage = !empty($op['profile_image'])
-    ? "/admin/uploads/" . $op['profile_image']
-    : "/admin/uploads/default.png";
+$dbImg = $op['profile_image'] ?? 'default.png';
+$profileImage = (strpos($dbImg, 'data:') === 0)
+    ? $dbImg
+    : "/admin/uploads/" . $dbImg;
 ?>
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>Operator Profile</title>
+    <title>Technician Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS -->
     <link rel="stylesheet" href="/Technician/assets/css/profile.css">

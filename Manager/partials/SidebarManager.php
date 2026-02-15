@@ -13,10 +13,10 @@ $username = $_SESSION['username'] ?? 'Manager';
 $role     = $_SESSION['role'] ?? 'Manager';
 
 /* ===== PROFILE IMAGE (จาก SESSION) ===== */
-$uploadPath = "/factory_monitoring/Manager/uploads/";
-$profileImage = !empty($_SESSION['profile_image'])
-    ? $uploadPath . $_SESSION['profile_image']
-    : $uploadPath . "default_profile.png";
+$sessImg = $_SESSION['profile_image'] ?? 'default_profile.png';
+$profileImage = (strpos($sessImg, 'data:') === 0)
+    ? $sessImg
+    : "/factory_monitoring/Manager/uploads/" . $sessImg;
 
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
