@@ -177,7 +177,7 @@ $conn->close();
               data-mac-address="<?php echo htmlspecialchars($m['mac_address']); ?>"
               onclick="location.href='/dashboard/Dashboard.php?id=<?php echo $m['machine_id']; ?>'">
 
-              <img src="/<?php echo $m['photo_url']; ?>" alt="รูปเครื่องจักร">
+              <img src="<?php echo $m['photo_url']; ?>" alt="รูปเครื่องจักร">
               <div class="machine-name"><?php echo htmlspecialchars($m['name']); ?></div>
               <div class="machine-id">ID: <?php echo htmlspecialchars($m['machine_id']); ?></div>
 

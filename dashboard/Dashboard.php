@@ -106,7 +106,7 @@ $conn->close();
                 <?php
                 // ตรวจสอบว่ามีข้อมูลชื่อไฟล์รูปภาพหรือไม่
                 $imgSrc = !empty($machine['photo_url'])
-                  ? "/" . $machine['photo_url']
+                  ? $machine['photo_url']
                   : "/assets/default-machine.png";
                 ?>
                 <img src="<?php echo $imgSrc; ?>"
