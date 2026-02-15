@@ -17,7 +17,6 @@ $password = $_POST['password'] ?? '';
 $confirm_password = $_POST['confirm_password'] ?? '';
 $profile_image = null;
 
-
 // =======================================================
 //       1) ดึงข้อมูลก่อนแก้ไข (สำคัญที่สุด)
 // =======================================================
@@ -36,7 +35,6 @@ if (!$oldData) {
     die("❌ ไม่พบข้อมูลผู้ใช้งาน!");
 }
 
-
 // =======================================================
 //       2) ตรวจสอบรหัสผ่านใหม่ (ถ้ามีการกรอก)
 // =======================================================
@@ -48,25 +46,23 @@ if (!empty($password)) {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 }
 
-
-
 // =======================================================
 //       3) อัปโหลดรูปโปรไฟล์ใหม่ (ถ้ามี)
 // =======================================================
 if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0) {
 
-    $uploadDir = __DIR__ . "/uploads/";
-    if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-
-    $fileName = time() . "_" . basename($_FILES['profile_image']['name']);
-    $targetFile = $uploadDir . $fileName;
-
-    if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $targetFile)) {
-        $profile_image = $fileName;
-    }
+    // 1. อ่านไฟล์เป็นข้อมูลดิบ
+    $fileData = file_get_contents($_FILES['profile_image']['tmp_name']);
+    
+    // 2. หาประเภทไฟล์ (เช่น image/jpeg)
+    $type = $_FILES['profile_image']['type'];
+    
+    // 3. แปลงเป็น Base64
+    $base64 = base64_encode($fileData);
+    
+    // 4. สร้าง String ที่พร้อมเก็บลง DB (data:image/png;base64,.....)
+    $profile_image = 'data:' . $type . ';base64,' . $base64;
 }
-
-
 
 // =======================================================
 //       4) สร้าง SQL UPDATE ตามกรณีต่างๆ
@@ -104,8 +100,6 @@ if ($profile_image && !empty($password)) {
     $stmt->bind_param("sssi", $username, $email, $phone, $user_id);
 }
 
-
-
 // =======================================================
 //       5) Execute UPDATE Users
 // =======================================================
@@ -140,7 +134,6 @@ if ($stmt->execute()) {
 
     $action = "UPDATE_PROFILE";
     $role = $_SESSION['role'] ?? 'User';
-
 
     // =======================================================
     //       6) Insert Log
