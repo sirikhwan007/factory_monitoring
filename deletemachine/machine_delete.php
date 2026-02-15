@@ -74,7 +74,7 @@ if (!$machine) {
               <!-- รูปเครื่องจักร -->
               <div class="text-center mb-4">
                 <?php if (!empty($machine['photo_url'])): ?>
-                  <img src="/<?= $machine['photo_url'] ?>" style="max-width:200px;" class="img-thumbnail">
+                  <img src="<?= $machine['photo_url'] ?>" style="max-width:200px;" class="img-thumbnail">
                 <?php else: ?>
                   <p class="text-muted">ไม่มีรูปภาพ</p>
                 <?php endif; ?>
