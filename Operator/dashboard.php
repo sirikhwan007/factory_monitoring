@@ -42,7 +42,6 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     <title>Operator Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
     <link rel="stylesheet" href="/Operator/assets/css/dashboard.css">
     <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
     <style>
@@ -67,6 +66,20 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
         .ring-active {
             animation: bell-ring 0.5s infinite;
             color: #dc3545 !important;
+        }
+
+        .sidebar-operator img {
+            width: 80px;       /* กำหนดความกว้าง (ปรับขนาดได้ตามใจชอบ เช่น 50px, 100px) */
+            height: 80px;      /* กำหนดความสูงให้เท่ากัน */
+            object-fit: cover; /* ให้รูปไม่บีบ ไม่เบี้ยว */
+            border-radius: 50%; /* ถ้าอยากให้รูปเป็นวงกลม */
+            margin-bottom: 10px; /* เว้นระยะห่างด้านล่าง */
+        }
+
+        /* กรณีที่รูปไม่ได้อยู่ใน class sidebar-operator โดยตรง */
+        .main-operator img.profile-img { 
+             max-width: 100px;
+             height: auto;
         }
     </style>
 </head>
