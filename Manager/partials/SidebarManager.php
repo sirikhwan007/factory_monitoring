@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /factory_monitoring/login.php");
+    header("Location: /login.php");
     exit();
 }
 
@@ -16,7 +16,7 @@ $role     = $_SESSION['role'] ?? 'Manager';
 $sessImg = $_SESSION['profile_image'] ?? 'default_profile.png';
 $profileImage = (strpos($sessImg, 'data:') === 0)
     ? $sessImg
-    : "/factory_monitoring/Manager/uploads/" . $sessImg;
+    : "/Manager/uploads/" . $sessImg;
 
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
@@ -28,7 +28,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <meta charset="UTF-8">
     <title>Sidebar</title>
 
-    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
@@ -66,11 +66,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
         <div class="sidebar-top">
 
-            <a href="/factory_monitoring/Manager/profile.php" class="profile-btn">
+            <a href="/Manager/profile.php" class="profile-btn">
                 <div class="sb-logo">
                     <img src="<?= $profileImage ?>"
                         class="profile-img"
-                        onerror="this.src='/factory_monitoring/Manager/uploads/default_profile.png'">
+                        onerror="this.src='/Manager/uploads/default_profile.png'">
 
                     <div class="profile-info">
                         <span class="profile-name"><?= htmlspecialchars($username) ?></span>
@@ -82,7 +82,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <ul class="sb-ul">
 
                 <li>
-                    <a href="/factory_monitoring/Manager/dashboard.php"
+                    <a href="/Manager/dashboard.php"
                         class="<?= $currentPage === 'dashboard.php' ? 'active' : '' ?>">
                         <i class="fas fa-chart-line"></i>
                         <span>หน้าหลัก</span>
@@ -90,7 +90,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 </li>
 
                 <li>
-                    <a href="/factory_monitoring/machine_list/machine.php"
+                    <a href="/machine_list/machine.php"
                         class="<?= $currentPage === 'machine.php' ? 'active' : '' ?>">
                         <i class="fas fa-industry"></i>
                         <span>สถานะเครื่องจักร</span>
@@ -98,14 +98,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 </li>
 
                 <li>
-                    <a href="/factory_monitoring/Manager/user_roles.php"
+                    <a href="/Manager/user_roles.php"
                         class="<?= $currentPage === 'user_roles.php' ? 'active' : '' ?>">
                         <i class="fas fa-user-clock"></i>
                         <span>พนักงานหน้างาน</span>
                     </a>
                 </li>
            <li>
-                    <a href="/factory_monitoring/repair/reporthistory.php"
+                    <a href="/repair/reporthistory.php"
                         class="<?= $currentPage === 'reporthistory.php' ? 'active' : '' ?>">
                         <i class="fas fa-screwdriver-wrench"></i>
                         <span>ประวัติการแจ้งซ่อม</span>
@@ -116,7 +116,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         </div>
 
         <div class="sidebar-bottom">
-            <a href="/factory_monitoring/logout.php" class="btn-logout">
+            <a href="/logout.php" class="btn-logout">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>ออกจากระบบ</span>
             </a>
