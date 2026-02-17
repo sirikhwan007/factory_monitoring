@@ -44,7 +44,6 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 
-
 ?>
 
 <!DOCTYPE html>
