@@ -31,12 +31,6 @@ $cancelled = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ย
 ----------------------------------------------------- */
 $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 10");
 
-$sidebar_paths = [
-    'Operator'    => __DIR__ . '/../Operator/SidebarOperator.php',
-];
-
-// เลือกไฟล์
-$sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 ?>
 
 <!DOCTYPE html>
@@ -85,7 +79,7 @@ $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
     <section class="main-operator">
 
-        <?php include $sidebar_file; ?>
+        <?php include __DIR__ . '/../Operator/SidebarOperator.php'; ?>
 
         <div class="dashboard">
             <div class="container-fluid">
