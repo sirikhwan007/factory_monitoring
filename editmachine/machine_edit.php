@@ -21,7 +21,7 @@ if (!$machine) {
   die("ไม่พบข้อมูลเครื่องจักร");
 }
 // ดึงไฟล์ Datasheet จากตาราง machine_documents
-$stmtDoc = $conn->prepare("SELECT file_path FROM machine_documents WHERE machine_id = ?");
+$stmtDoc = $conn->prepare("SELECT file_name, file_path FROM machine_documents WHERE machine_id = ?");
 $stmtDoc->bind_param("i", $machine_id);
 $stmtDoc->execute();
 $resDoc = $stmtDoc->get_result();
@@ -37,7 +37,8 @@ $sidebar_paths = [
 // เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
-$current_datasheet = $doc['file_path'] ?? "";
+$current_datasheet_path = $doc['file_path'] ?? "";
+$current_datasheet_name = $doc['file_name'] ?? "";
 
 ?>
 
@@ -168,11 +169,11 @@ $current_datasheet = $doc['file_path'] ?? "";
 
                 <div class="upload-container text-center">
                   <!-- ไฟล์ปัจจุบัน -->
-                  <?php if (!empty($current_datasheet)): ?>
+                  <?php if (!empty($current_datasheet_path)): ?>
                     <p>
                       ไฟล์ปัจจุบัน:
-                      <a href="/<?= $current_datasheet ?>" target="_blank">
-                        <?= basename($current_datasheet) ?>
+                      <a href="/<?= $current_datasheet_path ?>" target="_blank">
+                        <?= htmlspecialchars($current_datasheet_name) ?>
                       </a>
                     </p>
                   <?php else: ?>
