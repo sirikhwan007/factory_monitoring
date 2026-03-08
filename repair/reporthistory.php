@@ -55,9 +55,9 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ประวัติการแจ้งซ่อม</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
-    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
-    <link rel="stylesheet" href="/factory_monitoring/repair/css/reporthistory.css">
+    <link rel="stylesheet" href="../admin/assets/css/index.css">
+    <link rel="stylesheet" href="../Operator/assets/css/SidebarOperator.css">
+    <link rel="stylesheet" href="../repair/css/reporthistory.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     
@@ -70,10 +70,10 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     </div>
 
     <section class="main">
-
         <div class="sidebar-wrapper">
             <?php include $sidebar_file; ?>
         </div>
+        
         <div class="repair-history-container">
             <h2 class="page-title"><i class="fas fa-history"></i> ประวัติการแจ้งซ่อม</h2>
 
@@ -203,13 +203,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
         });
 
         $(document).ready(function() {
-            // เมื่อกดปุ่ม Hamburger
-
-
-            // เมื่อกดที่ฉากหลัง (Overlay) ให้ปิดเมนู
-
-
-            // (Optional) เมื่อกดเมนูข้างใน Sidebar (ถ้าเป็นลิงก์ในหน้าเดียวกัน) ให้ปิด Sidebar ด้วย
             $('.sidebar-wrapper a').click(function() {
                 // ถ้าไม่ใช่ dropdown toggle ให้ปิด sidebar
                 if (!$(this).hasClass('dropdown-toggle')) {
