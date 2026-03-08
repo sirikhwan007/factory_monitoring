@@ -24,57 +24,63 @@ $sidebar_paths = [
 ];
 $sidebar_file = $sidebar_paths[$user_role] ?? null;
 
+$sidebar_css_paths = [
+    'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
+    'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
+    'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
+];
+$current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
+
 /* ================= ADD PLAN ================= */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['task_name'])) {
 
-$task_name      = trim($_POST['task_name']);
-$interval_month = (int)$_POST['interval_month'];
+    $task_name      = trim($_POST['task_name']);
+    $interval_month = (int)$_POST['interval_month'];
 
-$technician_id = ($_POST['technician_id'] !== '')
-    ? $_POST['technician_id']
-    : null;
+    $technician_id = ($_POST['technician_id'] !== '')
+        ? $_POST['technician_id']
+        : null;
 
-$last_maintenance = date('Y-m-d');
-$next_maintenance = date('Y-m-d', strtotime("+{$interval_month} months"));
+    $last_maintenance = date('Y-m-d');
+    $next_maintenance = date('Y-m-d', strtotime("+{$interval_month} months"));
 
-if ($technician_id === null) {
+    if ($technician_id === null) {
 
-    $stmt = $conn->prepare("
+        $stmt = $conn->prepare("
         INSERT INTO maintenance_plan
         (machine_id, task_name, interval_month, technician_id, last_maintenance, next_maintenance, status)
         VALUES (?, ?, ?, NULL, ?, ?, 'ปกติ')
     ");
 
-    $stmt->bind_param(
-        "ssiss",
-        $machine_id,
-        $task_name,
-        $interval_month,
-        $last_maintenance,
-        $next_maintenance
-    );
+        $stmt->bind_param(
+            "ssiss",
+            $machine_id,
+            $task_name,
+            $interval_month,
+            $last_maintenance,
+            $next_maintenance
+        );
+    } else {
 
-} else {
-
-    $stmt = $conn->prepare("
+        $stmt = $conn->prepare("
         INSERT INTO maintenance_plan
         (machine_id, task_name, interval_month, technician_id, last_maintenance, next_maintenance, status)
         VALUES (?, ?, ?, ?, ?, ?, 'ปกติ')
     ");
 
-    $stmt->bind_param(
-        "ssisss",
-        $machine_id,
-        $task_name,
-        $interval_month,
-        $technician_id,
-        $last_maintenance,
-        $next_maintenance
-    );
-}
+        $stmt->bind_param(
+            "ssisss",
+            $machine_id,
+            $task_name,
+            $interval_month,
+            $technician_id,
+            $last_maintenance,
+            $next_maintenance
+        );
+    }
 
-$stmt->execute();
-$stmt->close();
+    $stmt->execute();
+    $stmt->close();
 
     header("Location: maintenance_plan.php?machine_id=" . urlencode($machine_id));
     exit();
@@ -115,11 +121,9 @@ $techs = $conn->query("
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แผนซ่อมตามรอบ | <?= htmlspecialchars($machine_id) ?></title>
-
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
-    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
-    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
+    <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
@@ -183,19 +187,91 @@ $techs = $conn->query("
         .status {
             font-weight: bold;
         }
+
+        @media (max-width: 992px) {
+      .main-content {
+        margin-left: 0;
+        padding: 15px;
+        border-radius: 0;
+        padding-top: 60px;
+      }
+
+      
+
+      .sidebar-wrapper * {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+
+      .sidebar-wrapper a,
+      .sidebar-wrapper .nav-link {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        text-align: left !important;
+        padding: 10px 20px !important;
+      }
+
+      .sidebar-wrapper {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        width: 250px;
+        height: 100vh;
+        z-index: 2000;
+        background-color: #fff;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease-in-out;
+      }
+
+      .sidebar-wrapper.active {
+        left: 0;
+      }
+
+      .btn-hamburger {
+        display: flex;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        width: 35px;
+        height: 35px;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 3000;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1900;
+      }
+
+      .sidebar-overlay.active {
+        display: block;
+      }
+    }
     </style>
 </head>
 
 <body>
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+        <i class="fa-solid fa-bars"></i>
+    </div>
 
     <div class="layout-wrapper">
 
         <!-- SIDEBAR -->
-        <?php
-        if ($sidebar_file && file_exists($sidebar_file)) {
-            include $sidebar_file;
-        }
-        ?>
+        <div class="sidebar-wrapper">
+            <?php include $sidebar_file; ?>
+        </div>
 
         <!-- MAIN -->
         <div class="main-content">
@@ -245,7 +321,7 @@ $techs = $conn->query("
                             รอบ: ทุก <?= $p['interval_month'] ?> เดือน<br>
                             รอบถัดไป: <?= $p['next_maintenance'] ?><br>
                             ช่าง: <?= htmlspecialchars($p['technician_name'] ?? 'ไม่ระบุ') ?><br>
-                            สถานะ: <span class="status"><?= $p['status'] ?></span>
+                            
                         </div>
                     <?php endwhile; ?>
                 <?php endif; ?>
