@@ -46,76 +46,82 @@ $conn->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-    
         @media (max-width: 992px) {
-    .main {
-        flex-direction: column;
-    }
-    .sidebar-wrapper * {
-        display: block !important; 
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
+            .main {
+                flex-direction: column;
+            }
 
-    .sidebar-wrapper a,
-    .sidebar-wrapper .nav-link { 
-        display: flex !important;           /* ใช้ Flexbox */
-        flex-direction: row !important;     /* บังคับเรียงแนวนอน (ซ้ายไปขวา) */
-        align-items: center !important;     /* จัดให้อยู่กึ่งกลางแนวตั้ง */
-        justify-content: flex-start !important; /* ชิดซ้าย */
-        text-align: left !important;        /* ข้อความชิดซ้าย */
-        padding: 10px 20px !important;      /* เพิ่มระยะห่างรอบๆ ให้กดง่ายขึ้น */
-    }
+            .sidebar-wrapper * {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
 
-    .sidebar-wrapper {
-        position: fixed;
-        top: 0;
-        left: -260px;
-        width: 250px;
-        height: 100vh;
-        z-index: 2000;
-        background-color: #fff;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
-        transition: all 0.3s ease-in-out;
-    }
+            .sidebar-wrapper a,
+            .sidebar-wrapper .nav-link {
+                display: flex !important;
+                /* ใช้ Flexbox */
+                flex-direction: row !important;
+                /* บังคับเรียงแนวนอน (ซ้ายไปขวา) */
+                align-items: center !important;
+                /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+                justify-content: flex-start !important;
+                /* ชิดซ้าย */
+                text-align: left !important;
+                /* ข้อความชิดซ้าย */
+                padding: 10px 20px !important;
+                /* เพิ่มระยะห่างรอบๆ ให้กดง่ายขึ้น */
+            }
 
-    .sidebar-wrapper.active {
-        left: 0;
-    }
+            .sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
+            }
 
-    .repair-history-container {
-        width: 100%;
-        padding: 60px 15px 15px;
-    }
+            .sidebar-wrapper.active {
+                left: 0;
+            }
 
-    .btn-hamburger {
-        display: flex;
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        width: 35px;
-        height: 35px;
-        align-items: center;
-        justify-content: center;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-        z-index: 3000;
-        font-size: 20px;
-        cursor: pointer;
-    }
+            .repair-history-container {
+                width: 100%;
+                padding: 60px 15px 15px;
+            }
 
-    .sidebar-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 1900;
-    }
+            .btn-hamburger {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
+                cursor: pointer;
+            }
 
-    .sidebar-overlay.active {
-        display: block;
-    }
-}
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
     </style>
 </head>
 
