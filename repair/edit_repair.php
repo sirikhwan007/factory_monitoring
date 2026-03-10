@@ -96,6 +96,13 @@ $sidebar_paths = [
 // เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
+$sidebar_css_paths = [
+    'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
+    'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
+    'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
+];
+$current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
+
 $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 ?>
@@ -108,9 +115,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>จัดการงานซ่อม #<?= $repair_id ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
-    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
-    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -206,11 +211,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 
         /* Responsive */
         @media (max-width: 992px) {
-            .sidebar-wrapper {
-                position: fixed;
-                left: -250px;
-                height: 100vh;
-            }
+            
 
             .sidebar-wrapper.active {
                 left: 0;
@@ -220,10 +221,76 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
                 width: 100%;
                 padding: 15px;
                 padding-top: 60px;
-                /* เว้นที่ให้ปุ่ม Hamburger */
+            }
+
+            .dashboard {
+                margin-left: 0;
+                padding: 15px;
+                border-radius: 0;
+                padding-top: 60px;
+            }
+
+            .main {
+                flex-direction: column;
+            }
+
+            .sidebar-wrapper * {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+
+            .sidebar-wrapper a,
+            .sidebar-wrapper .nav-link {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                text-align: left !important;
+                padding: 10px 20px !important;
+            }
+
+            .sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
+            }
+
+            .sidebar-wrapper.active {
+                left: 0;
             }
 
             .btn-hamburger {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
+                cursor: pointer;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
+
+            .sidebar-overlay.active {
                 display: block;
             }
         }
@@ -232,7 +299,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 
 <body>
 
-    <div class="btn-hamburger">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
         <i class="fa-solid fa-bars"></i>
     </div>
 
@@ -356,7 +423,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
                                             <select class="form-select" name="status" id="status" required>
                                                 <option value="รอดำเนินการ" <?= $row['status'] == 'รอดำเนินการ' ? 'selected' : '' ?>>รอดำเนินการ</option>
                                                 <option value="ยกเลิก" <?= $row['status'] == 'ยกเลิก' ? 'selected' : '' ?>>ยกเลิก</option>
-                                                
+
                                             </select>
                                         </div>
 
@@ -368,11 +435,11 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
                                                 if ($tech_result->num_rows > 0) {
                                                     $tech_result->data_seek(0);
                                                     while ($tech = $tech_result->fetch_assoc()):
-                                                        ?>
+                                                ?>
                                                         <option value="<?= $tech['user_id'] ?>" <?= (isset($row['technician_id']) && $row['technician_id'] == $tech['user_id']) ? 'selected' : '' ?>>
                                                             <?= htmlspecialchars($tech['username']) ?>
                                                         </option>
-                                                        <?php
+                                                <?php
                                                     endwhile;
                                                 }
                                                 ?>

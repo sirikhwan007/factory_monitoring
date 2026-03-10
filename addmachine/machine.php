@@ -17,6 +17,7 @@ $sidebar_css_paths = [
     'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
+
 ?>
 
 <!DOCTYPE html>
@@ -36,83 +37,83 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         @media (max-width: 992px) {
-      .dashboard {
-        margin-left: 0;
-        padding: 15px;
-        border-radius: 0;
-        padding-top: 0px;
-      }
+            .dashboard {
+                margin-left: 0;
+                padding: 15px;
+                border-radius: 0;
+                padding-top: 0px;
+            }
 
-      .main {
-        flex-direction: column;
-      }
+            .main {
+                flex-direction: column;
+            }
 
-      .sidebar-wrapper * {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-      }
+            .sidebar-wrapper * {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
 
-      .sidebar-wrapper a,
-      .sidebar-wrapper .nav-link {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        text-align: left !important;
-        padding: 10px 20px !important;
-      }
+            .sidebar-wrapper a,
+            .sidebar-wrapper .nav-link {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                text-align: left !important;
+                padding: 10px 20px !important;
+            }
 
-      .sidebar-wrapper {
-        position: fixed;
-        top: 0;
-        left: -260px;
-        width: 250px;
-        height: 100vh;
-        z-index: 2000;
-        background-color: #fff;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease-in-out;
-      }
+            .sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
+            }
 
-      .sidebar-wrapper.active {
-        left: 0;
-      }
+            .sidebar-wrapper.active {
+                left: 0;
+            }
 
-      .repair-history-container {
-        width: 100%;
-        padding: 60px 15px 15px;
-      }
+            .repair-history-container {
+                width: 100%;
+                padding: 60px 15px 15px;
+            }
 
-      .btn-hamburger {
-        display: flex;
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        width: 35px;
-        height: 35px;
-        align-items: center;
-        justify-content: center;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        z-index: 3000;
-        font-size: 20px;
-        cursor: pointer;
-      }
+            .btn-hamburger {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
+                cursor: pointer;
+            }
 
-      .sidebar-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1900;
-      }
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
 
-      .sidebar-overlay.active {
-        display: block;
-      }
-      
-    }
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+        }
     </style>
 </head>
 
