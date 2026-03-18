@@ -187,7 +187,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         /* DESCRIPTION */
         .left p {
             margin: 0;
-            /* สำคัญ */
             font-size: 14px;
             opacity: 0.7;
             text-align: center;
@@ -200,7 +199,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            /* ⭐ ดันลงกลางแนวตั้ง */
+            
         }
 
         /* HEADER */
@@ -267,6 +266,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         button:hover {
             background: #1748c5;
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                
+                max-width: 350px;
+                max-height: auto;
+            }
+            .right{
+                max-width: 200px;
+            }
         }
     </style>
 </head>

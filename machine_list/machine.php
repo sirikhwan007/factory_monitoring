@@ -8,9 +8,15 @@ if (!isset($_SESSION['user_id'])) {
   exit();
 }
 
+$user_id = $_SESSION['user_id'];
 $user_role = $_SESSION['role'] ?? 'Operator';
 
-
+$sql_user = "SELECT username, role FROM users WHERE user_id = ?";
+$stmt = $conn->prepare($sql_user);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$user_data = $stmt->get_result()->fetch_assoc();
+$username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 
 // ดึงข้อมูลเครื่องจักร
 $machines = [];
@@ -33,6 +39,15 @@ $sidebar_paths = [
 // เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
+$sidebar_css_paths = [
+  'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
+  'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
+  'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
+  'Technician' => '/factory_monitoring/Technician/assets/css/sidebar_technician.css',
+];
+$current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
+
+
 
 $conn->close();
 ?>
@@ -45,11 +60,16 @@ $conn->close();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>รายการเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<<<<<<< HEAD
   <link rel="stylesheet" href="/machine_list/css/machine_list.css">
   <link rel="stylesheet" href="/admin/assets/css/index.css">
   <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
   <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
   <link rel="stylesheet" href="/Technician/assets/css/sidebar_technician.css">
+=======
+  <link rel="stylesheet" href="/factory_monitoring/machine_list/css/machine_list.css">
+  <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
+>>>>>>> lnw007V2
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
@@ -60,7 +80,8 @@ $conn->close();
       border-radius: 20px;
       padding: 30px;
       margin: 0px;
-      margin-left: 250px; /* Desktop */
+      margin-left: 250px;
+      /* Desktop */
       transition: all 0.3s ease;
     }
 
@@ -69,21 +90,16 @@ $conn->close();
       display: flex !important;
       flex-direction: row !important;
       gap: 12px;
-      /* ระยะห่างระหว่างปุ่ม */
       flex-wrap: nowrap;
-      /* ห้ามขึ้นบรรทัดใหม่ */
       overflow-x: auto;
-      /* ให้ปัดข้างได้ถ้าปุ่มยาวเกินจอ */
       margin-bottom: 20px;
       padding: 10px 0;
     }
 
-    /* ซ่อนแถบเลื่อน (Scrollbar) เพื่อความสวยงาม */
     .status-filter::-webkit-scrollbar {
       display: none;
     }
 
-    /* สไตล์ปุ่มตัวกรอง (เลียนแบบหน้า Users) */
     .btn-filter {
       white-space: nowrap;
       /* ห้ามข้อความในปุ่มตัดบรรทัด */
@@ -113,15 +129,16 @@ $conn->close();
 
     /* ผิดปกติ - สีเหลือง */
     .btn-filter.btn-warning.active {
-    background-color: #ffc107;
-    color: #212529;
-    border-color: #ffc107;
-}
+      background-color: #ffc107;
+      color: #212529;
+      border-color: #ffc107;
+    }
+
     .btn-filter.btn-danger-custom.active {
-    background-color: #fd7e14;
-    color: white;
-    border-color: #fd7e14;
-}
+      background-color: #fd7e14;
+      color: white;
+      border-color: #fd7e14;
+    }
 
 
     .btn-filter.btn-stopped.active {
@@ -130,17 +147,87 @@ $conn->close();
       border-color: #dc3545;
     }
 
-    
+
     .btn-filter:hover:not(.active) {
       background-color: #f8f9fa;
       border-color: #adb5bd;
     }
-    
-    @media (max-width: 991px) {
+
+    @media (max-width: 992px) {
       .dashboard {
-        margin-left: 0; /* จอเล็กไม่ต้องเว้นที่ซ้าย */
-        padding: 15px;  /* ลด padding ให้เนื้อหาเต็มจอมากขึ้น */
-        border-radius: 0; /* จอเล็กไม่ต้องโค้งเยอะก็ได้ */
+        margin-left: 0;
+        padding: 15px;
+        border-radius: 0;
+        padding-top: 60px;
+      }
+
+      .main {
+        flex-direction: column;
+      }
+
+      .sidebar-wrapper * {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+
+      .sidebar-wrapper a,
+      .sidebar-wrapper .nav-link {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        text-align: left !important;
+        padding: 10px 20px !important;
+      }
+
+      .sidebar-wrapper {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        width: 250px;
+        height: 100vh;
+        z-index: 2000;
+        background-color: #fff;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease-in-out;
+      }
+
+      .sidebar-wrapper.active {
+        left: 0;
+      }
+
+      .repair-history-container {
+        width: 100%;
+        padding: 60px 15px 15px;
+      }
+
+      .btn-hamburger {
+        display: flex;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        width: 35px;
+        height: 35px;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 3000;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1900;
+      }
+
+      .sidebar-overlay.active {
+        display: block;
       }
     }
   </style>
@@ -148,21 +235,25 @@ $conn->close();
 
 <body>
 
+  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <i class="fa-solid fa-bars"></i>
+  </div>
+
   <section class="main">
-
-    <?php include $sidebar_file; ?>
-
+    <div class="sidebar-wrapper">
+      <?php include $sidebar_file; ?>
+    </div>
+    
     <div class="dashboard">
       <h2 class="dashboard-title">รายการเครื่องจักร</h2>
 
-
       <div class="status-filter">
-    <button onclick="filterStatus('all', this)" class="btn-filter btn-all active">เครื่องจักรทั้งหมด</button>
-    <button onclick="filterStatus('กำลังทำงาน', this)" class="btn-filter btn-running">กำลังทำงาน</button>
-    <button onclick="filterStatus('ผิดปกติ', this)" class="btn-filter btn-warning">ผิดปกติ</button>
-    <button onclick="filterStatus('อันตราย', this)" class="btn-filter btn-danger-custom">อันตราย</button>
-    <button onclick="filterStatus('หยุดทำงาน', this)" class="btn-filter btn-stopped">หยุดทำงาน</button>
-</div>
+        <button onclick="filterStatus('all', this)" class="btn-filter btn-all active">เครื่องจักรทั้งหมด</button>
+        <button onclick="filterStatus('กำลังทำงาน', this)" class="btn-filter btn-running">กำลังทำงาน</button>
+        <button onclick="filterStatus('ผิดปกติ', this)" class="btn-filter btn-warning">ผิดปกติ</button>
+        <button onclick="filterStatus('อันตราย', this)" class="btn-filter btn-danger-custom">อันตราย</button>
+        <button onclick="filterStatus('หยุดทำงาน', this)" class="btn-filter btn-stopped">หยุดทำงาน</button>
+      </div>
 
       <div class="machine-header">
         <input type="text" id="searchInput" placeholder="ค้นหาเครื่องจักร..." class="search-input">
@@ -212,6 +303,22 @@ $conn->close();
           confirmButtonColor: '#28a745'
         });
     <?php endif; ?>
+
+    $(document).ready(function() {
+      // เมื่อคลิกที่ลิงก์ใน sidebar
+      $('.sidebar-wrapper a').click(function() {
+        if (!$(this).hasClass('dropdown-toggle')) {
+          $('.sidebar-wrapper').removeClass('active');
+          $('.sidebar-overlay').removeClass('active'); // เพิ่มบรรทัดนี้
+        }
+      });
+
+      // ปรับแต่งปุ่ม Hamburger ให้เปิด Overlay ด้วย
+      $('.btn-hamburger').click(function() {
+        
+        document.querySelector('.sidebar-overlay').classList.toggle('active');
+      });
+    });
   </script>
 </body>
 

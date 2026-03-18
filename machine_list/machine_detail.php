@@ -38,6 +38,13 @@ $sidebar_paths = [
 // เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
+$sidebar_css_paths = [
+    'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
+    'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
+    'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
+];
+$current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
+
 // ตรวจสอบรูปภาพ
 $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://placehold.co/600x400?text=No+Image';
 ?>
@@ -50,9 +57,13 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>รายละเอียดเครื่องจักร : <?= htmlspecialchars($machine['machine_id']) ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<<<<<<< HEAD
     <link rel="stylesheet" href="/admin/assets/css/index.css">
     <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
     <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
+=======
+    <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
+>>>>>>> lnw007V2
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
@@ -153,6 +164,12 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                 position: fixed;
                 left: -250px;
                 height: 100vh;
+                top: 0;
+                width: 250px;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
             }
 
             .sidebar-wrapper.active {
@@ -164,7 +181,35 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                 padding: 20px;
             }
 
+            .main {
+                flex-direction: column;
+            }
+
             .btn-hamburger {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
+                cursor: pointer;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
+
+            .sidebar-overlay.active {
                 display: block;
             }
 
@@ -186,6 +231,7 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
         <div class="sidebar-wrapper">
             <?php include $sidebar_file; ?>
         </div>
+
         <div class="content-container">
 
             <div class="container-fluid p-0">
@@ -415,11 +461,15 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        
         const MACHINE_MAC = "<?php echo $machine['mac_address']; ?>";
     </script>
+<<<<<<< HEAD
     <script src="/machine_list/js/machine_detail.js"></script>
     
+=======
+    <script src="/factory_monitoring/machine_list/js/machine_detail.js"></script>
+
+>>>>>>> lnw007V2
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/admin/assets/js/SidebarAdmin.js"></script>
     <script src="/Manager/assets/js/SidebarManager.js"></script>

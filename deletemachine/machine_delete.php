@@ -27,6 +27,14 @@ $sidebar_paths = [
 // เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
+$sidebar_css_paths = [
+  'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
+  'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
+  'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
+  'Technician' => '/factory_monitoring/Technician/assets/css/sidebar_technician.css',
+];
+$current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
+
 if (!$machine) {
   die("ไม่พบข้อมูลเครื่องจักร");
 }
@@ -42,23 +50,116 @@ if (!$machine) {
   <title>ลบเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<<<<<<< HEAD
   <link rel="stylesheet" href="/admin/assets/css/index.css">
   <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
   <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
+=======
+  <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
+>>>>>>> lnw007V2
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     .dashboard {
       margin-left: 250px;
+    }
+    @media (max-width: 992px) {
+      .dashboard {
+        margin-left: 0;
+        padding: 15px;
+        border-radius: 0;
+        padding-top: 0px;
+      }
+
+      .main {
+        flex-direction: column;
+      }
+
+      .sidebar-wrapper * {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+
+      .sidebar-wrapper a,
+      .sidebar-wrapper .nav-link {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        text-align: left !important;
+        padding: 10px 20px !important;
+      }
+
+      .sidebar-wrapper {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        width: 250px;
+        height: 100vh;
+        z-index: 2000;
+        background-color: #fff;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease-in-out;
+      }
+
+      .sidebar-wrapper.active {
+        left: 0;
+      }
+
+      .btn-hamburger {
+        display: flex;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        width: 35px;
+        height: 35px;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 3000;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1900;
+      }
+
+      .sidebar-overlay.active {
+        display: block;
+      }
+
+      .img-thumbnail {
+        max-width: 80% !important;
+        height: auto;
+      }
+
+      .d-flex.justify-content-center.gap-5 {
+        flex-direction: column;
+        align-items: center !important;
+        gap: 1rem !important;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="btn-hamburger"><i class="fa-solid fa-bars"></i></div>
+  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <i class="fa-solid fa-bars"></i>
+  </div>
 
   <section class="main">
-    <?php include $sidebar_file; ?>
+
+    <div class="sidebar-wrapper">
+      <?php include $sidebar_file; ?>
+    </div>
+    
     <div class="dashboard">
       <div class="container my-5">
         <div class="card shadow-lg border-0">
@@ -74,7 +175,11 @@ if (!$machine) {
               <!-- รูปเครื่องจักร -->
               <div class="text-center mb-4">
                 <?php if (!empty($machine['photo_url'])): ?>
+<<<<<<< HEAD
                   <img src="<?= $machine['photo_url'] ?>" style="max-width:200px;" class="img-thumbnail">
+=======
+                  <img src="/factory_monitoring/<?= $machine['photo_url'] ?>" style="max-width:30%;" class="img-thumbnail">
+>>>>>>> lnw007V2
                 <?php else: ?>
                   <p class="text-muted">ไม่มีรูปภาพ</p>
                 <?php endif; ?>
