@@ -47,9 +47,12 @@ $in_progress = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='�
 $completed = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='สำเร็จ'")->fetch_row()[0];
 $cancelled = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ยกเลิก'")->fetch_row()[0];
 
-$sidebar_paths = [
-    'Admin'    => __DIR__ . '/SidebarAdmin.php',
-];
+$sidebar_file = __DIR__ . "/SidebarAdmin.php";
+if (!file_exists($sidebar_file)) {
+    echo "❌ ไม่เจอ SidebarAdmin.php ที่ path นี้: " . $sidebar_file;
+    exit();
+}
+include $sidebar_file;
 
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Admin'];
 
