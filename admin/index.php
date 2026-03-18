@@ -345,7 +345,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     </section>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    
+    <script src="assets/js/SidebarAdmin.js"></script>
     <script src="assets/js/indexadmin.js"></script>
     <script>
         $(document).ready(function() {

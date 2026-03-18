@@ -27,7 +27,7 @@ $(document).ready(function () {
      Hamburger (Responsive)
   =============================== */
   $(".btn-hamburger").click(function () {
-    $(".sidebar").toggleClass("sidebar-active");
+    $(".sidebar-wrapper").toggleClass("active");
   });
 
   /* ===============================
