@@ -108,17 +108,9 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แจ้งซ่อมเครื่องจักร</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<<<<<<< HEAD
-    <link rel="stylesheet" href="/admin/assets/css/index.css">
-    <link rel="stylesheet" href="/repair/css/report.css">
-    <link rel="stylesheet" href="/dashboard/dashboard.css">
-    <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
-    <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
-=======
     <link rel="stylesheet" href="/factory_monitoring/repair/css/report.css">
     <link rel="stylesheet" href="/factory_monitoring/dashboard/dashboard.css">
     <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
->>>>>>> lnw007V2
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         .dashboard {

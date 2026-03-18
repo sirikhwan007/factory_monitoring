@@ -49,21 +49,6 @@ $conn->begin_transaction();
 
 try {
 
-    // -------------------------------------
-    
-    /*if (!empty($photo_url) && file_exists("../" . $photo_url)) {
-        unlink("../" . $photo_url);
-    }
-
-    // -------------------------------------
-    
-    if (!empty($datasheet_path) && file_exists("../" . $datasheet_path)) {
-        unlink("../" . $datasheet_path);
-    }*/
-
-    // -------------------------------------
-    // 5) ลบข้อมูลใน machine_documents
-    // -------------------------------------
     $stmt = $conn->prepare("DELETE FROM machine_documents WHERE machine_id = ?");
     $stmt->bind_param("s", $machine_id);
     $stmt->execute();

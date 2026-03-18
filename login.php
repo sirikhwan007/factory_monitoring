@@ -29,16 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             switch ($user['role']) {
                 case 'Admin':
-                    header("Location: /admin/index.php");
+                    header("Location: /factory_monitoring/admin/index.php");
                     break;
                 case 'Manager':
-                    header("Location: /Manager/dashboard.php");
+                    header("Location: /factory_monitoring/Manager/dashboard.php");
                     break;
                 case 'Technician':
-                    header("Location: /Technician/dashboard.php");
+                    header("Location: /factory_monitoring/Technician/dashboard.php");
                     break;
                 case 'Operator':
-                    header("Location: /Operator/dashboard.php");
+                    header("Location: /factory_monitoring/Operator/dashboard.php");
                     break;
                 default:
                     header("Location: login.php");
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Factory Monitoring | Login</title>
+    <title>Factory Monitoring</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
 

@@ -258,7 +258,7 @@ $conn->close();
           <?php foreach ($machines as $m): ?>
             <div class="machine-card"
               data-mac-address="<?php echo htmlspecialchars($m['mac_address']); ?>"
-              onclick="location.href='/dashboard/Dashboard.php?id=<?php echo $m['machine_id']; ?>'">
+              onclick="location.href='../dashboard/Dashboard.php?id=<?php echo $m['machine_id']; ?>'">
 
               <img src="<?php echo $m['photo_url']; ?>" alt="รูปเครื่องจักร">
               <div class="machine-name"><?php echo htmlspecialchars($m['name']); ?></div>

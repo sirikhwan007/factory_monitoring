@@ -37,10 +37,6 @@ $sidebar_paths = [
 // เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
-<<<<<<< HEAD
-$current_datasheet_path = $doc['file_path'] ?? "";
-$current_datasheet_name = $doc['file_name'] ?? "";
-=======
 $sidebar_css_paths = [
   'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
   'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
@@ -50,7 +46,6 @@ $sidebar_css_paths = [
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
 $current_datasheet = $doc['file_path'] ?? "";
->>>>>>> lnw007V2
 
 ?>
 
@@ -62,15 +57,8 @@ $current_datasheet = $doc['file_path'] ?? "";
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>แก้ไขข้อมูลเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<<<<<<< HEAD
-  <link rel="stylesheet" href="/admin/assets/css/index.css">
-  <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
-  <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
-  <link rel="stylesheet" href="/editmachine/edit.css">
-=======
   <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
   <link rel="stylesheet" href="/factory_monitoring/editmachine/edit.css">
->>>>>>> lnw007V2
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

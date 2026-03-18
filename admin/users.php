@@ -16,8 +16,8 @@ $page = 'dashboard';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>จัดการผู้ใช้งาน</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/admin/assets/css/users.css">
-    <link rel="stylesheet" href="/admin/assets/css/index.css">
+    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/users.css">
+    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -148,28 +148,18 @@ $page = 'dashboard';
                         $result = $conn->query($sql);
 
                         while ($row = $result->fetch_assoc()) {
-                            // รูปจริงบน server
+                            
                             $serverPath = __DIR__ . '/uploads/' . $row['profile_image'];
 
                             if (!file_exists($serverPath) || empty($row['profile_image'])) {
 
-<<<<<<< HEAD
-                            // default.png ต้องอยู่ใน admin/uploads !!
-                            $profileImage = '/admin/uploads/default.png';
-                        } else {
-
-                            // รูปผู้ใช้ปกติ
-                            $profileImage = '/admin/uploads/' . $row['profile_image'];
-                        }
-=======
-                                // default.png ต้องอยู่ใน admin/uploads !!
+                                
                                 $profileImage = '/factory_monitoring/admin/uploads/default.png';
                             } else {
 
-                                // รูปผู้ใช้ปกติ
+                                
                                 $profileImage = '/factory_monitoring/admin/uploads/' . $row['profile_image'];
                             }
->>>>>>> lnw007V2
 
                             echo '<tr class="user-row" data-role="' . $row['role'] . '">
 

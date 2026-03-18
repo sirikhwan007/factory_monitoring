@@ -50,13 +50,7 @@ if (!$machine) {
   <title>ลบเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<<<<<<< HEAD
-  <link rel="stylesheet" href="/admin/assets/css/index.css">
-  <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
-  <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
-=======
   <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
->>>>>>> lnw007V2
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     .dashboard {

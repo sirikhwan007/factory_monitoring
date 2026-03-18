@@ -69,14 +69,13 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
         }
 
         .sidebar-operator img {
-            width: 50px;       /* กำหนดความกว้าง (ปรับขนาดได้ตามใจชอบ เช่น 50px, 100px) */
-            height: 50px;      /* กำหนดความสูงให้เท่ากัน */
-            object-fit: cover; /* ให้รูปไม่บีบ ไม่เบี้ยว */
-            border-radius: 50%; /* ถ้าอยากให้รูปเป็นวงกลม */
-            margin-bottom: 10px; /* เว้นระยะห่างด้านล่าง */
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 10px;
         }
 
-        /* กรณีที่รูปไม่ได้อยู่ใน class sidebar-operator โดยตรง */
         .main-operator img.profile-img { 
              max-width: 100px;
              height: auto;
