@@ -48,7 +48,7 @@ $completed = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ส
 $cancelled = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ยกเลิก'")->fetch_row()[0];
 
 $sidebar_paths = [
-    'Admin'    => '/SidebarAdmin.php',
+    'Admin'    => __DIR__ . '/SidebarAdmin.php',
 ];
 
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Admin'];
