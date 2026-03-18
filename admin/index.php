@@ -54,7 +54,6 @@ if (!file_exists($sidebar_file)) {
 }
 include $sidebar_file;
 
-$sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Admin'];
 
 $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 10");
 
