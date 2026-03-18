@@ -4,38 +4,28 @@ include "../config.php";
 
 $user_role = $_SESSION['role'] ?? 'Admin';
 
-// เช็กล็อกอิน
 if (!isset($_SESSION['user_id'])) {
     header("Location: /login.php");
     exit();
 }
-// ตรวจสิทธิ์แอดมิน
 if ($_SESSION['role'] !== 'Admin') {
     header("Location: /login.php");
     exit();
 }
-// ตั้งค่าหน้าปัจจุบัน
-$page = 'dashboard';
 
-/* -----------------------------------------------------
-    MACHINE OVERVIEW
------------------------------------------------------ */
+$page = 'dashboard';
 
 $total_machines  = $conn->query("SELECT COUNT(*) FROM machines")->fetch_row()[0];
 $total_danger = $conn->query("SELECT COUNT(*) FROM machines WHERE status='อันตราย'")->fetch_row()[0];
 
-/* -----------------------------------------------------
-    USER OVERVIEW
------------------------------------------------------ */
+
 $total_users     = $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0];
 $role_admin      = $conn->query("SELECT COUNT(*) FROM users WHERE role='Admin'")->fetch_row()[0];
 $role_manager    = $conn->query("SELECT COUNT(*) FROM users WHERE role='Manager'")->fetch_row()[0];
 $role_technician = $conn->query("SELECT COUNT(*) FROM users WHERE role='Technician'")->fetch_row()[0];
 $role_operator   = $conn->query("SELECT COUNT(*) FROM users WHERE role='Operator'")->fetch_row()[0];
 
-/* -----------------------------------------------------
-   🔹 REPAIR REQUEST OVERVIEW (งานซ่อม / แจ้งซ่อม)
------------------------------------------------------ */
+
 $sql_total = "SELECT COUNT(*) AS total FROM repair_requests";
 $total_repair = $conn->query($sql_total)->fetch_assoc()['total'];
 $total = $total_repair;
@@ -58,10 +48,9 @@ $completed = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ส
 $cancelled = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ยกเลิก'")->fetch_row()[0];
 
 $sidebar_paths = [
-    'Admin'    => __DIR__ . '/SidebarAdmin.php',
+    'Admin'    => __DIR__ . 'SidebarAdmin.php',
 ];
 
-// เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Admin'];
 
 $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 10");
