@@ -58,7 +58,7 @@ $completed = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ส
 $cancelled = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ยกเลิก'")->fetch_row()[0];
 
 $sidebar_paths = [
-    'Admin'    => __DIR__ . '../admin/SidebarAdmin.php',
+    'Admin'    => __DIR__ . '/SidebarAdmin.php',
 ];
 
 // เลือกไฟล์
@@ -76,7 +76,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factory Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../admin/assets/css/index.css">
+    <link rel="stylesheet" href="/admin/assets/css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         @keyframes bell-ring {
