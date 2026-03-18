@@ -166,7 +166,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 </head>
 
 <body>
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger">
         <i class="fa-solid fa-bars"></i>
     </div>
 
@@ -356,7 +356,6 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                         $('.sidebar-overlay').removeClass('active'); // เพิ่มบรรทัดนี้
                     }
                 });
-
                 $('.btn-hamburger').click(function() {
                     document.querySelector('.sidebar-overlay').classList.toggle('active');
                 });

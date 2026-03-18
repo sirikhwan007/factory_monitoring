@@ -27,8 +27,8 @@ $(document).ready(function () {
      Hamburger (Responsive)
   =============================== */
   $(".btn-hamburger").click(function () {
-    $(".sidebar").toggleClass("sidebar-wrapper.active");
-  });
+  $(".sidebar-wrapper").toggleClass("active");
+});
 
   /* ===============================
      Auto show sidebar on desktop
