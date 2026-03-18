@@ -29,31 +29,31 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 
     <ul class="sb-ul">
       <li>
-        <a href="/factory_monitoring/admin/index.php">
+        <a href="/admin/index.php">
           <i class="fas fa-home"></i><span class="sb-text">หน้าหลัก</span>
         </a>
       </li>
 
       <li>
-        <a href="/factory_monitoring/machine_list/machine.php">
+        <a href="/machine_list/machine.php">
           <i class="fas fa-industry"></i><span class="sb-text">เครื่องจักร</span>
         </a>
       </li>
 
       <li>
-        <a href="/factory_monitoring/admin/users.php">
+        <a href="/admin/users.php">
           <i class="fas fa-user"></i><span class="sb-text">ผู้ใช้</span>
         </a>
       </li>
 
       <li>
-        <a href="/factory_monitoring/repair/reporthistory.php">
+        <a href="/repair/reporthistory.php">
           <i class="fas fa-history"></i><span class="sb-text">ประวัติการแจ้งซ่อม</span>
         </a>
       </li>
 
       <li>
-        <a href="/factory_monitoring/logs/logs.php">
+        <a href="/logs/logs.php">
           <i class="fas fa-clipboard-list"></i><span class="sb-text">ประวัติการเข้าใช้</span>
         </a>
       </li>

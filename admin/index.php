@@ -65,7 +65,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factory Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
+    <link rel="stylesheet" href="/admin/assets/css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         @keyframes bell-ring {
@@ -190,7 +190,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                 <div class="row mb-4 g-3">
                     <div class="col-lg col-md-4 col-6">
                         <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=all'">
+                            onclick="location.href='/machine_list/machine.php?status=all'">
                             <h5 class="text-muted">เครื่องจักรทั้งหมด</h5>
                             <h2 class="fw-bold text-primary"><?= $total_machines ?></h2>
                         </div>
@@ -198,7 +198,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col-lg col-md-4 col-6">
                         <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=กำลังทำงาน'">
+                            onclick="location.href='/machine_list/machine.php?status=กำลังทำงาน'">
                             <h5 class="text-muted text-success">กำลังทำงาน</h5>
                             <h2 class="fw-bold text-success" id="activeCount">0</h2>
                         </div>
@@ -206,7 +206,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col-lg col-md-4 col-6">
                         <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=ผิดปกติ'">
+                            onclick="location.href='/machine_list/machine.php?status=ผิดปกติ'">
                             <h5 class="text-muted text-warning">ผิดปกติ</h5>
                             <h2 class="fw-bold text-warning" id="errorCount">0</h2>
                         </div>
@@ -214,7 +214,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col-lg col-md-6 col-6">
                         <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer; "
-                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=อันตราย'">
+                            onclick="location.href='/machine_list/machine.php?status=อันตราย'">
                             <h5 class="text-muted">อันตราย</h5>
                             <h2 class="fw-bold" style="color: #fd7e14;" id="dangerCount">0</h2>
                         </div>
@@ -222,7 +222,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col-lg col-md-6 col-12">
                         <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/machine_list/machine.php?status=หยุดทำงาน'">
+                            onclick="location.href='/machine_list/machine.php?status=หยุดทำงาน'">
                             <h5 class="text-muted text-danger">หยุดทำงาน</h5>
                             <h2 class="fw-bold text-danger" id="stopCount">0</h2>
                         </div>
@@ -235,7 +235,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col">
                         <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=all'">
+                            onclick="location.href='/repair/reporthistory.php?status=all'">
                             <h6 class="text-muted">ทั้งหมด</h6>
                             <h2 class="fw-bold text-primary"><?= $total ?></h2>
                         </div>
@@ -243,7 +243,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col">
                         <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=รอดำเนินการ'">
+                            onclick="location.href='/repair/reporthistory.php?status=รอดำเนินการ'">
                             <h6 class="text-muted">รอดำเนินการ</h6>
                             <h2 class="fw-bold text-warning"><?= $pending ?></h2>
                         </div>
@@ -251,7 +251,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col">
                         <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=กำลังซ่อม'">
+                            onclick="location.href='/repair/reporthistory.php?status=กำลังซ่อม'">
                             <h6 class="text-muted">กำลังซ่อม</h6>
                             <h2 class="fw-bold text-info"><?= $in_progress ?></h2>
                         </div>
@@ -259,7 +259,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col">
                         <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=สำเร็จ'">
+                            onclick="location.href='/repair/reporthistory.php?status=สำเร็จ'">
                             <h6 class="text-muted">เสร็จสิ้น</h6>
                             <h2 class="fw-bold text-success"><?= $completed ?></h2>
                         </div>
@@ -267,7 +267,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                     <div class="col">
                         <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                            onclick="location.href='/factory_monitoring/repair/reporthistory.php?status=ยกเลิก'">
+                            onclick="location.href='/repair/reporthistory.php?status=ยกเลิก'">
                             <h6 class="text-muted">ยกเลิก</h6>
                             <h2 class="fw-bold text-danger"><?= $cancelled ?></h2>
                         </div>
@@ -343,8 +343,8 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     </section>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="/factory_monitoring/admin/assets/js/SidebarAdmin.js"></script>
-    <script src="/factory_monitoring/admin/assets/js/indexadmin.js"></script>
+    <script src="/admin/assets/js/SidebarAdmin.js"></script>
+    <script src="/admin/assets/js/indexadmin.js"></script>
     <script>
         $(document).ready(function() {
 
