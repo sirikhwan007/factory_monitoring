@@ -58,7 +58,7 @@ $completed = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ส
 $cancelled = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ยกเลิก'")->fetch_row()[0];
 
 $sidebar_paths = [
-    'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
+    'Admin'    => __DIR__ . '/admin/SidebarAdmin.php',
 ];
 
 // เลือกไฟล์
@@ -115,17 +115,11 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
             .sidebar-wrapper a,
             .sidebar-wrapper .nav-link {
                 display: flex !important;
-                /* ใช้ Flexbox */
                 flex-direction: row !important;
-                /* บังคับเรียงแนวนอน (ซ้ายไปขวา) */
                 align-items: center !important;
-                /* จัดให้อยู่กึ่งกลางแนวตั้ง */
                 justify-content: flex-start !important;
-                /* ชิดซ้าย */
                 text-align: left !important;
-                /* ข้อความชิดซ้าย */
                 padding: 10px 20px !important;
-                /* เพิ่มระยะห่างรอบๆ ให้กดง่ายขึ้น */
             }
 
             .sidebar-wrapper {
@@ -367,7 +361,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     <script src="/admin/assets/js/indexadmin.js"></script>
     <script>
         $(document).ready(function() {
-                // เมื่อคลิกที่ลิงก์ใน sidebar
+
                 $('.sidebar-wrapper a').click(function() {
                     if (!$(this).hasClass('dropdown-toggle')) {
                         $('.sidebar-wrapper').removeClass('active');
@@ -375,10 +369,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                     }
                 });
 
-                // ปรับแต่งปุ่ม Hamburger ให้เปิด Overlay ด้วย
                 $('.btn-hamburger').click(function() {
-                    // ไม่ต้องแก้ใน HTML แต่แก้ logic ตรงนี้แทน หรือใช้แบบเดิมก็ได้
-                    // แต่ต้องมั่นใจว่า .sidebar-overlay มีคลาส active
                     document.querySelector('.sidebar-overlay').classList.toggle('active');
                 });
             });
