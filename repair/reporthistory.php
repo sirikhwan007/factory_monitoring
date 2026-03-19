@@ -59,85 +59,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <link rel="stylesheet" href="../repair/css/reporthistory.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        @media (max-width: 992px) {
-            .dashboard {
-                margin-left: 0;
-                padding: 15px;
-                border-radius: 0;
-                padding-top: 60px;
-            }
-
-            .main {
-                flex-direction: column;
-            }
-
-            .sidebar-wrapper * {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-
-            .sidebar-wrapper a,
-            .sidebar-wrapper .nav-link {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                text-align: left !important;
-                padding: 10px 20px !important;
-            }
-
-            .sidebar-wrapper {
-                position: fixed;
-                top: 0;
-                left: -260px;
-                width: 250px;
-                height: 100vh;
-                z-index: 2000;
-                background-color: #fff;
-                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-                transition: all 0.3s ease-in-out;
-            }
-
-            .sidebar-wrapper.active {
-                left: 0;
-            }
-
-            .repair-history-container {
-                width: 100%;
-                padding: 60px 15px 15px;
-            }
-
-            .btn-hamburger {
-                display: flex;
-                position: fixed;
-                top: 15px;
-                left: 15px;
-                width: 35px;
-                height: 35px;
-                align-items: center;
-                justify-content: center;
-                background: #fff;
-                border-radius: 8px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-                z-index: 3000;
-                font-size: 20px;
-                cursor: pointer;
-            }
-
-            .sidebar-overlay {
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 1900;
-            }
-
-            .sidebar-overlay.active {
-                display: block;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -278,14 +199,19 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
         });
 
         $(document).ready(function() {
-            $('.sidebar-wrapper a').click(function() {
-                // ถ้าไม่ใช่ dropdown toggle ให้ปิด sidebar
-                if (!$(this).hasClass('dropdown-toggle')) {
-                    $('.sidebar-wrapper').removeClass('active');
-                    $('.sidebar-overlay').removeClass('active');
-                }
-            });
-        });
+      // เมื่อคลิกที่ลิงก์ใน sidebar
+      $('.sidebar-wrapper a').click(function() {
+        if (!$(this).hasClass('dropdown-toggle')) {
+          $('.sidebar-wrapper').removeClass('active');
+          $('.sidebar-overlay').removeClass('active'); // เพิ่มบรรทัดนี้
+        }
+      });
+
+      $('.btn-hamburger').click(function() {
+        
+        document.querySelector('.sidebar-overlay').classList.toggle('active');
+      });
+    });
     </script>
 
 </body>

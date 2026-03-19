@@ -305,7 +305,6 @@ $conn->close();
         }
       });
 
-      // ปรับแต่งปุ่ม Hamburger ให้เปิด Overlay ด้วย
       $('.btn-hamburger').click(function() {
         
         document.querySelector('.sidebar-overlay').classList.toggle('active');
