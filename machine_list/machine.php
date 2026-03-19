@@ -47,8 +47,6 @@ $sidebar_css_paths = [
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
-
-
 $conn->close();
 ?>
 

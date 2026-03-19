@@ -7,7 +7,7 @@ $profileImage = $_SESSION['profile_image'] ?? 'default.png';
 $username     = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 $role         = $_SESSION['role'] ?? 'Operator';
 
-/* ป้องกัน error ถ้าไม่ได้กำหนด */
+
 $activePage = $activePage ?? '';
 ?>
 
@@ -17,7 +17,7 @@ $activePage = $activePage ?? '';
         <a href="/operator/profile.php" class="op-profile-btn">
             <div class="op-logo">
                 <?php
-                // เช็คว่าเป็น Base64 หรือไม่ ถ้าใช่ให้แสดงเลย ถ้าไม่ใช่ให้เติม Path
+                
                 $showImg = (strpos($profileImage, 'data:') === 0)
                     ? $profileImage
                     : "/admin/uploads/" . $profileImage;

@@ -38,8 +38,16 @@ $sidebar_paths = [
     'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
 ];
 
-// เลือกไฟล์
+
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
+$sidebar_css_paths = [
+  'Admin'      => '/admin/assets/css/index.css',
+  'Manager'    => '/Manager/assets/css/Sidebar.css',
+  'Operator'   => '/Operator/assets/css/SidebarOperator.css',
+];
+$current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
+
+
 $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
@@ -54,8 +62,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ประวัติการแจ้งซ่อม</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../admin/assets/css/index.css">
-    <link rel="stylesheet" href="../Operator/assets/css/SidebarOperator.css">
+    <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
     <link rel="stylesheet" href="../repair/css/reporthistory.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
