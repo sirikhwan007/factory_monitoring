@@ -1,6 +1,4 @@
-/* ===============================
-   FONT & RESET
-================================ */
+
 @import url("https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600&display=swap");
 
 * {
@@ -10,9 +8,6 @@
     font-family: "Sarabun", sans-serif;
 }
 
-/* ===============================
-   THEME (ADMIN STYLE)
-================================ */
 :root {
     --primary: #6f1e51;
     --secondary: #8e44ad;
@@ -22,9 +17,6 @@
     --danger: #ea2027;
 }
 
-/* ===============================
-   SIDEBAR OPERATOR
-================================ */
 .sidebar-operator {
     position: fixed;
     top: 0;
@@ -40,9 +32,7 @@
     transition: transform 0.3s ease;
 }
 
-/* ===============================
-   TOP (PROFILE)
-================================ */
+
 .op-top {
     padding: 32px 20px 0;
 }
@@ -63,6 +53,7 @@
 .op-profile-img {
     width: 50px !important;
     height: 50px !important;
+    max-width: 50px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -85,9 +76,7 @@
     color: var(--text-muted);
 }
 
-/* ===============================
-   MENU
-================================ */
+
 .op-ul {
     list-style: none;
     margin: 0;
@@ -133,12 +122,9 @@
 
 .op-ul li.active a::before {
     display: none;
-    /* เอาเส้นซ้ายแบบเดิมออก */
 }
 
-/* ===============================
-   BOTTOM
-================================ */
+
 .sidebar-bottom {
     margin-top: auto;
     padding: 25px 20px;
@@ -146,7 +132,6 @@
     justify-content: center;
 }
 
-/* ---------- LOGOUT ---------- */
 .btn-logout {
     display: flex;
     justify-content: center;
@@ -166,9 +151,7 @@
     background: #c0392b;
 }
 
-/* ===============================
-   RESPONSIVE
-================================ */
+
 @media (max-width: 992px) {
     .sidebar-operator {
         transform: translateX(-100%);
