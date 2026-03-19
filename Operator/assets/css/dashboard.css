@@ -75,7 +75,7 @@ h1 {
 ============================ */
 @media (max-width: 992px) {
     .main-operator {
-        margin-left: 0;   /* มือถือไม่ต้องเผื่อ sidebar */
+        margin-left: 0;
         padding: 15px;
     }
 }
