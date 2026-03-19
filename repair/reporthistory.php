@@ -38,8 +38,8 @@ $sidebar_paths = [
     'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
 ];
 
-
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
+
 $sidebar_css_paths = [
   'Admin'      => '/admin/assets/css/index.css',
   'Manager'    => '/Manager/assets/css/Sidebar.css',
