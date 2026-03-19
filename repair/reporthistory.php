@@ -59,11 +59,10 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <link rel="stylesheet" href="../repair/css/reporthistory.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
+
 </head>
 
 <body>
-
     <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
         <i class="fa-solid fa-bars"></i>
     </div>
@@ -72,7 +71,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
         <div class="sidebar-wrapper">
             <?php include $sidebar_file; ?>
         </div>
-        
+
         <div class="repair-history-container">
             <h2 class="page-title"><i class="fas fa-history"></i> ประวัติการแจ้งซ่อม</h2>
 
@@ -125,7 +124,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                                 $report_date = $report_datetime->format('d/m/Y');
                                 $report_time = $report_datetime->format('H:i');
 
-                                // เตรียมข้อมูลวันที่ซ่อมเสร็จ
                                 $repair_complete_date = '-';
                                 $repair_complete_time = '';
                                 if (!empty($row['repair_time']) && $row['repair_time'] !== '0000-00-00 00:00:00') {

@@ -353,7 +353,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                 $('.sidebar-wrapper a').click(function() {
                     if (!$(this).hasClass('dropdown-toggle')) {
                         $('.sidebar-wrapper').removeClass('active');
-                        $('.sidebar-overlay').removeClass('active'); // เพิ่มบรรทัดนี้
+                        $('.sidebar-overlay').removeClass('active');
                     }
                 });
                 $('.btn-hamburger').click(function() {

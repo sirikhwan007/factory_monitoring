@@ -60,17 +60,11 @@ $conn->close();
             .sidebar-wrapper a,
             .sidebar-wrapper .nav-link {
                 display: flex !important;
-                /* ใช้ Flexbox */
                 flex-direction: row !important;
-                /* บังคับเรียงแนวนอน (ซ้ายไปขวา) */
                 align-items: center !important;
-                /* จัดให้อยู่กึ่งกลางแนวตั้ง */
                 justify-content: flex-start !important;
-                /* ชิดซ้าย */
                 text-align: left !important;
-                /* ข้อความชิดซ้าย */
                 padding: 10px 20px !important;
-                /* เพิ่มระยะห่างรอบๆ ให้กดง่ายขึ้น */
             }
 
             .sidebar-wrapper {
