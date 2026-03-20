@@ -62,19 +62,18 @@ $repairs  = $conn->query("
 
 <body>
     <div class="layout-wrapper">
-        <?php include __DIR__ . '/partials/SidebarManager.php'; ?>
+        <div class="sidebar-wrapper">
+            <?php include __DIR__ . '/partials/SidebarManager.php'; ?>
+        </div>
 
         <section class="main p-4">
-
 
             <h3>Manager Control Panel</h3>
             <p class="text-muted">ภาพรวมระบบโรงงาน</p>
 
-            <!-- KPI -->
             <div class="row g-4 mb-4">
                 <?php
                 $kpis = [
-                    // แก้ไขบรรทัดนี้: ใส่โครงสร้าง HTML ที่มี ID เพื่อให้ JS เข้าไปเขียนค่าได้
                     ['เครื่อง Online', '<span id="onlineCount">0</span> / ' . $totalMachine, 'success'],
                     ['งานค้าง', $pendingRepair . " งาน", 'danger'],
                     ['แจ้งซ่อมวันนี้', $repairToday . " งาน", 'warning'],
