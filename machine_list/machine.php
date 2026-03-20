@@ -74,7 +74,6 @@ $conn->close();
       /* Desktop */
       transition: all 0.3s ease;
     }
-
     
     .status-filter {
       display: flex !important;

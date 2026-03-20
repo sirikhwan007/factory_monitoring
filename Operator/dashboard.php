@@ -10,25 +10,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Operator') {
 
 $page = 'dashboard';
 
-/* -----------------------------------------------------
-   🔹 MACHINE OVERVIEW
------------------------------------------------------ */
 $total_machines  = $conn->query("SELECT COUNT(*) FROM machines")->fetch_row()[0];
 $total_danger = $conn->query("SELECT COUNT(*) FROM machines WHERE status='อันตราย'")->fetch_row()[0];
 
-/* -----------------------------------------------------
-   🔹 REPAIR OVERVIEW (ดึงจาก repair_history เพื่อให้อัพเดตตามหน้าประวัติ)
------------------------------------------------------ */
-// แก้ไข: เปลี่ยนการนับมาที่ตาราง repair_history และใช้คำภาษาไทยตามหน้าประวัติ
+
 $total = $conn->query("SELECT COUNT(*) FROM repair_history")->fetch_row()[0];
 $pending = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='รอดำเนินการ'")->fetch_row()[0];
 $in_progress = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='กำลังซ่อม'")->fetch_row()[0];
 $completed = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='สำเร็จ'")->fetch_row()[0];
 $cancelled = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ยกเลิก'")->fetch_row()[0];
-
-/* -----------------------------------------------------
-   🔹 RECENT ACTIVITY (LOGS)
------------------------------------------------------ */
 $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 10");
 
 ?>
