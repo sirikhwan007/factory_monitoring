@@ -66,23 +66,23 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
             margin-bottom: 10px;
         }
 
-        .main-operator img.profile-img { 
-             max-width: 100px;
-             height: auto;
+        .main-operator img.profile-img {
+            max-width: 100px;
+            height: auto;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="btn-hamburger">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
         <i class="fa-solid fa-bars"></i>
     </div>
 
     <section class="main-operator">
-
-        <?php include __DIR__ . '/../Operator/SidebarOperator.php'; ?>
-
+        <div class="sidebar-wrapper">
+            <?php include __DIR__ . '/../Operator/SidebarOperator.php'; ?>
+        </div>
         <div class="dashboard">
             <div class="container-fluid">
 
@@ -118,7 +118,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                         </div>
                         <div class="col-lg col-md-6 col-6">
                             <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/machine_list/machine.php?status=อันตราย'">
-                                <h5 class="text-muted" >อันตราย</h5>
+                                <h5 class="text-muted">อันตราย</h5>
                                 <h2 class="fw-bold" style="color: #fd7e14;" id="dangerCount">0</h2>
                             </div>
                         </div>
