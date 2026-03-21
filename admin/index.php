@@ -165,7 +165,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
     <section class="main">
         <div class="sidebar-wrapper">
-            <?php include __DIR__ . '/SidebarAdmin.php'; ?>
+            <?php include __DIR__ . '/admin/SidebarAdmin.php'; ?>
         </div>
 
         <div class="container-fluid">
