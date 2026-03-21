@@ -47,6 +47,13 @@ $in_progress = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='�
 $completed = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='สำเร็จ'")->fetch_row()[0];
 $cancelled = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ยกเลิก'")->fetch_row()[0];
 
+$sidebar_file = __DIR__ . "/SidebarAdmin.php";
+if (!file_exists($sidebar_file)) {
+    echo "❌ ไม่เจอ SidebarAdmin.php ที่ path นี้: " . $sidebar_file;
+    exit();
+}
+include $sidebar_file;
+
 
 $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 10");
 
@@ -60,7 +67,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factory Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/index.css">
+    <link rel="stylesheet" href="assets/css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         @keyframes bell-ring {
@@ -159,13 +166,13 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 </head>
 
 <body>
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
-    <i class="fa-solid fa-bars"></i>
-  </div>
+    <div class="btn-hamburger">
+        <i class="fa-solid fa-bars"></i>
+    </div>
 
     <section class="main">
         <div class="sidebar-wrapper">
-            <?php include __DIR__ . '/admin/SidebarAdmin.php'; ?>
+            <?php include $sidebar_file; ?>
         </div>
 
         <div class="container-fluid">
