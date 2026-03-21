@@ -3,13 +3,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: /login.php");
-    exit();
-}
-
+/* ===== SESSION DATA ===== */
 $username = $_SESSION['username'] ?? 'Manager';
 $role     = $_SESSION['role'] ?? 'Manager';
+
 
 $sessImg = $_SESSION['profile_image'] ?? 'default_profile.png';
 $profileImage = (strpos($sessImg, 'data:') === 0)
@@ -19,15 +16,13 @@ $profileImage = (strpos($sessImg, 'data:') === 0)
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 
-<div class="sidebar active">
-
+<div class="sidebar">
     <div class="sidebar-top">
-
         <a href="/Manager/profile.php" class="profile-btn">
             <div class="sb-logo">
                 <img src="<?= $profileImage ?>"
                     class="profile-img"
-                    onerror="this.src='/Manager/uploads/default_profile.png'">
+                    onerror="this.src='/factory_monitoring/Manager/uploads/default_profile.png'">
 
                 <div class="profile-info">
                     <span class="profile-name"><?= htmlspecialchars($username) ?></span>
@@ -78,5 +73,4 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <span>ออกจากระบบ</span>
         </a>
     </div>
-
 </div>
