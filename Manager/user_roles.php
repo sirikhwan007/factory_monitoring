@@ -15,7 +15,7 @@ require_once __DIR__ . '/../config.php';
     <meta charset="UTF-8">
     <title>พนักงานหน้างาน | Factory Monitoring</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/factory_monitoring/manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="/manager/assets/css/Sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
@@ -269,7 +269,7 @@ require_once __DIR__ . '/../config.php';
                 ?>
                     <tr>
                         <td>
-                            <img src="/factory_monitoring/admin/uploads/<?= htmlspecialchars($image) ?>"
+                            <img src="/admin/uploads/<?= htmlspecialchars($image) ?>"
                                 class="profile-img"
                                 onerror="this.src='/admin/uploads/default.png'">
                         </td>
