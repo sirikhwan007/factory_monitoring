@@ -15,11 +15,11 @@ require_once __DIR__ . '/../config.php';
     <meta charset="UTF-8">
     <title>พนักงานหน้างาน | Factory Monitoring</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
-        /* ===== Layout ===== */
+        
         body {
             background: #f4f6f9;
         }
@@ -29,14 +29,12 @@ require_once __DIR__ . '/../config.php';
             padding: 30px;
         }
 
-        /* ===== Page Title ===== */
         .main-content h2 {
             margin-bottom: 20px;
             font-weight: 600;
             color: #333;
         }
 
-        /* ===== Filter + Search ===== */
         .role-filter {
             display: flex;
             gap: 10px;
@@ -140,7 +138,7 @@ require_once __DIR__ . '/../config.php';
             background: #27ae60;
         }
 
-        /* ===== Responsive ===== */
+
         @media (max-width: 992px) {
             
             .main-content {
@@ -287,11 +285,9 @@ require_once __DIR__ . '/../config.php';
     <script>
         let currentRole = 'all';
 
-        // กดปุ่ม filter
         function filterRole(role) {
             currentRole = role;
 
-            // active button
             document.querySelectorAll('.role-filter .btn')
                 .forEach(btn => btn.classList.remove('active'));
 
@@ -300,11 +296,9 @@ require_once __DIR__ . '/../config.php';
             applyFilters();
         }
 
-        // พิมพ์ค้นหา
         document.getElementById('searchInput')
             .addEventListener('keyup', applyFilters);
 
-        // รวม filter + search
         function applyFilters() {
             const keyword = document.getElementById('searchInput').value.toLowerCase();
             const rows = document.querySelectorAll('tbody tr');
