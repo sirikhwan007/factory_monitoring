@@ -214,6 +214,11 @@ require_once __DIR__ . '/../config.php';
                 display: block;
             }
         }
+        @media (min-width: 993px) {
+            .btn-hamburger {
+                display: none;
+            }
+        }
     </style>
 </head>
 
