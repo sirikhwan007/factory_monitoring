@@ -22,7 +22,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <div class="sb-logo">
                 <img src="<?= $profileImage ?>"
                     class="profile-img"
-                    onerror="this.src='/factory_monitoring/Manager/uploads/default_profile.png'">
+                    onerror="this.src='/Manager/uploads/default_profile.png'">
 
                 <div class="profile-info">
                     <span class="profile-name"><?= htmlspecialchars($username) ?></span>
