@@ -13,13 +13,11 @@ require_once __DIR__ . '/../config.php';
 
 <head>
     <meta charset="UTF-8">
-    <title>พนักงานหน้างาน | Factory Monitoring</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>พนักงานหน้างาน | Factory Monitoring</title>
     <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
     <style>
-        
         body {
             background: #f4f6f9;
         }
@@ -79,7 +77,6 @@ require_once __DIR__ . '/../config.php';
             box-shadow: 0 0 0 2px rgba(111, 30, 81, 0.15);
         }
 
-        /* ===== Table ===== */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -140,29 +137,9 @@ require_once __DIR__ . '/../config.php';
 
 
         @media (max-width: 992px) {
-            
             .main-content {
-                flex-direction: column;
                 margin-left: 0;
-                padding: 70px 20px 20px 20px;
-                border-radius: 0;
-                padding-top: 60px;
-            }
-
-            .sidebar-wrapper * {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-
-            .sidebar-wrapper a,
-            .sidebar-wrapper .nav-link {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                text-align: left !important;
-                padding: 10px 20px !important;
+                padding-top: 80px;
             }
 
             .sidebar-wrapper {
@@ -179,11 +156,17 @@ require_once __DIR__ . '/../config.php';
 
             .sidebar-wrapper.active {
                 left: 0;
+                /* เลื่อนออกมาแสดง */
             }
 
-            .repair-history-container {
-                width: 100%;
-                padding: 60px 15px 15px;
+
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
             }
 
             .btn-hamburger {
@@ -204,6 +187,7 @@ require_once __DIR__ . '/../config.php';
             }
 
             .sidebar-overlay {
+                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(0, 0, 0, 0.5);
@@ -214,26 +198,20 @@ require_once __DIR__ . '/../config.php';
                 display: block;
             }
         }
-        @media (min-width: 993px) {
-            .btn-hamburger {
-                display: none;
-            }
-        }
     </style>
 </head>
 
 <body>
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
-
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
     <div class="sidebar-wrapper">
         <?php include 'partials/SidebarManager.php'; ?>
     </div>
 
     <div class="main-content">
         <h2>รายชื่อพนักงานหน้างาน</h2>
-        <!-- Role Filter -->
         <div class="role-filter">
             <button class="btn active" onclick="filterRole('all')">All</button>
             <button class="btn" onclick="filterRole('operator')">Operator</button>

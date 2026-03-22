@@ -92,14 +92,15 @@ $repairs  = $conn->query("
                 position: fixed;
                 top: 15px;
                 left: 15px;
-                width: 40px;
-                height: 40px;
+                width: 35px;
+                height: 35px;
                 align-items: center;
                 justify-content: center;
                 background: #fff;
-                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
                 border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
                 z-index: 3000;
+                font-size: 20px;
                 cursor: pointer;
             }
 
