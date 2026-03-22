@@ -36,7 +36,6 @@ $sidebar_paths = [
   'Technician' => __DIR__ . '/../Technician/SidebarTechnician.php',
 ];
 
-// เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
@@ -71,10 +70,9 @@ $conn->close();
       padding: 30px;
       margin: 0px;
       margin-left: 250px;
-      /* Desktop */
       transition: all 0.3s ease;
     }
-    
+
     .status-filter {
       display: flex !important;
       flex-direction: row !important;
@@ -91,7 +89,6 @@ $conn->close();
 
     .btn-filter {
       white-space: nowrap;
-      /* ห้ามข้อความในปุ่มตัดบรรทัด */
       padding: 8px 22px;
       border-radius: 30px;
       border: 1px solid #dee2e6;
@@ -102,21 +99,18 @@ $conn->close();
       transition: all 0.3s ease;
     }
 
-    /* เครื่องจักรทั้งหมด - สีน้ำเงิน */
     .btn-filter.btn-all.active {
       background-color: #0d6efd;
       color: white;
       border-color: #0d6efd;
     }
 
-    /* กำลังทำงาน - สีเขียว */
     .btn-filter.btn-running.active {
       background-color: #28a745;
       color: white;
       border-color: #28a745;
     }
 
-    /* ผิดปกติ - สีเหลือง */
     .btn-filter.btn-warning.active {
       background-color: #ffc107;
       color: #212529;
@@ -129,13 +123,11 @@ $conn->close();
       border-color: #fd7e14;
     }
 
-
     .btn-filter.btn-stopped.active {
       background-color: #dc3545;
       color: white;
       border-color: #dc3545;
     }
-
 
     .btn-filter:hover:not(.active) {
       background-color: #f8f9fa;
@@ -148,26 +140,6 @@ $conn->close();
         padding: 15px;
         border-radius: 0;
         padding-top: 60px;
-      }
-
-      .main {
-        flex-direction: column;
-      }
-
-      .sidebar-wrapper * {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-      }
-
-      .sidebar-wrapper a,
-      .sidebar-wrapper .nav-link {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        text-align: left !important;
-        padding: 10px 20px !important;
       }
 
       .sidebar-wrapper {
@@ -186,9 +158,13 @@ $conn->close();
         left: 0;
       }
 
-      .repair-history-container {
-        width: 100%;
-        padding: 60px 15px 15px;
+      .sidebar-wrapper .sidebar {
+        transform: translateX(0) !important;
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        padding-top: 60px;
       }
 
       .btn-hamburger {
@@ -196,8 +172,8 @@ $conn->close();
         position: fixed;
         top: 15px;
         left: 15px;
-        width: 35px;
-        height: 35px;
+        width: 40px;
+        height: 40px;
         align-items: center;
         justify-content: center;
         background: #fff;
@@ -209,6 +185,7 @@ $conn->close();
       }
 
       .sidebar-overlay {
+        display: none;
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.5);
@@ -224,15 +201,14 @@ $conn->close();
 
 <body>
 
-  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
     <i class="fa-solid fa-bars"></i>
   </div>
-
+  <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
+  <div class="sidebar-wrapper">
+    <?php include $sidebar_file; ?>
+  </div>
   <section class="main">
-    <div class="sidebar-wrapper">
-      <?php include $sidebar_file; ?>
-    </div>
-    
     <div class="dashboard">
       <h2 class="dashboard-title">รายการเครื่องจักร</h2>
 
@@ -293,20 +269,7 @@ $conn->close();
         });
     <?php endif; ?>
 
-    $(document).ready(function() {
-      // เมื่อคลิกที่ลิงก์ใน sidebar
-      $('.sidebar-wrapper a').click(function() {
-        if (!$(this).hasClass('dropdown-toggle')) {
-          $('.sidebar-wrapper').removeClass('active');
-          $('.sidebar-overlay').removeClass('active'); // เพิ่มบรรทัดนี้
-        }
-      });
-
-      $('.btn-hamburger').click(function() {
-        
-        document.querySelector('.sidebar-overlay').classList.toggle('active');
-      });
-    });
+    
   </script>
 </body>
 

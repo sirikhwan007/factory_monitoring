@@ -229,7 +229,7 @@ require_once __DIR__ . '/../config.php';
         $result = $conn->query($sql);
         ?>
 
-        <table>
+        <table class="table">
             <thead>
                 <tr>
                     <th>รูป</th>

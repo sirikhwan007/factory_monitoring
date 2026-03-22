@@ -2,29 +2,24 @@
 session_start();
 include __DIR__ . "/../config.php";
 
-// ตรวจสอบ Role ของผู้ใช้งาน (ดึงจาก session ที่คุณตั้งไว้ตอน Login)
 $user_role = $_SESSION['role'] ?? 'Operator';
 
-// 1. รับค่าจาก URL (รองรับทั้ง id งานซ่อม หรือ machine_id จากหน้า Dashboard)
 $repair_id = $_GET['id'] ?? null;
 $machine_id_from_dash = $_GET['machine_id'] ?? null;
 
-// 2. ดึงข้อมูลรายชื่อช่าง (สำหรับ Dropdown)
 $tech_sql = "SELECT user_id, username FROM users WHERE role = 'Technician' ORDER BY username ASC";
 $tech_result = $conn->query($tech_sql);
 
 $msg = "";
 
-// 3. ตรวจสอบการบันทึกข้อมูล (POST Request)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = $_POST['status'];
     $detail = $_POST['detail'];
     $repair_note = $_POST['repair_note'] ?? '';
     $technician_id = !empty($_POST['technician_id']) ? (int)$_POST['technician_id'] : NULL;
-    $m_id = $_POST['machine_id']; // รับค่า machine_id จาก hidden field
+    $m_id = $_POST['machine_id'];
 
     if ($repair_id) {
-        // --- กรณีแก้ไขรายการเดิม (UPDATE) ---
         $repair_time_sql = ($status === 'สำเร็จ') ? ", repair_time = NOW()" : "";
         $update_sql = "UPDATE repair_history SET 
                        status = ?, detail = ?, repair_note = ?, technician_id = ? $repair_time_sql
@@ -32,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare($update_sql);
         $stmt->bind_param("sssii", $status, $detail, $repair_note, $technician_id, $repair_id);
     } else {
-        // --- กรณีแจ้งซ่อมใหม่ (INSERT) ---
         $reporter = $_SESSION['username'] ?? 'System';
         $insert_sql = "INSERT INTO repair_history (machine_id, reporter, detail, status, technician_id, report_time) 
                        VALUES (?, ?, ?, ?, ?, NOW())";
@@ -41,14 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($stmt->execute()) {
-        // ถ้าสำเร็จ ให้กลับไปหน้าประวัติของเครื่องจักรนั้นๆ
         header("Location: reporthistory.php?id=" . $m_id);
         exit;
     } else {
         $msg = '<div class="alert alert-danger">เกิดข้อผิดพลาด: ' . htmlspecialchars($stmt->error) . '</div>';
     }
 }
-// 4. การดึงข้อมูลมาแสดงผลใน Form
 if ($repair_id) {
     $sql = "SELECT r.*, m.location, u.username 
             FROM repair_history r 
@@ -61,13 +53,10 @@ if ($repair_id) {
     $stmt->execute();
     $row = $stmt->get_result()->fetch_assoc();
 } elseif ($machine_id_from_dash) {
-    // ดึงข้อมูลจาก Machine ID (Mode แจ้งใหม่)
     $stmt = $conn->prepare("SELECT machine_id, location FROM machines WHERE machine_id = ?");
     $stmt->bind_param("s", $machine_id_from_dash);
     $stmt->execute();
     $m_info = $stmt->get_result()->fetch_assoc();
-
-    // สร้างข้อมูลจำลองสำหรับแสดงผลใน Form แจ้งใหม่
     $row = [
         'id' => 'ใหม่',
         'machine_id' => $m_info['machine_id'],
@@ -92,14 +81,12 @@ $sidebar_paths = [
     'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
     'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
 ];
-
-// เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
-    'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
-    'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
-    'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
+    'Admin'      => '/admin/assets/css/index.css',
+    'Manager'    => '/Manager/assets/css/Sidebar.css',
+    'Operator'   => '/Operator/assets/css/SidebarOperator.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
@@ -119,7 +106,6 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* --- Layout Styles --- */
         body {
             background-color: #f8fafd;
             font-family: 'Kanit', sans-serif;
@@ -133,7 +119,6 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             min-height: 100vh;
         }
 
-        /* Sidebar Styling */
         .sidebar-wrapper {
             width: 250px;
             min-width: 250px;
@@ -144,14 +129,12 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             transition: 0.3s;
         }
 
-        /* Content Styling */
         .content-container {
             flex-grow: 1;
             padding: 30px;
             width: calc(100% - 250px);
         }
 
-        /* Custom Styles for Edit Page */
         .card-custom {
             border: none;
             border-radius: 12px;
@@ -180,7 +163,6 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             font-size: 1.05rem;
         }
 
-        /* Machine Detail Card Styles */
         .card-machine {
             border: none;
             border-radius: 15px;
@@ -195,7 +177,6 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             padding: 20px;
         }
 
-        /* Mobile Hamburger */
         .btn-hamburger {
             display: none;
             position: fixed;
@@ -209,45 +190,16 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             cursor: pointer;
         }
 
-        /* Responsive */
         @media (max-width: 992px) {
-            
-
-            .sidebar-wrapper.active {
-                left: 0;
+            .main {
+                flex-direction: column;
             }
+
 
             .content-container {
                 width: 100%;
                 padding: 15px;
                 padding-top: 60px;
-            }
-
-            .dashboard {
-                margin-left: 0;
-                padding: 15px;
-                border-radius: 0;
-                padding-top: 60px;
-            }
-
-            .main {
-                flex-direction: column;
-            }
-
-            .sidebar-wrapper * {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-
-            .sidebar-wrapper a,
-            .sidebar-wrapper .nav-link {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                text-align: left !important;
-                padding: 10px 20px !important;
             }
 
             .sidebar-wrapper {
@@ -264,6 +216,15 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 
             .sidebar-wrapper.active {
                 left: 0;
+            }
+
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
             }
 
             .btn-hamburger {
@@ -284,6 +245,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             }
 
             .sidebar-overlay {
+                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(0, 0, 0, 0.5);
@@ -298,10 +260,10 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 </head>
 
 <body>
-
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
     <section class="main">
         <div class="sidebar-wrapper">
