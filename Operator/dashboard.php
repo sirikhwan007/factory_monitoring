@@ -70,112 +70,171 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
             max-width: 100px;
             height: auto;
         }
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+                padding-top: 80px;
+            }
+
+            .sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
+            }
+
+            .sidebar-wrapper.active {
+                left: 0;
+            }
+
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
+            }
+
+            .btn-hamburger {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
+                cursor: pointer;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
     </style>
 </head>
 
 <body>
-
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
-
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
     <section class="main-operator">
         <div class="sidebar-wrapper">
-            <?php include __DIR__ . '/../Operator/SidebarOperator.php'; ?>
+            <?php include __DIR__ . '/SidebarOperator.php'; ?>
         </div>
         <div class="dashboard">
             <div class="container-fluid">
 
-                
-                    <h2 class="mb-4">Operator</h2>
-                    <!-- Machine Overview -->
-                    <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-                        <h4>ข้อมูลเครื่องจักร</h4>
-                        <div id="notification-bell" class="position-relative" style="cursor: pointer; font-size: 1.5rem;">
-                            <i class="fa-solid fa-bell text-secondary"></i>
-                            <span id="alert-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">!</span>
+
+                <h2 class="mb-4">Operator</h2>
+                <!-- Machine Overview -->
+                <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+                    <h4>ข้อมูลเครื่องจักร</h4>
+                    <div id="notification-bell" class="position-relative" style="cursor: pointer; font-size: 1.5rem;">
+                        <i class="fa-solid fa-bell text-secondary"></i>
+                        <span id="alert-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">!</span>
+                    </div>
+                </div>
+
+                <div class="row mb-4 g-3">
+                    <div class="col-lg col-md-4 col-6">
+                        <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/machine_list/machine.php?status=all'">
+                            <h5 class="text-muted">เครื่องจักรทั้งหมด</h5>
+                            <h2 class="fw-bold text-primary"><?= $total_machines ?></h2>
+                        </div>
+                    </div>
+                    <div class="col-lg col-md-4 col-6">
+                        <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/machine_list/machine.php?status=กำลังทำงาน'">
+                            <h5 class="text-muted text-success">กำลังทำงาน</h5>
+                            <h2 class="fw-bold text-success" id="activeCount">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg col-md-4 col-6">
+                        <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/machine_list/machine.php?status=ผิดปกติ'">
+                            <h5 class="text-muted text-warning">ผิดปกติ</h5>
+                            <h2 class="fw-bold text-warning" id="errorCount">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg col-md-6 col-6">
+                        <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/machine_list/machine.php?status=อันตราย'">
+                            <h5 class="text-muted">อันตราย</h5>
+                            <h2 class="fw-bold" style="color: #fd7e14;" id="dangerCount">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg col-md-6 col-12">
+                        <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/machine_list/machine.php?status=หยุดทำงาน'">
+                            <h5 class="text-muted text-danger">หยุดทำงาน</h5>
+                            <h2 class="fw-bold text-danger" id="stopCount">0</h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Repair Request Overview -->
+                <h4 class="mt-4 mb-3">สถานะซ่อมบำรุง</h4>
+
+                <div class="row g-3 row-cols-1 row-cols-md-3 row-cols-lg-5">
+
+                    <div class="col">
+                        <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
+                            onclick="location.href='/repair/reporthistory.php?status=all'">
+                            <h6 class="text-muted">ทั้งหมด</h6>
+                            <h2 class="fw-bold text-primary"><?= $total ?></h2>
                         </div>
                     </div>
 
-                    <div class="row mb-4 g-3">
-                        <div class="col-lg col-md-4 col-6">
-                            <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/machine_list/machine.php?status=all'">
-                                <h5 class="text-muted">เครื่องจักรทั้งหมด</h5>
-                                <h2 class="fw-bold text-primary"><?= $total_machines ?></h2>
-                            </div>
-                        </div>
-                        <div class="col-lg col-md-4 col-6">
-                            <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/machine_list/machine.php?status=กำลังทำงาน'">
-                                <h5 class="text-muted text-success">กำลังทำงาน</h5>
-                                <h2 class="fw-bold text-success" id="activeCount">0</h2>
-                            </div>
-                        </div>
-                        <div class="col-lg col-md-4 col-6">
-                            <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/machine_list/machine.php?status=ผิดปกติ'">
-                                <h5 class="text-muted text-warning">ผิดปกติ</h5>
-                                <h2 class="fw-bold text-warning" id="errorCount">0</h2>
-                            </div>
-                        </div>
-                        <div class="col-lg col-md-6 col-6">
-                            <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/machine_list/machine.php?status=อันตราย'">
-                                <h5 class="text-muted">อันตราย</h5>
-                                <h2 class="fw-bold" style="color: #fd7e14;" id="dangerCount">0</h2>
-                            </div>
-                        </div>
-                        <div class="col-lg col-md-6 col-12">
-                            <div class="card shadow-sm p-3 border-0 text-center h-100" style="cursor:pointer;" onclick="location.href='/machine_list/machine.php?status=หยุดทำงาน'">
-                                <h5 class="text-muted text-danger">หยุดทำงาน</h5>
-                                <h2 class="fw-bold text-danger" id="stopCount">0</h2>
-                            </div>
+                    <div class="col">
+                        <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
+                            onclick="location.href='/repair/reporthistory.php?status=รอดำเนินการ'">
+                            <h6 class="text-muted">รอดำเนินการ</h6>
+                            <h2 class="fw-bold text-warning"><?= $pending ?></h2>
                         </div>
                     </div>
-                    <!-- Repair Request Overview -->
-                    <h4 class="mt-4 mb-3">สถานะซ่อมบำรุง</h4>
 
-                    <div class="row g-3 row-cols-1 row-cols-md-3 row-cols-lg-5">
-
-                        <div class="col">
-                            <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                                onclick="location.href='/repair/reporthistory.php?status=all'">
-                                <h6 class="text-muted">ทั้งหมด</h6>
-                                <h2 class="fw-bold text-primary"><?= $total ?></h2>
-                            </div>
+                    <div class="col">
+                        <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
+                            onclick="location.href='/repair/reporthistory.php?status=กำลังซ่อม'">
+                            <h6 class="text-muted">กำลังซ่อม</h6>
+                            <h2 class="fw-bold text-info"><?= $in_progress ?></h2>
                         </div>
-
-                        <div class="col">
-                            <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                                onclick="location.href='/repair/reporthistory.php?status=รอดำเนินการ'">
-                                <h6 class="text-muted">รอดำเนินการ</h6>
-                                <h2 class="fw-bold text-warning"><?= $pending ?></h2>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                                onclick="location.href='/repair/reporthistory.php?status=กำลังซ่อม'">
-                                <h6 class="text-muted">กำลังซ่อม</h6>
-                                <h2 class="fw-bold text-info"><?= $in_progress ?></h2>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                                onclick="location.href='/repair/reporthistory.php?status=สำเร็จ'">
-                                <h6 class="text-muted">เสร็จสิ้น</h6>
-                                <h2 class="fw-bold text-success"><?= $completed ?></h2>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
-                                onclick="location.href='/repair/reporthistory.php?status=ยกเลิก'">
-                                <h6 class="text-muted">ยกเลิก</h6>
-                                <h2 class="fw-bold text-danger"><?= $cancelled ?></h2>
-                            </div>
-                        </div>
-
                     </div>
-                
+
+                    <div class="col">
+                        <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
+                            onclick="location.href='/repair/reporthistory.php?status=สำเร็จ'">
+                            <h6 class="text-muted">เสร็จสิ้น</h6>
+                            <h2 class="fw-bold text-success"><?= $completed ?></h2>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card shadow-sm p-3 text-center h-100" style="cursor:pointer;"
+                            onclick="location.href='/repair/reporthistory.php?status=ยกเลิก'">
+                            <h6 class="text-muted">ยกเลิก</h6>
+                            <h2 class="fw-bold text-danger"><?= $cancelled ?></h2>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
 
@@ -186,33 +245,6 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     <script src="SidebarOperator.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const sidebar = document.querySelector(".sidebar-operator");
-            const btnHamburger = document.querySelector(".btn-hamburger");
-
-            // Sidebar Toggle
-            if (btnHamburger && sidebar) {
-                btnHamburger.addEventListener("click", () => {
-                    sidebar.classList.toggle("active");
-                });
-            }
-
-            // Auto-active Menu ตาม URL ปัจจุบัน
-            const currentUrl = window.location.href;
-            const links = document.querySelectorAll(".op-ul a");
-
-            links.forEach(a => {
-                if (a.href === currentUrl) {
-                    a.classList.add("active-menu");
-                    // แนะนำให้ย้าย Style ไปไว้ใน CSS class .active-menu แทนการเขียน inline
-                    Object.assign(a.style, {
-                        background: "#8e44ad",
-                        color: "#fff",
-                        fontWeight: "bold"
-                    });
-                }
-            });
-        });
         $(document).ready(function() {
             let alertCounter = 0;
             let currentIssue = 'all';
