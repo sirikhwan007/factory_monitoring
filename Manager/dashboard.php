@@ -76,9 +76,7 @@ $repairs  = $conn->query("
 
             .sidebar-wrapper.active {
                 left: 0;
-                /* เลื่อนออกมาแสดง */
             }
-
 
             .sidebar-wrapper .sidebar {
                 transform: translateX(0) !important;

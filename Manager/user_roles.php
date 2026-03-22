@@ -108,16 +108,13 @@ require_once __DIR__ . '/../config.php';
             background: #fafafa;
         }
 
-        /* ===== Profile Image ===== */
         .profile-img {
             width: 46px;
             height: 46px;
             border-radius: 50%;
             object-fit: cover;
-            border: 1px solid #ddd;
         }
 
-        /* ===== Role Badge (optional) ===== */
         .role-badge {
             padding: 4px 12px;
             border-radius: 14px;
@@ -139,7 +136,7 @@ require_once __DIR__ . '/../config.php';
         @media (max-width: 992px) {
             .main-content {
                 margin-left: 0;
-                padding-top: 80px;
+                padding-top: 60px;
             }
 
             .sidebar-wrapper {
@@ -158,7 +155,6 @@ require_once __DIR__ . '/../config.php';
                 left: 0;
                 /* เลื่อนออกมาแสดง */
             }
-
 
             .sidebar-wrapper .sidebar {
                 transform: translateX(0) !important;
@@ -210,7 +206,7 @@ require_once __DIR__ . '/../config.php';
         <?php include 'partials/SidebarManager.php'; ?>
     </div>
 
-    <div class="main-content">
+    <section class="main-content">
         <h2>รายชื่อพนักงานหน้างาน</h2>
         <div class="role-filter">
             <button class="btn active" onclick="filterRole('all')">All</button>
@@ -222,7 +218,7 @@ require_once __DIR__ . '/../config.php';
         <input type="text"
             id="searchInput"
             class="search-box"
-            placeholder="ค้นหา username / email / phone...">
+            placeholder="ค้นหา">
 
 
         <?php
@@ -233,7 +229,7 @@ require_once __DIR__ . '/../config.php';
         $result = $conn->query($sql);
         ?>
 
-        <table>
+        <table class="table">
             <thead>
                 <tr>
                     <th>รูป</th>
@@ -263,7 +259,7 @@ require_once __DIR__ . '/../config.php';
                 <?php endwhile; ?>
             </tbody>
         </table>
-    </div>
+    </section>
 
     <script>
         let currentRole = 'all';
