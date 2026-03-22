@@ -41,9 +41,9 @@ $sidebar_paths = [
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
-  'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
-  'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
-  'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
+    'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
+    'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
+    'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
@@ -68,82 +68,81 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         @media (max-width: 992px) {
-    .main {
-        flex-direction: column;
-        margin-left: 0;
-        padding: 15px;
-        border-radius: 0;
-        padding-top: 10px;
-    }
+            .main {
+                flex-direction: column;
+                margin-left: 0;
+                padding: 15px;
+                border-radius: 0;
+                padding-top: 10px;
+            }
 
-    .sidebar-wrapper {
-        position: fixed;
-        top: 0;
-        left: -260px;
-        width: 250px;
-        height: 100vh;
-        z-index: 2000;
-        background-color: #fff;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease-in-out;
-    }
+            .sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
+            }
 
-    .sidebar-wrapper.active {
-        left: 0;
-    }
+            .sidebar-wrapper.active {
+                left: 0;
+            }
 
-    .repair-history-container {
-        width: 100%;
-        padding: 60px 15px 15px;
-    }
+            .repair-history-container {
+                width: 100%;
+                padding: 60px 15px 15px;
+            }
 
-    .sidebar-wrapper .sidebar {
-        transform: translateX(0) !important;
-        position: relative !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        display: flex !important;
-        padding-top: 60px;
-    }
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
+            }
 
-    .btn-hamburger {
-        display: flex;
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        width: 35px;
-        height: 35px;
-        align-items: center;
-        justify-content: center;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        z-index: 3000;
-        font-size: 20px;
-        cursor: pointer;
-    }
+            .btn-hamburger {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
+                cursor: pointer;
+            }
 
-    .sidebar-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1900;
-    }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
 
-    .sidebar-overlay.active {
-        display: block;
-    }
-}
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
-    <i class="fa-solid fa-bars"></i>
-  </div>
-  <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
-  
+        <i class="fa-solid fa-bars"></i>
+    </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
     <section class="main">
         <div class="sidebar-wrapper">
@@ -276,8 +275,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                 $('#modal_repair_id').val(repairId);
             });
         });
-
-        
     </script>
 
 </body>

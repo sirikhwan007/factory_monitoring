@@ -119,7 +119,6 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* --- Layout Styles --- */
         body {
             background-color: #f8fafd;
             font-family: 'Kanit', sans-serif;
@@ -133,7 +132,6 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             min-height: 100vh;
         }
 
-        /* Sidebar Styling */
         .sidebar-wrapper {
             width: 250px;
             min-width: 250px;
@@ -144,14 +142,12 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             transition: 0.3s;
         }
 
-        /* Content Styling */
         .content-container {
             flex-grow: 1;
             padding: 30px;
             width: calc(100% - 250px);
         }
 
-        /* Custom Styles for Edit Page */
         .card-custom {
             border: none;
             border-radius: 12px;
@@ -180,7 +176,6 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             font-size: 1.05rem;
         }
 
-        /* Machine Detail Card Styles */
         .card-machine {
             border: none;
             border-radius: 15px;
@@ -195,7 +190,6 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             padding: 20px;
         }
 
-        /* Mobile Hamburger */
         .btn-hamburger {
             display: none;
             position: fixed;
@@ -209,45 +203,16 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             cursor: pointer;
         }
 
-        /* Responsive */
         @media (max-width: 992px) {
-            
-
-            .sidebar-wrapper.active {
-                left: 0;
+            .main {
+                flex-direction: column;
             }
+
 
             .content-container {
                 width: 100%;
                 padding: 15px;
                 padding-top: 60px;
-            }
-
-            .dashboard {
-                margin-left: 0;
-                padding: 15px;
-                border-radius: 0;
-                padding-top: 60px;
-            }
-
-            .main {
-                flex-direction: column;
-            }
-
-            .sidebar-wrapper * {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-
-            .sidebar-wrapper a,
-            .sidebar-wrapper .nav-link {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                text-align: left !important;
-                padding: 10px 20px !important;
             }
 
             .sidebar-wrapper {
@@ -264,6 +229,15 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 
             .sidebar-wrapper.active {
                 left: 0;
+            }
+
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
             }
 
             .btn-hamburger {
@@ -284,6 +258,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             }
 
             .sidebar-overlay {
+                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(0, 0, 0, 0.5);
@@ -298,10 +273,10 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 </head>
 
 <body>
-
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
     <section class="main">
         <div class="sidebar-wrapper">
