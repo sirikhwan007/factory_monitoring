@@ -52,33 +52,14 @@ $repairs  = $conn->query("
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/Manager/assets/css/dashboard.css">
-    <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/dashboard.css">
+    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @media (max-width: 992px) {
             .main-content {
-                flex-direction: column;
                 margin-left: 0;
-                padding: 70px 20px 20px 20px;
-                border-radius: 0;
-                padding-top: 60px;
-            }
-
-            .sidebar-wrapper * {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-
-            .sidebar-wrapper a,
-            .sidebar-wrapper .nav-link {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                text-align: left !important;
-                padding: 10px 20px !important;
+                padding-top: 80px;
             }
 
             .sidebar-wrapper {
@@ -95,11 +76,17 @@ $repairs  = $conn->query("
 
             .sidebar-wrapper.active {
                 left: 0;
+                /* เลื่อนออกมาแสดง */
             }
 
-            .repair-history-container {
-                width: 100%;
-                padding: 60px 15px 15px;
+
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
             }
 
             .btn-hamburger {
@@ -107,19 +94,19 @@ $repairs  = $conn->query("
                 position: fixed;
                 top: 15px;
                 left: 15px;
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 align-items: center;
                 justify-content: center;
-                background: #fff;
+                background: #6f1e51;
+                color: #fff;
                 border-radius: 8px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
                 z-index: 3000;
-                font-size: 20px;
                 cursor: pointer;
             }
 
             .sidebar-overlay {
+                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(0, 0, 0, 0.5);
@@ -129,15 +116,15 @@ $repairs  = $conn->query("
             .sidebar-overlay.active {
                 display: block;
             }
-
         }
     </style>
 </head>
 
 <body>
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
     <div class="sidebar-wrapper">
         <?php include 'partials/SidebarManager.php'; ?>
     </div>

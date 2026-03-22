@@ -18,11 +18,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
 <div class="sidebar">
     <div class="sidebar-top">
-        <a href="/Manager/profile.php" class="profile-btn">
+        <a href="/factory_monitoring/Manager/profile.php" class="profile-btn">
             <div class="sb-logo">
                 <img src="<?= $profileImage ?>"
                     class="profile-img"
-                    onerror="this.src='/Manager/uploads/default_profile.png'">
+                    onerror="this.src='/factory_monitoring/Manager/uploads/default_profile.png'">
 
                 <div class="profile-info">
                     <span class="profile-name"><?= htmlspecialchars($username) ?></span>
@@ -34,7 +34,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <ul class="sb-ul">
 
             <li>
-                <a href="/Manager/dashboard.php"
+                <a href="/factory_monitoring/Manager/dashboard.php"
                     class="<?= $currentPage === 'dashboard.php' ? 'active' : '' ?>">
                     <i class="fas fa-chart-line"></i>
                     <span>หน้าหลัก</span>
@@ -42,7 +42,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </li>
 
             <li>
-                <a href="/machine_list/machine.php"
+                <a href="/factory_monitoring/machine_list/machine.php"
                     class="<?= $currentPage === 'machine.php' ? 'active' : '' ?>">
                     <i class="fas fa-industry"></i>
                     <span>สถานะเครื่องจักร</span>
@@ -50,14 +50,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </li>
 
             <li>
-                <a href="/Manager/user_roles.php"
+                <a href="/factory_monitoring/Manager/user_roles.php"
                     class="<?= $currentPage === 'user_roles.php' ? 'active' : '' ?>">
                     <i class="fas fa-user-clock"></i>
                     <span>พนักงานหน้างาน</span>
                 </a>
             </li>
             <li>
-                <a href="/repair/reporthistory.php"
+                <a href="/factory_monitoring/repair/reporthistory.php"
                     class="<?= $currentPage === 'reporthistory.php' ? 'active' : '' ?>">
                     <i class="fas fa-screwdriver-wrench"></i>
                     <span>ประวัติการแจ้งซ่อม</span>
@@ -68,7 +68,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     </div>
 
     <div class="sidebar-bottom">
-        <a href="/logout.php" class="btn-logout">
+        <a href="/factory_monitoring/logout.php" class="btn-logout">
             <i class="fas fa-sign-out-alt"></i>
             <span>ออกจากระบบ</span>
         </a>
