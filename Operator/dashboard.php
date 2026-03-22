@@ -32,8 +32,8 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     <title>Operator Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="/Operator/assets/css/dashboard.css">
-    <link rel="stylesheet" href="/Operator/assets/css/SidebarOperator.css">
+    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/dashboard.css">
+    <link rel="stylesheet" href="/factory_monitoring/Operator/assets/css/SidebarOperator.css">
     <style>
         @keyframes bell-ring {
 
@@ -86,7 +86,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
         <div class="dashboard">
             <div class="container-fluid">
 
-                <div class="dashboard">
+                
                     <h2 class="mb-4">Operator</h2>
                     <!-- Machine Overview -->
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -175,7 +175,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                         </div>
 
                     </div>
-                </div>
+                
             </div>
         </div>
 

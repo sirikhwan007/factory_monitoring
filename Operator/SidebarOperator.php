@@ -14,7 +14,7 @@ $activePage = $activePage ?? '';
 <div class="sidebar-operator">
 
     <div class="op-top">
-        <a href="/operator/profile.php" class="op-profile-btn">
+        <a href="/factory_monitoring/operator/profile.php" class="op-profile-btn">
             <div class="op-logo">
                 <?php
                 $showImg = (strpos($profileImage, 'data:') === 0)
@@ -33,7 +33,7 @@ $activePage = $activePage ?? '';
         <ul class="op-ul">
             <!-- Dashboard -->
             <li>
-                <a href="/Operator/dashboard.php"
+                <a href="/factory_monitoring/Operator/dashboard.php"
                     class="<?= $activePage === 'dashboard' ? 'active' : '' ?>">
                     <i class="fa-solid fa-home"></i>
                     <span class="sb-text">หน้าหลัก</span>
@@ -41,7 +41,7 @@ $activePage = $activePage ?? '';
             </li>
             <!-- Machines -->
             <li>
-                <a href="/machine_list/machine.php"
+                <a href="/factory_monitoring/machine_list/machine.php"
                     class="<?= $activePage === 'machines' ? 'active' : '' ?>">
                     <i class="fa-solid fa-industry"></i>
                     <span class="sb-text">เครื่องจักรทั้งหมด</span>
@@ -50,7 +50,7 @@ $activePage = $activePage ?? '';
 
             <!-- History -->
             <li>
-                <a href="/repair/reporthistory.php"
+                <a href="/factory_monitoring/repair/reporthistory.php"
                     class="<?= $activePage === 'history' ? 'active' : '' ?>">
                     <i class="fa-solid fa-clock"></i>
                     <span class="sb-text">รายการแจ้งซ่อม</span>
@@ -61,7 +61,7 @@ $activePage = $activePage ?? '';
     </div>
 
     <div class="sidebar-bottom">
-        <a href="/logout.php" class="btn-logout">
+        <a href="/factory_monitoring/logout.php" class="btn-logout">
             <i class="fa-solid fa-sign-out-alt"></i>
             <span class="sb-text">ออกจากระบบ</span>
         </a>
