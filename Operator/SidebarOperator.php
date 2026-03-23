@@ -11,13 +11,15 @@ $role         = $_SESSION['role'] ?? 'Operator';
 $activePage = $activePage ?? '';
 ?>
 
+<div class="sidebar">
+
     <div class="op-top">
         <a href="/factory_monitoring/operator/profile.php" class="op-profile-btn">
             <div class="op-logo">
                 <?php
                 $showImg = (strpos($profileImage, 'data:') === 0)
                     ? $profileImage
-                    : "/admin/uploads/" . $profileImage;
+                    : "/factory_monitoring/admin/uploads/" . $profileImage;
                 ?>
                 <img src="<?php echo $showImg; ?>" class="profile-img" alt="Profile">
 
@@ -64,3 +66,5 @@ $activePage = $activePage ?? '';
             <span class="sb-text">ออกจากระบบ</span>
         </a>
     </div>
+
+</div>

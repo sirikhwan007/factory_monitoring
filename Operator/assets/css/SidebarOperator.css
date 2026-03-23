@@ -1,4 +1,3 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600&display=swap");
 
 * {
@@ -15,6 +14,21 @@
     --text-muted: #adadad;
     --bg-main: #ffffff;
     --danger: #ea2027;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background: var(--bg-main);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    transition: transform 0.3s ease;
 }
 
 .op-top {
@@ -136,11 +150,13 @@
 
 
 @media (max-width: 992px) {
-    .sidebar-operator {
-        transform: translateX(-100%);
+    .sidebar {
+        display: flex !important;
+        background: transparent;
+        box-shadow: none;
     }
 
-    .sidebar-operator.active {
+    .sidebar.active {
         transform: translateX(0);
     }
 }

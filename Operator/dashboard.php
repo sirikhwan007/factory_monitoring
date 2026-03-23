@@ -57,7 +57,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
             color: #dc3545 !important;
         }
 
-        .sidebar-operator img {
+        .sidebar img {
             width: 50px;
             height: 50px;
             object-fit: cover;
@@ -98,7 +98,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                 width: 100% !important;
                 max-width: 100% !important;
                 display: flex !important;
-                padding-top: 60px;
+                padding-top: 40px;
             }
 
             .btn-hamburger {
