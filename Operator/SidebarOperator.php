@@ -21,7 +21,7 @@ $activePage = $activePage ?? '';
                     ? $profileImage
                     : "/factory_monitoring/admin/uploads/" . $profileImage;
                 ?>
-                <img src="<?php echo $showImg; ?>" class="profile-img" alt="Profile">
+                <img src="<?php echo $showImg; ?>" class="op-profile-img" alt="Profile">
 
                 <div class="op-profile-info">
                     <span class="op-profile-name"><?= htmlspecialchars($username) ?></span>
