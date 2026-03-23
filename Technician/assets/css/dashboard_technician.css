@@ -1,24 +1,14 @@
-/* ===============================
-   Technician Dashboard
-================================ */
-
-/* ---------- Main Layout ---------- */
 .main {
-    /* กำหนดให้เนื้อหาอยู่ห่างจากขอบซ้ายเท่ากับความกว้าง Sidebar */
     margin-left: 260px; 
-    
-    /* บังคับให้อยู่ด้านบนสุด */
     position: absolute;
     top: 0;
     right: 0;
-    left: 0; /* หรือใช้ margin-left แทนเพื่อเว้นที่ */
-    
+    left: 0;
     padding: 24px;
     min-height: 100vh;
-    background-color: #f8f9fa; /* เติมสีพื้นหลังให้อ่อนๆ จะได้เห็นขอบเขตชัดเจน */
+    background-color: #f8f9fa;
 }
 
-/* ---------- Title ---------- */
 .dashboard-title {
     font-size: 26px;
     font-weight: 600;
@@ -26,21 +16,18 @@
     color: #2c3e50;
 }
 
-/* ---------- Welcome ---------- */
 .welcome-text {
     font-size: 15px;
     color: #555;
     margin-bottom: 25px;
 }
 
-/* ---------- Card Grid ---------- */
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
 }
 
-/* ---------- Card ---------- */
 .card {
     background: #ffffff;
     border-radius: 14px;
@@ -55,14 +42,12 @@
     box-shadow: 0 10px 24px rgba(0,0,0,0.12);
 }
 
-/* ---------- Card Icon ---------- */
 .card i {
     font-size: 32px;
     color: #2980b9;
     margin-bottom: 12px;
 }
 
-/* ---------- Card Text ---------- */
 .card h3 {
     margin: 0 0 6px;
     font-size: 18px;
@@ -75,7 +60,6 @@
     color: #666;
 }
 
-/* ---------- Job Count ---------- */
 .card .job-count {
     font-size: 28px !important;
     font-weight: 700;
@@ -83,7 +67,6 @@
     margin: 10px 0 0 0;
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 992px) {
     .main {
         margin-left: 0;

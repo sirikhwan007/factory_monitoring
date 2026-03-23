@@ -28,7 +28,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ประวัติการแจ้งซ่อม</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/Technician/assets/css/sidebar_technician.css">
+    <link rel="stylesheet" href="/factory_monitoring/Technician/assets/css/sidebar_technician.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
@@ -40,7 +40,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             overflow-x: hidden;
         }
 
-        /* ================= Sidebar (โครงเดิม) ================= */
         .sidebar {
             width: 250px;
             min-width: 250px;
@@ -55,7 +54,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             overflow-y: auto;
         }
 
-        /* ================= Content ================= */
         .repair-history-container {
             margin-left: 250px;
             width: calc(100% - 250px);
@@ -63,7 +61,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             transition: all .3s ease;
         }
 
-        /* ================= Title ================= */
         .page-title {
             font-size: 2.2rem;
             font-weight: 700;
@@ -79,7 +76,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             font-size: 2.5rem;
         }
 
-        /* ================= Table Wrapper ================= */
         .table-wrapper {
             background: #ffffff;
             border-radius: 15px;
@@ -88,7 +84,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             overflow-x: auto;
         }
 
-        /* ================= Table ================= */
         .repair-table {
             width: 100%;
             min-width: 1200px;
@@ -115,7 +110,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             border-radius: 0 10px 10px 0;
         }
 
-        /* ================= Table Body ================= */
         .repair-table tbody td {
             background: #fff;
             padding: 15px 20px;
@@ -144,7 +138,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             border-radius: 0 8px 8px 0;
         }
 
-        /* ================= Detail ================= */
         .detail-cell {
             max-width: 250px;
             min-width: 150px;
@@ -155,7 +148,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             color: #666;
         }
 
-        /* ================= Status Badge ================= */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -191,7 +183,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             border: 1px solid #dc3545;
         }
 
-        /* ================= Action Button ================= */
         .action-cell {
             display: flex;
             justify-content: center;
@@ -217,7 +208,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
         }
 
-        /* ================= Mobile ================= */
         @media (max-width: 992px) {
             .sidebar {
                 left: -250px;
@@ -291,7 +281,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                         $no = 1;
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()):
-                                // ... (Logic สถานะ และ วันที่ เหมือนเดิม ไม่ต้องแก้) ...
                                 $status_class = '';
                                 $status_icon = '';
                                 switch ($row['status']) {
@@ -316,7 +305,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                                 $report_date = $report_datetime->format('d/m/Y');
                                 $report_time = $report_datetime->format('H:i');
 
-                                // เตรียมข้อมูลวันที่ซ่อมเสร็จ
                                 $repair_complete_date = '-';
                                 $repair_complete_time = '';
                                 if (!empty($row['repair_time']) && $row['repair_time'] !== '0000-00-00 00:00:00') {

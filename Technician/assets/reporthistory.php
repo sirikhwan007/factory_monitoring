@@ -1,5 +1,4 @@
 <?php
-// ... (ส่วน PHP ด้านบนเหมือนเดิม ไม่ต้องแก้) ...
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -30,45 +29,41 @@ $role         = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <link rel="stylesheet" href="/factory_monitoring/assets/css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* --- General & Typography --- */
         body {
             font-family: 'Kanit', sans-serif;
             background-color: #f8fafd;
             color: #333;
             line-height: 1.6;
             margin: 0;
-            overflow-x: hidden; /* ป้องกันสกรอลแนวนอนทั้งหน้า */
+            overflow-x: hidden;
         }
 
-        /* --- [แก้ไขส่วน Layout หลัก] --- */
         .main {
-            display: flex; /* จัดเรียงซ้าย-ขวา */
+            display: flex;
             width: 100%;
-            min-height: 100vh; /* ความสูงเต็มจอ */
-            padding: 0 !important; /* ลบ padding เดิมออกเพื่อไม่ให้เบี้ยว */
+            min-height: 100vh;
+            padding: 0 !important;
         }
 
-        /* --- [เพิ่ม Class สำหรับ Sidebar Wrapper] --- */
         .sidebar-wrapper {
-            width: 250px; /* ความกว้างคงที่ของ Sidebar */
-            min-width: 250px; /* ห้ามหดเล็กกว่านี้ */
-            flex-shrink: 0; /* สำคัญ! ห้ามบีบ Sidebar เมื่อหน้าจอเล็ก */
-            background: #fff; /* หรือสีเดียวกับ Sidebar ของคุณ */
-            height: 100vh; /* สูงเต็มจอ */
-            position: sticky; /* ให้ติดอยู่กับที่ */
+            width: 250px;
+            min-width: 250px;
+            flex-shrink: 0;
+            background: #fff;
+            height: 100vh;
+            position: sticky;
             top: 0;
-            overflow-y: auto; /* ถ้า Sidebar ยาวให้เลื่อนได้ */
+            overflow-y: auto;
             box-shadow: 2px 0 5px rgba(0,0,0,0.05);
             z-index: 1000;
             transition: all 0.3s;
         }
 
-        /* --- [แก้ไขส่วน Content ด้านขวา] --- */
         .repair-history-container {
-            flex-grow: 1; /* ให้กินพื้นที่ที่เหลือทั้งหมด */
+            flex-grow: 1;
             padding: 30px;
-            width: calc(100% - 250px); /* ความกว้าง = 100% - ความกว้าง Sidebar */
-            overflow-x: auto; /* ให้ตารางเลื่อนแนวนอนได้ในกรอบนี้ */
+            width: calc(100% - 250px); 
+            overflow-x: auto;
         }
 
         .page-title {
@@ -83,7 +78,6 @@ $role         = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
         }
         .page-title i { color: #3498db; font-size: 2.5rem; }
 
-        /* --- Table Container --- */
         .table-wrapper {
             background: #ffffff;
             border-radius: 15px;
@@ -92,10 +86,9 @@ $role         = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             overflow-x: auto;
         }
 
-        /* --- Table Styles (คงเดิม) --- */
         .repair-table {
             width: 100%;
-            min-width: 1200px; /* ลดลงหน่อยเพื่อให้พอดีกับจอ Laptop ทั่วไป */
+            min-width: 1200px; 
             border-collapse: separate;
             border-spacing: 0 10px;
         }
@@ -138,8 +131,6 @@ $role         = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             font-size: 0.9em;
             color: #666;
         }
-
-        /* --- Badges & Buttons (คงเดิม) --- */
         .status-badge {
             display: inline-flex; align-items: center; padding: 7px 14px; border-radius: 25px;
             font-size: 13px; font-weight: 600; text-transform: capitalize; gap: 6px; white-space: nowrap;
@@ -162,22 +153,20 @@ $role         = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
         .datetime-date { font-weight: 500; color: #495057; }
         .datetime-time { font-size: 12px; color: #888; }
 
-        /* --- Responsive Adjustments --- */
-        /* สำหรับหน้าจอ Mobile (เล็กกว่า 992px) */
         @media (max-width: 992px) {
             .sidebar-wrapper {
-                position: absolute; /* เปลี่ยนเป็นลอยเหนือเนื้อหา */
-                left: -250px; /* ซ่อนไปทางซ้าย */
+                position: absolute;
+                left: -250px;
             }
             .sidebar-wrapper.active {
-                left: 0; /* แสดงเมื่อมี class active (ต้องใช้ JS เปิดปิด) */
+                left: 0;
             }
             .repair-history-container {
-                width: 100%; /* เนื้อหาเต็มจอ */
+                width: 100%;
                 padding: 15px;
             }
             .btn-hamburger {
-                display: block; /* แสดงปุ่มเมนูบนมือถือ */
+                display: block;
                 position: fixed;
                 top: 15px;
                 left: 15px;
@@ -189,8 +178,7 @@ $role         = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                 cursor: pointer;
             }
         }
-        
-        /* ซ่อนปุ่ม hamburger บนจอใหญ่ */
+
         @media (min-width: 993px) {
             .btn-hamburger { display: none; }
         }
@@ -232,7 +220,6 @@ $role         = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             $no = 1;
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()):
-                    // ... (Logic สถานะ และ วันที่ เหมือนเดิม ไม่ต้องแก้) ...
                     $status_class = ''; $status_icon = '';
                     switch($row['status']){
                         case 'สำเร็จ': $status_class='success'; $status_icon='<i class="fas fa-check-circle"></i>'; break;
@@ -243,8 +230,7 @@ $role         = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                     $report_datetime = new DateTime($row['report_time']);
                     $report_date = $report_datetime->format('d/m/Y');
                     $report_time = $report_datetime->format('H:i');
-                    
-                    // เตรียมข้อมูลวันที่ซ่อมเสร็จ
+
                     $repair_complete_date = '-';
                     $repair_complete_time = '';
                     if (!empty($row['repair_time']) && $row['repair_time'] !== '0000-00-00 00:00:00') {

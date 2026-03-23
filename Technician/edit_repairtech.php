@@ -2,18 +2,11 @@
 session_start();
 include __DIR__ . "/../config.php";
 
-/* ===============================
-   1. ตรวจสอบ ID
-================================ */
 if (!isset($_GET['id'])) {
     die("Error: ไม่พบ ID รายการแจ้งซ่อม");
 }
 $repair_id = (int) $_GET['id'];
 
-/* ===============================
-   2. ดึงข้อมูลใบแจ้งซ่อม
-   ✔ ใช้ username จาก repair_history ตรง ๆ
-================================ */
 $stmt = $conn->prepare("
     SELECT r.*, m.location, u.username AS tech_name
     FROM repair_history r
@@ -30,9 +23,6 @@ if (!$row) {
     die("ไม่พบข้อมูลใบแจ้งซ่อม");
 }
 
-/* ===============================
-   3. เตรียมข้อมูล Sidebar
-================================ */
 $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 $username_session = $_SESSION['username'] ?? 'ช่างเทคนิค';
 ?>
@@ -45,7 +35,7 @@ $username_session = $_SESSION['username'] ?? 'ช่างเทคนิค';
     <title>รายละเอียดใบแจ้งซ่อม #<?= $row['id'] ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/Technician/assets/css/sidebar_technician.css">
+    <link rel="stylesheet" href="/factory_monitoring/Technician/assets/css/sidebar_technician.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
@@ -64,18 +54,18 @@ $username_session = $_SESSION['username'] ?? 'ช่างเทคนิค';
 
         .sidebar-wrapper {
             width: 250px;
-    min-width: 250px;
-    height: 100vh;
-    background: #fff;
-    border-right: 1px solid #ddd;
+            min-width: 250px;
+            height: 100vh;
+            background: #fff;
+            border-right: 1px solid #ddd;
         }
 
         .content-container {
             flex: 1;
-    padding: 30px;
-    height: 100vh; 
-    overflow-y: auto; /* ให้เลื่อนขึ้นลงได้เฉพาะฝั่งเนื้อหา */
-    background: #f4f6f9;
+            padding: 30px;
+            height: 100vh;
+            overflow-y: auto;
+            background: #f4f6f9;
         }
 
         .card-machine {
@@ -155,12 +145,10 @@ $username_session = $_SESSION['username'] ?? 'ช่างเทคนิค';
 
     <section class="main">
 
-        <!-- Sidebar -->
         <div class="sidebar-wrapper">
             <?php include __DIR__ . '/SidebarTechnician.php'; ?>
         </div>
 
-        <!-- Content -->
         <div class="content-container">
             <div class="container-fluid p-0">
 
@@ -253,23 +241,22 @@ $username_session = $_SESSION['username'] ?? 'ช่างเทคนิค';
                                 <?php endif; ?>
 
                                 <h5 class="text-muted mb-2 mt-3">
-    <i class="fas fa-user-cog"></i> ช่างผู้รับผิดชอบ
-</h5>
+                                    <i class="fas fa-user-cog"></i> ช่างผู้รับผิดชอบ
+                                </h5>
 
-<div class="p-3 bg-light rounded border mb-3">
-    <?php if (!empty($row['tech_name'])): ?>
-        <span class="fw-bold text-primary">
-            <i class="fas fa-user-check me-1"></i> 
-            <?= htmlspecialchars($row['tech_name']) ?>
-        </span>
-    <?php else: ?>
-        <span class="text-muted fst-italic">
-            <i class="fas fa-user-slash me-1"></i> ยังไม่ได้มอบหมายช่าง
-        </span>
-    <?php endif; ?>
-</div>
+                                <div class="p-3 bg-light rounded border mb-3">
+                                    <?php if (!empty($row['tech_name'])): ?>
+                                        <span class="fw-bold text-primary">
+                                            <i class="fas fa-user-check me-1"></i>
+                                            <?= htmlspecialchars($row['tech_name']) ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="text-muted fst-italic">
+                                            <i class="fas fa-user-slash me-1"></i> ยังไม่ได้มอบหมายช่าง
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
 
-                                <!-- ปุ่มกลับ -->
                                 <hr>
                                 <div class="mt-4">
                                     <a href="javascript:history.back()" class="btn btn-secondary px-4">

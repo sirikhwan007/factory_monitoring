@@ -2,7 +2,6 @@
 session_start();
 require_once __DIR__ . '/../config.php';
 
-/* ================= AUTH ================= */
 if (!isset($_SESSION['user_id'])) {
     header("Location: /login.php");
     exit();
@@ -11,7 +10,6 @@ if (!isset($_SESSION['user_id'])) {
 $user_id   = $_SESSION['user_id'];
 $user_role = $_SESSION['role'];
 
-/* ================= SIDEBAR ================= */
 $sidebar_paths = [
     'Admin'      => __DIR__ . '/../admin/SidebarAdmin.php',
     'Manager'    => __DIR__ . '/../Manager/partials/SidebarManager.php',
@@ -19,9 +17,6 @@ $sidebar_paths = [
 ];
 $sidebar_file = $sidebar_paths[$user_role] ?? null;
 
-/* ================= FINISH TASK ================= */
-
-/* ================= FINISH TASK ================= */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finish_id'])) {
 
     $id = (int)$_POST['finish_id'];
@@ -45,14 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finish_id'])) {
         $row = $res->fetch_assoc();
 
         $interval   = (int)$row['interval_month'];
-        $planned    = $row['next_maintenance'];   // วันที่ควรทำ
+        $planned    = $row['next_maintenance'];
         $completed = date('Y-m-d H:i:s');
-        // วันที่ทำจริง
 
-        // ถึงรอบหรือเกินรอบเท่านั้น
         if ($planned <= $completed) {
 
-            /* ===== คำนวณวันล่าช้า ===== */
             $delay = 0;
             if ($completed > $planned) {
                 $delay = (new DateTime($planned))
@@ -62,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finish_id'])) {
 
             $remark = $delay > 0 ? 'งานล่าช้า' : 'ตรงรอบ';
 
-            /* 1 INSERT LOG */
             $log = $conn->prepare("
                 INSERT INTO maintenance_logs
                 (plan_id, machine_id, technician_id, task_name,
@@ -104,8 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finish_id'])) {
     exit();
 }
 
-
-/* ================= LOAD TASKS ================= */
 $sql = "
 SELECT
     mp.id,
@@ -136,7 +125,7 @@ $tasks = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>งานซ่อมของฉัน</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/admin/assets/css/index.css">
+    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
 
     <style>
         body {
@@ -152,12 +141,11 @@ $tasks = $stmt->get_result();
         transition: all 0.3s;
     }
 
-    /* เนื้อหาหลัก */
     .main-content {
         flex: 1;
         padding: 20px;
         width: 100%;
-        margin-left: 250px; /* ระยะสำหรับ Desktop */
+        margin-left: 250px;
         transition: margin-left 0.3s ease;
     }
 
@@ -168,7 +156,6 @@ $tasks = $stmt->get_result();
         box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
     }
 
-    /* จัดการปุ่มและ Header */
     .header-section {
         display: flex;
         align-items: center;
@@ -176,7 +163,6 @@ $tasks = $stmt->get_result();
         margin-bottom: 20px;
     }
 
-    /* ปุ่ม Hamburger สำหรับมือถือ (ปกติซ่อนไว้) */
     .menu-toggle {
         display: none;
         background: #334155;
@@ -188,12 +174,11 @@ $tasks = $stmt->get_result();
         font-size: 1.2rem;
     }
 
-    /* รายละเอียดงาน */
     .task {
         padding: 16px 0;
         border-bottom: 1px solid #eee;
         display: flex;
-        flex-direction: column; /* เรียงลงมาในมือถือ */
+        flex-direction: column;
         gap: 8px;
     }
 
@@ -215,7 +200,7 @@ $tasks = $stmt->get_result();
     .badge.overdue { background: #fdecea; color: #b91c1c; }
 
     button[type="submit"] {
-        width: 100%; /* ปุ่มเต็มความกว้างในมือถือเพื่อให้กดง่าย */
+        width: 100%;
         max-width: 200px;
         padding: 10px 16px;
         border: none;
@@ -231,18 +216,16 @@ $tasks = $stmt->get_result();
         cursor: not-allowed;
     }
 
-    /* ========== RESPONSIVE MOBILE ========== */
     @media (max-width: 768px) {
         .main-content {
-            margin-left: 0; /* เอาขอบออกเพื่อให้เต็มจอ */
+            margin-left: 0;
             padding: 15px;
         }
 
         .menu-toggle {
-            display: block; /* โชว์ปุ่มเปิดเมนู */
+            display: block;
         }
 
-        /* ซ่อน Sidebar ไว้ข้างนอก (ต้องดู class ในไฟล์ Sidebar ของคุณด้วย) */
         aside, .sidebar { 
             position: fixed;
             left: -250px;
@@ -251,7 +234,6 @@ $tasks = $stmt->get_result();
             transition: 0.3s;
         }
 
-        /* เมื่อมีการเปิดเมนู */
         .sidebar.active {
             left: 0;
         }
@@ -307,7 +289,6 @@ $tasks = $stmt->get_result();
 </body>
 <script>
         function toggleSidebar() {
-            // ปรับ Selector ให้ตรงกับ class หลักของ Sidebar ในไฟล์ php ที่คุณ include มา
             const sidebar = document.querySelector('aside') || document.querySelector('.sidebar');
             if(sidebar) {
                 sidebar.classList.toggle('active');

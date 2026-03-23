@@ -2,13 +2,11 @@
 session_start();
 require_once "../config.php";
 
-/* ===== Auth Guard ===== */
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Technician') {
     header("Location: /login.php");
     exit();
 }
 
-/* ===== Load Technician Data ===== */
 $user_id = $_SESSION['user_id'];
 
 $stmt = $conn->prepare("
@@ -27,100 +25,98 @@ $profileImage = (strpos($dbImg, 'data:') === 0)
 ?>
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <title>Technician Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- CSS -->
     <link rel="stylesheet" href="/Technician/assets/css/profile.css">
-    <!-- FontAwesome -->
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 
-<div class="profile-container">
+    <div class="profile-container">
 
-    <img src="<?= $profileImage ?>" class="profile-img">
+        <img src="<?= $profileImage ?>" class="profile-img">
 
-    <h2><?= htmlspecialchars($op['username']) ?></h2>
-    <p class="role">Technician</p>
+        <h2><?= htmlspecialchars($op['username']) ?></h2>
+        <p class="role">Technician</p>
 
-    <div class="info-box">
-        <p><strong>Email:</strong> <?= htmlspecialchars($op['email']) ?></p>
-        <p><strong>Phone:</strong> <?= htmlspecialchars($op['phone']) ?></p>
+        <div class="info-box">
+            <p><strong>Email:</strong> <?= htmlspecialchars($op['email']) ?></p>
+            <p><strong>Phone:</strong> <?= htmlspecialchars($op['phone']) ?></p>
+        </div>
+
+        <button class="btn-edit" onclick="openPasswordModal()">
+            <i class="fa-solid fa-key"></i> เปลี่ยนรหัสผ่าน
+        </button>
     </div>
 
-    <button class="btn-edit" onclick="openPasswordModal()">
-        <i class="fa-solid fa-key"></i> เปลี่ยนรหัสผ่าน
-    </button>
-</div>
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePasswordModal()">&times;</span>
 
-<!-- ===== Modal Change Password ===== -->
-<div id="passwordModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closePasswordModal()">&times;</span>
+            <h3>เปลี่ยนรหัสผ่าน</h3>
 
-        <h3>เปลี่ยนรหัสผ่าน</h3>
+            <form action="change_password.php" method="POST">
+                <label>รหัสผ่านใหม่</label>
+                <input type="password" name="password" required>
 
-        <form action="change_password.php" method="POST">
-            <label>รหัสผ่านใหม่</label>
-            <input type="password" name="password" required>
+                <label>ยืนยันรหัสผ่าน</label>
+                <input type="password" name="confirm_password" required>
 
-            <label>ยืนยันรหัสผ่าน</label>
-            <input type="password" name="confirm_password" required>
-
-            <button type="submit" class="btn-save">
-                <i class="fa-solid fa-save"></i> บันทึก
-            </button>
-        </form>
+                <button type="submit" class="btn-save">
+                    <i class="fa-solid fa-save"></i> บันทึก
+                </button>
+            </form>
+        </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-function openPasswordModal() {
-    document.getElementById("passwordModal").style.display = "flex";
-}
-function closePasswordModal() {
-    document.getElementById("passwordModal").style.display = "none";
-}
-window.onclick = function(e) {
-    const modal = document.getElementById("passwordModal");
-    if (e.target === modal) modal.style.display = "none";
-}
-
-
-</script>
-<?php if (isset($_SESSION['success'])): ?>
     <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'สำเร็จ!',
-            text: '<?= $_SESSION['success']; ?>',
-            confirmButtonText: 'ตกลง'
-        });
-    </script>
-    <?php unset($_SESSION['success']); // ลบ session ทิ้งเมื่อแสดงแล้ว ?>
-<?php endif; ?>
+        function openPasswordModal() {
+            document.getElementById("passwordModal").style.display = "flex";
+        }
 
-<?php if (isset($_SESSION['error'])): ?>
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'ผิดพลาด!',
-            text: '<?= $_SESSION['error']; ?>',
-            confirmButtonText: 'ลองใหม่'
-        }).then((result) => {
-            // เปิด Modal ค้างไว้เพื่อให้กรอกใหม่ได้เลย
-            if (result.isConfirmed) {
-                openPasswordModal();
-            }
-        });
+        function closePasswordModal() {
+            document.getElementById("passwordModal").style.display = "none";
+        }
+        window.onclick = function(e) {
+            const modal = document.getElementById("passwordModal");
+            if (e.target === modal) modal.style.display = "none";
+        }
     </script>
-    <?php unset($_SESSION['error']); ?>
-<?php endif; ?>
+    <?php if (isset($_SESSION['success'])): ?>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'สำเร็จ!',
+                text: '<?= $_SESSION['success']; ?>',
+                confirmButtonText: 'ตกลง'
+            });
+        </script>
+        <?php unset($_SESSION['success']); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['error'])): ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'ผิดพลาด!',
+                text: '<?= $_SESSION['error']; ?>',
+                confirmButtonText: 'ลองใหม่'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    openPasswordModal();
+                }
+            });
+        </script>
+        <?php unset($_SESSION['error']); ?>
+    <?php endif; ?>
 
 </body>
+
 </html>

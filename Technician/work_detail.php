@@ -113,11 +113,10 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>รายละเอียดงานซ่อม #<?= $repair_id ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/Technician/assets/css/sidebar_technician.css">
+    <link rel="stylesheet" href="/factory_monitoring/Technician/assets/css/sidebar_technician.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* --- Layout Styles --- */
         body {
             background-color: #f8fafd;
             font-family: 'Kanit', sans-serif;
@@ -131,7 +130,6 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
             min-height: 100vh;
         }
 
-        /* Sidebar Styling */
         .sidebar-wrapper {
             width: 250px;
             min-width: 250px;
@@ -142,14 +140,12 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
             transition: 0.3s;
         }
 
-        /* Content Styling */
         .content-container {
             flex-grow: 1;
             padding: 30px;
             width: calc(100% - 250px);
         }
 
-        /* Custom Styles for Edit Page */
         .card-custom {
             border: none;
             border-radius: 12px;
@@ -178,7 +174,6 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
             font-size: 1.05rem;
         }
 
-        /* Machine Detail Card Styles */
         .card-machine {
             border: none;
             border-radius: 15px;
@@ -193,7 +188,6 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
             padding: 20px;
         }
 
-        /* Mobile Hamburger */
         .btn-hamburger {
             display: none;
             position: fixed;
@@ -207,7 +201,6 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
             cursor: pointer;
         }
 
-        /* Responsive */
         @media (max-width: 992px) {
             .sidebar-wrapper {
                 position: fixed;
@@ -368,7 +361,7 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/Technician/assets/js/SidebarOperator.js"></script>
+    <script src="/factory_monitoring/Technician/assets/js/SidebarOperator.js"></script>
 
 </body>
 
