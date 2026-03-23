@@ -11,7 +11,7 @@ $role         = $_SESSION['role'] ?? 'Operator';
 $activePage = $activePage ?? '';
 ?>
 
-<div class="sidebar-operator">
+<div class="sidebar">
 
     <div class="op-top">
         <a href="/operator/profile.php" class="op-profile-btn">
@@ -21,7 +21,7 @@ $activePage = $activePage ?? '';
                     ? $profileImage
                     : "/admin/uploads/" . $profileImage;
                 ?>
-                <img src="<?php echo $showImg; ?>" class="profile-img" alt="Profile">
+                <img src="<?php echo $showImg; ?>" class="op-profile-img" alt="Profile">
 
                 <div class="op-profile-info">
                     <span class="op-profile-name"><?= htmlspecialchars($username) ?></span>
@@ -31,7 +31,6 @@ $activePage = $activePage ?? '';
         </a>
 
         <ul class="op-ul">
-            <!-- Dashboard -->
             <li>
                 <a href="/Operator/dashboard.php"
                     class="<?= $activePage === 'dashboard' ? 'active' : '' ?>">
@@ -39,7 +38,6 @@ $activePage = $activePage ?? '';
                     <span class="sb-text">หน้าหลัก</span>
                 </a>
             </li>
-            <!-- Machines -->
             <li>
                 <a href="/machine_list/machine.php"
                     class="<?= $activePage === 'machines' ? 'active' : '' ?>">
@@ -48,7 +46,6 @@ $activePage = $activePage ?? '';
                 </a>
             </li>
 
-            <!-- History -->
             <li>
                 <a href="/repair/reporthistory.php"
                     class="<?= $activePage === 'history' ? 'active' : '' ?>">
@@ -59,7 +56,6 @@ $activePage = $activePage ?? '';
 
         </ul>
     </div>
-
     <div class="sidebar-bottom">
         <a href="/logout.php" class="btn-logout">
             <i class="fa-solid fa-sign-out-alt"></i>
