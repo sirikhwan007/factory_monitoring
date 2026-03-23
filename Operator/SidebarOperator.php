@@ -11,8 +11,6 @@ $role         = $_SESSION['role'] ?? 'Operator';
 $activePage = $activePage ?? '';
 ?>
 
-<div class="sidebar-operator">
-
     <div class="op-top">
         <a href="/factory_monitoring/operator/profile.php" class="op-profile-btn">
             <div class="op-logo">
@@ -66,5 +64,3 @@ $activePage = $activePage ?? '';
             <span class="sb-text">ออกจากระบบ</span>
         </a>
     </div>
-
-</div>

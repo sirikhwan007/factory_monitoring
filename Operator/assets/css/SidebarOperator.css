@@ -17,22 +17,6 @@
     --danger: #ea2027;
 }
 
-.sidebar-operator {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px;
-    height: 100vh;
-    background: var(--bg-main);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
-    z-index: 1000;
-    transition: transform 0.3s ease;
-}
-
-
 .op-top {
     padding: 32px 20px 0;
 }

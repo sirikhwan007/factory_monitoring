@@ -13,7 +13,6 @@ $page = 'dashboard';
 $total_machines  = $conn->query("SELECT COUNT(*) FROM machines")->fetch_row()[0];
 $total_danger = $conn->query("SELECT COUNT(*) FROM machines WHERE status='อันตราย'")->fetch_row()[0];
 
-
 $total = $conn->query("SELECT COUNT(*) FROM repair_history")->fetch_row()[0];
 $pending = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='รอดำเนินการ'")->fetch_row()[0];
 $in_progress = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='กำลังซ่อม'")->fetch_row()[0];
@@ -70,10 +69,11 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
             max-width: 100px;
             height: auto;
         }
+
         @media (max-width: 992px) {
-            .main-content {
+            .main-operator {
                 margin-left: 0;
-                padding-top: 80px;
+                padding-top: 60px;
             }
 
             .sidebar-wrapper {
@@ -144,7 +144,6 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
         </div>
         <div class="dashboard">
             <div class="container-fluid">
-
 
                 <h2 class="mb-4">Operator</h2>
                 <!-- Machine Overview -->
@@ -232,18 +231,14 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                             <h2 class="fw-bold text-danger"><?= $cancelled ?></h2>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
-
     </section>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="SidebarOperator.js"></script>
-
     <script>
         $(document).ready(function() {
             let alertCounter = 0;
