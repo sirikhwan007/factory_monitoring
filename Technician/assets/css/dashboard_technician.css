@@ -1,5 +1,5 @@
 .main {
-    margin-left: 260px; 
+    margin-left: 250px; 
     position: absolute;
     top: 0;
     right: 0;
@@ -68,7 +68,11 @@
 }
 
 @media (max-width: 992px) {
-    .main {
-        margin-left: 0;
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
     }
 }

@@ -2,9 +2,6 @@
 session_start();
 require_once "../config.php";
 
-/* =======================
-   Auth Guard
-======================= */
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Technician') {
     header("Location: /login.php");
     exit();
@@ -12,9 +9,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Technician') {
 
 $username = $_SESSION['username'];
 
-/* =======================
-   งานรอดำเนินการ
-======================= */
 $pending_count = 0;
 $sql_pending = "SELECT COUNT(*) AS count 
                 FROM repair_history 
@@ -22,7 +16,6 @@ $sql_pending = "SELECT COUNT(*) AS count
 
 $stmt = $conn->prepare($sql_pending);
 if ($stmt) {
-    // ใช้ $_SESSION['user_id'] ซึ่งเป็นตัวเลข ID ของช่างที่ Login อยู่
     $stmt->bind_param("i", $_SESSION['user_id']);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -32,9 +25,6 @@ if ($stmt) {
     $stmt->close();
 }
 
-/* =======================
-   งานที่เสร็จแล้ว
-======================= */
 $completed_count = 0;
 $sql_completed = "SELECT COUNT(*) AS count 
                   FROM repair_history 
@@ -59,8 +49,7 @@ if ($stmt) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/factory_monitoring/Technician/assets/css/sidebar_technician.css">
     <link rel="stylesheet" href="/factory_monitoring/Technician/assets/css/dashboard_technician.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         .card-link {
             text-decoration: none;
@@ -82,18 +71,87 @@ if ($stmt) {
             font-weight: bold;
             color: #0d6efd;
         }
+
+        .btn-hamburger {
+            display: none;
+        }
+
+        @media (max-width: 992px) {
+            .main {
+                margin-left: 0;
+                padding-top: 60px;
+            }
+
+            .sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
+            }
+
+            .sidebar-wrapper.active {
+                left: 0;
+            }
+
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
+            }
+
+            .btn-hamburger {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
+                cursor: pointer;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
     </style>
 </head>
 
 <body>
-
-    <?php include "SidebarTechnician.php"; ?>
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
+    <div class="sidebar-wrapper">
+        <?php include __DIR__ . "/SidebarTechnician.php"; ?>
+    </div>
 
     <section class="main">
         <h1 class="dashboard-title">แดชบอร์ด Technician</h1>
-
         <p class="welcome-text">
-            ยินดีต้อนรับ, <strong><?= htmlspecialchars($username) ?></strong>
+            ยินดีต้อนรับ <strong><?= htmlspecialchars($username) ?></strong>
         </p>
 
         <div class="card-grid">
