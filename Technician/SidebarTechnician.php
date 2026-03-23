@@ -11,19 +11,15 @@ $activePage = $activePage ?? '';
 ?>
 
 <div class="sidebar">
-
     <div class="sidebar-top">
-
         <a href="/factory_monitoring/Technician/profile.php" class="profile-btn">
             <div class="sb-logo">
-
                 <?php
                 $showImg = (strpos($profileImage, 'data:') === 0)
                     ? $profileImage
                     : "/factory_monitoring/admin/uploads/" . $profileImage;
                 ?>
                 <img src="<?php echo $showImg; ?>" class="profile-img" alt="Profile">
-
                 <div class="profile-info">
                     <span class="profile-name">
                         <?php echo htmlspecialchars($username); ?>
@@ -32,10 +28,8 @@ $activePage = $activePage ?? '';
                         <?php echo htmlspecialchars($role); ?>
                     </span>
                 </div>
-
             </div>
         </a>
-
         <ul class="sb-ul">
 
             <li>

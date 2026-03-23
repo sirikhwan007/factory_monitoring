@@ -259,8 +259,7 @@ $conn->close();
   <script src="/dashboard/dashboard.js"></script>
   <script>
     <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
-        <
-        script >
+        <script>
         Swal.fire({
           title: 'ลบข้อมูลสำเร็จ!',
           text: 'เครื่องจักรและไฟล์ที่เกี่ยวข้องถูกลบออกจากระบบแล้ว',
@@ -268,8 +267,6 @@ $conn->close();
           confirmButtonColor: '#28a745'
         });
     <?php endif; ?>
-
-    
   </script>
 </body>
 
