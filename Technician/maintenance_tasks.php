@@ -293,12 +293,12 @@ $tasks = $stmt->get_result();
 
         <div class="main-content">
             <div class="header-section">
-                <h2 style="margin:0;">🛠 งานซ่อมของฉัน</h2>
+                <h2 style="margin:0;">🛠 แผนงานของฉัน</h2>
             </div>
 
             <div class="card">
                 <?php if ($tasks->num_rows === 0): ?>
-                    <p style="text-align:center; color:#666;">ยังไม่มีงานในขณะนี้</p>
+                    <p style="text-align:center; color:#666;">ยังไม่มีแผนงานในขณะนี้</p>
                 <?php else: ?>
                     <?php while ($t = $tasks->fetch_assoc()): ?>
                         <div class="task">

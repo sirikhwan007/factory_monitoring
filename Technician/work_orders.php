@@ -61,7 +61,7 @@ $result = $stmt->get_result();
         .repair-history-container {
             margin-left: 250px;
             width: calc(100% - 250px);
-            padding: 30px;
+            padding: 10px;
             transition: all 0.3s ease;
         }
 
