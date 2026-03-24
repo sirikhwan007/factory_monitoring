@@ -40,7 +40,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             overflow-x: hidden;
         }
 
-        /* ================= Sidebar (โครงเดิม) ================= */
         .sidebar {
             width: 250px;
             min-width: 250px;
@@ -55,7 +54,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             overflow-y: auto;
         }
 
-        /* ================= Content ================= */
         .repair-history-container {
             margin-left: 250px;
             width: calc(100% - 250px);
@@ -63,7 +61,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             transition: all .3s ease;
         }
 
-        /* ================= Title ================= */
         .page-title {
             font-size: 2.2rem;
             font-weight: 700;
@@ -79,7 +76,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             font-size: 2.5rem;
         }
 
-        /* ================= Table Wrapper ================= */
         .table-wrapper {
             background: #ffffff;
             border-radius: 15px;
@@ -88,7 +84,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             overflow-x: auto;
         }
 
-        /* ================= Table ================= */
         .repair-table {
             width: 100%;
             min-width: 1200px;
@@ -115,7 +110,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             border-radius: 0 10px 10px 0;
         }
 
-        /* ================= Table Body ================= */
         .repair-table tbody td {
             background: #fff;
             padding: 15px 20px;
@@ -144,7 +138,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             border-radius: 0 8px 8px 0;
         }
 
-        /* ================= Detail ================= */
         .detail-cell {
             max-width: 250px;
             min-width: 150px;
@@ -155,7 +148,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             color: #666;
         }
 
-        /* ================= Status Badge ================= */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -191,7 +183,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             border: 1px solid #dc3545;
         }
 
-        /* ================= Action Button ================= */
         .action-cell {
             display: flex;
             justify-content: center;
@@ -217,39 +208,65 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
             box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
         }
 
-        /* ================= Mobile ================= */
         @media (max-width: 992px) {
-            .sidebar {
-                left: -250px;
+            .sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
             }
 
-            .sidebar.active {
+            .sidebar-wrapper.active {
                 left: 0;
+            }
+
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
             }
 
             .repair-history-container {
                 margin-left: 0;
                 width: 100%;
-                padding: 15px;
+                padding: 60px;
             }
 
             .btn-hamburger {
-                display: block;
+                display: flex;
                 position: fixed;
                 top: 15px;
                 left: 15px;
-                z-index: 1100;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
                 background: #fff;
-                padding: 10px;
-                border-radius: 6px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
                 cursor: pointer;
             }
-        }
 
-        @media (min-width: 993px) {
-            .btn-hamburger {
+            .sidebar-overlay {
                 display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
             }
         }
     </style>
@@ -257,15 +274,15 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 
 <body>
 
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
+    </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
+    <div class="sidebar-wrapper">
+        <?php include __DIR__ . "/SidebarTechnician.php"; ?>
     </div>
 
     <section class="main">
-
-        <div class="sidebar-wrapper">
-            <?php include __DIR__ . '/SidebarTechnician.php'; ?>
-        </div>
 
         <div class="repair-history-container">
             <h2 class="page-title"><i class="fas fa-history"></i> ประวัติการแจ้งซ่อม</h2>
@@ -291,7 +308,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                         $no = 1;
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()):
-                                // ... (Logic สถานะ และ วันที่ เหมือนเดิม ไม่ต้องแก้) ...
                                 $status_class = '';
                                 $status_icon = '';
                                 switch ($row['status']) {
@@ -316,7 +332,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                                 $report_date = $report_datetime->format('d/m/Y');
                                 $report_time = $report_datetime->format('H:i');
 
-                                // เตรียมข้อมูลวันที่ซ่อมเสร็จ
                                 $repair_complete_date = '-';
                                 $repair_complete_time = '';
                                 if (!empty($row['repair_time']) && $row['repair_time'] !== '0000-00-00 00:00:00') {
@@ -324,7 +339,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                                     $repair_complete_date = $repair_datetime->format('d/m/Y');
                                     $repair_complete_time = $repair_datetime->format('H:i');
                                 }
-                                ?>
+                        ?>
                                 <tr>
                                     <td class="text-center"><strong><?= $no++ ?></strong></td>
                                     <td><?= htmlspecialchars($row['machine_id']) ?></td>
@@ -351,7 +366,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 
                                     <td class="text-center">
                                         <span class="status-badge <?= $status_class ?>">
-                                            <?= $status_icon ?>         <?= $row['status'] ?>
+                                            <?= $status_icon ?> <?= $row['status'] ?>
                                         </span>
                                     </td>
 
@@ -380,8 +395,8 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <script src="SidebarAdmin.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $('.btn-assign').click(function () {
+        $(document).ready(function() {
+            $('.btn-assign').click(function() {
                 var repairId = $(this).data('id');
                 $('#modal_repair_id').val(repairId);
             });

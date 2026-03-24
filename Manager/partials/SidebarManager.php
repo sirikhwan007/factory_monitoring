@@ -45,7 +45,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 <a href="/machine_list/machine.php"
                     class="<?= $currentPage === 'machine.php' ? 'active' : '' ?>">
                     <i class="fas fa-industry"></i>
-                    <span>สถานะเครื่องจักร</span>
+                    <span>รายการเครื่องจักร</span>
                 </a>
             </li>
 

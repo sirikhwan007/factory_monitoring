@@ -7,25 +7,19 @@ $profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] :
 $username     = isset($_SESSION['username']) ? $_SESSION['username'] : 'ผู้ใช้งาน';
 $role         = isset($_SESSION['role']) ? $_SESSION['role'] : 'Technician';
 
-/* ป้องกัน error ถ้าไม่ได้ส่ง activePage มา */
 $activePage = $activePage ?? '';
 ?>
 
 <div class="sidebar">
-
-    <!-- ===== TOP ===== -->
     <div class="sidebar-top">
-
         <a href="/Technician/profile.php" class="profile-btn">
             <div class="sb-logo">
-
                 <?php
                 $showImg = (strpos($profileImage, 'data:') === 0)
                     ? $profileImage
                     : "/admin/uploads/" . $profileImage;
                 ?>
                 <img src="<?php echo $showImg; ?>" class="profile-img" alt="Profile">
-
                 <div class="profile-info">
                     <span class="profile-name">
                         <?php echo htmlspecialchars($username); ?>
@@ -34,11 +28,8 @@ $activePage = $activePage ?? '';
                         <?php echo htmlspecialchars($role); ?>
                     </span>
                 </div>
-
             </div>
         </a>
-
-        <!-- ===== MENU ===== -->
         <ul class="sb-ul">
 
             <li>
@@ -53,7 +44,7 @@ $activePage = $activePage ?? '';
                 <a href="/machine_list/machine.php"
                     class="<?= $currentPage === 'machine.php' ? 'active' : '' ?>">
                     <i class="fas fa-industry"></i>
-                    <span>เครื่องจักร</span>
+                    <span>รายการเครื่องจักร</span>
                 </a>
             </li>
 
@@ -84,8 +75,6 @@ $activePage = $activePage ?? '';
         </ul>
 
     </div>
-
-    <!-- ===== BOTTOM ===== -->
     <div class="sidebar-bottom">
         <a href="/logout.php" class="btn btn-logout">
             <i class="fas fa-sign-out-alt"></i>

@@ -2,9 +2,6 @@
 session_start();
 include __DIR__ . "/../config.php";
 
-// ===============================
-// ตรวจสอบ Login + Role
-// ===============================
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Technician') {
     header("Location: ../login.php");
     exit();
@@ -18,16 +15,12 @@ $repair_id = intval($_GET['id']);
 $user_id   = $_SESSION['user_id'];
 $username  = $_SESSION['username'] ?? 'ช่างเทคนิค';
 
-// ===============================
-// บันทึกการซ่อม
-// ===============================
 $msg = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $repair_note = $_POST['repair_note'] ?? '';
     $status      = $_POST['status'] ?? 'กำลังซ่อม';
 
-    // ถ้าสถานะเป็น "สำเร็จ" ให้ลงเวลาซ่อมเสร็จอัตโนมัติ
     if ($status === 'สำเร็จ') {
         $sql = "UPDATE repair_history
                 SET technician_id = ?,
@@ -86,9 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// ===============================
-// ดึงข้อมูลงานซ่อม
-// ===============================
 $sql = "SELECT r.*, m.location FROM repair_history r LEFT JOIN machines m ON r.machine_id = m.machine_id WHERE r.id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $repair_id);
@@ -101,7 +91,6 @@ if ($result->num_rows === 0) {
 
 $row = $result->fetch_assoc();
 
-// --- เตรียมข้อมูลสำหรับ Sidebar ---
 $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 ?>
 
@@ -117,7 +106,6 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* --- Layout Styles --- */
         body {
             background-color: #f8fafd;
             font-family: 'Kanit', sans-serif;
@@ -131,7 +119,6 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
             min-height: 100vh;
         }
 
-        /* Sidebar Styling */
         .sidebar-wrapper {
             width: 250px;
             min-width: 250px;
@@ -142,14 +129,12 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
             transition: 0.3s;
         }
 
-        /* Content Styling */
         .content-container {
             flex-grow: 1;
             padding: 30px;
             width: calc(100% - 250px);
         }
 
-        /* Custom Styles for Edit Page */
         .card-custom {
             border: none;
             border-radius: 12px;
@@ -178,7 +163,6 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
             font-size: 1.05rem;
         }
 
-        /* Machine Detail Card Styles */
         .card-machine {
             border: none;
             border-radius: 15px;
@@ -193,7 +177,6 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
             padding: 20px;
         }
 
-        /* Mobile Hamburger */
         .btn-hamburger {
             display: none;
             position: fixed;
@@ -207,7 +190,6 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
             cursor: pointer;
         }
 
-        /* Responsive */
         @media (max-width: 992px) {
             .sidebar-wrapper {
                 position: fixed;

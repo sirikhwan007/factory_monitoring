@@ -73,6 +73,20 @@ $conn->close();
       transition: all 0.3s ease;
     }
 
+    .sidebar {
+      width: 250px;
+      min-width: 250px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      background: #ffffff;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      z-index: 1000;
+      transition: all .3s ease;
+      overflow-y: auto;
+    }
+
     .status-filter {
       display: flex !important;
       flex-direction: row !important;
@@ -268,8 +282,6 @@ $conn->close();
           confirmButtonColor: '#28a745'
         });
     <?php endif; ?>
-
-    
   </script>
 </body>
 
