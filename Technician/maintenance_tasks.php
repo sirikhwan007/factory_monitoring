@@ -10,13 +10,6 @@ if (!isset($_SESSION['user_id'])) {
 $user_id   = $_SESSION['user_id'];
 $user_role = $_SESSION['role'];
 
-$sidebar_paths = [
-    'Admin'      => __DIR__ . '/../admin/SidebarAdmin.php',
-    'Manager'    => __DIR__ . '/../Manager/partials/SidebarManager.php',
-    'Technician' => __DIR__ . '/../Technician/SidebarTechnician.php',
-];
-$sidebar_file = $sidebar_paths[$user_role] ?? null;
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finish_id'])) {
 
     $id = (int)$_POST['finish_id'];
@@ -75,7 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finish_id'])) {
             $log->execute();
             $log->close();
 
-            /* UPDATE PLAN */
             $next = date('Y-m-d', strtotime("$planned +{$interval} months"));
 
             $u = $conn->prepare("
@@ -125,136 +117,182 @@ $tasks = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>งานซ่อมของฉัน</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
-
+    <link rel="stylesheet" href="/factory_monitoring/Technician/assets/css/sidebar_technician.css">
     <style>
         body {
-        margin: 0;
-        background: #f4f6f9;
-        font-family: 'Sarabun', sans-serif;
-        overflow-x: hidden;
-    }
-
-    .layout-wrapper {
-        display: flex;
-        min-height: 100vh;
-        transition: all 0.3s;
-    }
-
-    .main-content {
-        flex: 1;
-        padding: 20px;
-        width: 100%;
-        margin-left: 250px;
-        transition: margin-left 0.3s ease;
-    }
-
-    .card {
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
-    }
-
-    .header-section {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-
-    .menu-toggle {
-        display: none;
-        background: #334155;
-        color: white;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1.2rem;
-    }
-
-    .task {
-        padding: 16px 0;
-        border-bottom: 1px solid #eee;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .task:last-child {
-        border-bottom: none;
-    }
-
-    .badge {
-        display: inline-block;
-        width: fit-content;
-        padding: 5px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .badge.normal { background: #e6f4ea; color: #1e7e34; }
-    .badge.warning { background: #fff4e5; color: #b45309; }
-    .badge.overdue { background: #fdecea; color: #b91c1c; }
-
-    button[type="submit"] {
-        width: 100%;
-        max-width: 200px;
-        padding: 10px 16px;
-        border: none;
-        border-radius: 6px;
-        background: #22c55e;
-        color: #fff;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    button[disabled] {
-        background: #9ca3af;
-        cursor: not-allowed;
-    }
-
-    @media (max-width: 768px) {
-        .main-content {
-            margin-left: 0;
-            padding: 15px;
+            margin: 0;
+            background: #f4f6f9;
+            font-family: 'Sarabun', sans-serif;
+            overflow-x: hidden;
         }
 
-        .menu-toggle {
-            display: block;
-        }
-
-        aside, .sidebar { 
+        .sidebar-wrapper {
             position: fixed;
-            left: -250px;
-            z-index: 1000;
-            height: 100%;
-            transition: 0.3s;
-        }
-
-        .sidebar.active {
+            top: 0;
             left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 2000;
+            transition: all 0.3s ease;
         }
 
-        h2 {
-            font-size: 1.4rem;
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            min-height: 100vh;
         }
-    }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .05);
+        }
+
+        .task {
+            padding: 20px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+        .badge.normal {
+            background: #e6f4ea;
+            color: #1e7e34;
+        }
+
+        .badge.warning {
+            background: #fff4e5;
+            color: #b45309;
+        }
+
+        .badge.overdue {
+            background: #fdecea;
+            color: #b91c1c;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            max-width: 180px;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #22c55e;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background: #16a34a;
+        }
+
+        button[disabled] {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .btn-hamburger {
+            display: none;
+        }
+
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+                padding: 50px;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
+            .sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
+            }
+
+            .sidebar-wrapper.active {
+                left: 0;
+            }
+
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
+            }
+
+            .repair-history-container {
+                margin-left: 0;
+                width: 100%;
+                padding: 60px;
+            }
+
+            .btn-hamburger {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
+                cursor: pointer;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div class="layout-wrapper">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
+    <div class="sidebar-wrapper">
+        <?php include __DIR__ . "/SidebarTechnician.php"; ?>
+    </div>
 
-        <?php if ($sidebar_file && file_exists($sidebar_file)) include $sidebar_file; ?>
+    <div class="layout-wrapper">
 
         <div class="main-content">
             <div class="header-section">
-                <button class="menu-toggle" onclick="toggleSidebar()">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
                 <h2 style="margin:0;">🛠 งานซ่อมของฉัน</h2>
             </div>
 
@@ -274,7 +312,7 @@ $tasks = $stmt->get_result();
                                     : ($t['status'] === 'warning' ? 'ใกล้ถึงรอบ' : 'ยังไม่ถึงรอบ') ?>
                             </span>
 
-                            <form method="post" >
+                            <form method="post">
                                 <input type="hidden" name="finish_id" value="<?= $t['id'] ?>">
                                 <button type="submit" <?= $t['status'] === 'normal' ? 'disabled' : '' ?>>
                                     ✔ งานเสร็จแล้ว
@@ -287,13 +325,6 @@ $tasks = $stmt->get_result();
         </div>
     </div>
 </body>
-<script>
-        function toggleSidebar() {
-            const sidebar = document.querySelector('aside') || document.querySelector('.sidebar');
-            if(sidebar) {
-                sidebar.classList.toggle('active');
-            }
-        }
-    </script>
+
 
 </html>

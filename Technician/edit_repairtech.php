@@ -112,25 +112,72 @@ $username_session = $_SESSION['username'] ?? 'ช่างเทคนิค';
         }
 
         @media (max-width: 992px) {
+
             .sidebar-wrapper {
                 position: fixed;
-                left: -240px;
                 top: 0;
-                height: 100%;
-                transition: .3s;
-                z-index: 1000;
+                left: -260px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
             }
 
             .sidebar-wrapper.active {
                 left: 0;
             }
 
-            .content-container {
-                padding: 16px;
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
                 padding-top: 60px;
             }
 
+            .repair-history-container {
+                margin-left: 0;
+                width: 100%;
+                padding: 60px;
+            }
+
+            .content-container {
+                flex: 1;
+                padding: 50px;
+                height: 100vh;
+                overflow-y: auto;
+                background: #f4f6f9;
+            }
+
             .btn-hamburger {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
+                cursor: pointer;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
+
+            .sidebar-overlay.active {
                 display: block;
             }
         }
@@ -138,15 +185,14 @@ $username_session = $_SESSION['username'] ?? 'ช่างเทคนิค';
 </head>
 
 <body>
-
-    <div class="btn-hamburger">
-        <i class="fas fa-bars"></i>
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
+        <i class="fa-solid fa-bars"></i>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
     <section class="main">
-
         <div class="sidebar-wrapper">
-            <?php include __DIR__ . '/SidebarTechnician.php'; ?>
+            <?php include __DIR__ . "/SidebarTechnician.php"; ?>
         </div>
 
         <div class="content-container">

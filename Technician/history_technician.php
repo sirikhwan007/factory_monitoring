@@ -209,37 +209,65 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
         }
 
         @media (max-width: 992px) {
-            .sidebar {
-                left: -250px;
+
+            .sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
             }
 
-            .sidebar.active {
+            .sidebar-wrapper.active {
                 left: 0;
+            }
+
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
             }
 
             .repair-history-container {
                 margin-left: 0;
                 width: 100%;
-                padding: 15px;
+                padding: 60px;
             }
 
             .btn-hamburger {
-                display: block;
+                display: flex;
                 position: fixed;
                 top: 15px;
                 left: 15px;
-                z-index: 1100;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
                 background: #fff;
-                padding: 10px;
-                border-radius: 6px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
                 cursor: pointer;
             }
-        }
 
-        @media (min-width: 993px) {
-            .btn-hamburger {
+            .sidebar-overlay {
                 display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
             }
         }
     </style>
@@ -247,15 +275,15 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 
 <body>
 
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
+    </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
+    <div class="sidebar-wrapper">
+        <?php include __DIR__ . "/SidebarTechnician.php"; ?>
     </div>
 
     <section class="main">
-
-        <div class="sidebar-wrapper">
-            <?php include __DIR__ . '/SidebarTechnician.php'; ?>
-        </div>
 
         <div class="repair-history-container">
             <h2 class="page-title"><i class="fas fa-history"></i> ประวัติการแจ้งซ่อม</h2>
@@ -312,7 +340,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
                                     $repair_complete_date = $repair_datetime->format('d/m/Y');
                                     $repair_complete_time = $repair_datetime->format('H:i');
                                 }
-                                ?>
+                        ?>
                                 <tr>
                                     <td class="text-center"><strong><?= $no++ ?></strong></td>
                                     <td><?= htmlspecialchars($row['machine_id']) ?></td>
@@ -339,7 +367,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 
                                     <td class="text-center">
                                         <span class="status-badge <?= $status_class ?>">
-                                            <?= $status_icon ?>         <?= $row['status'] ?>
+                                            <?= $status_icon ?> <?= $row['status'] ?>
                                         </span>
                                     </td>
 
@@ -368,8 +396,8 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <script src="SidebarAdmin.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $('.btn-assign').click(function () {
+        $(document).ready(function() {
+            $('.btn-assign').click(function() {
                 var repairId = $(this).data('id');
                 $('#modal_repair_id').val(repairId);
             });

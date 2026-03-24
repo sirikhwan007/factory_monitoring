@@ -54,7 +54,7 @@ $result = $stmt->get_result();
             background: #ffffff;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
             z-index: 1000;
-            transition: all .3s ease;
+            transition: all 0.3s ease;
             overflow-y: auto;
         }
 
@@ -62,7 +62,7 @@ $result = $stmt->get_result();
             margin-left: 250px;
             width: calc(100% - 250px);
             padding: 30px;
-            transition: all .3s ease;
+            transition: all 0.3s ease;
         }
 
         .page-title {
@@ -213,7 +213,6 @@ $result = $stmt->get_result();
         }
 
         @media (max-width: 992px) {
-            
 
             .sidebar-wrapper {
                 position: fixed;
@@ -227,7 +226,7 @@ $result = $stmt->get_result();
                 transition: all 0.3s ease-in-out;
             }
 
-            .sidebar.active {
+            .sidebar-wrapper.active {
                 left: 0;
             }
 
@@ -262,6 +261,7 @@ $result = $stmt->get_result();
                 font-size: 20px;
                 cursor: pointer;
             }
+
             .sidebar-overlay {
                 display: none;
                 position: fixed;
