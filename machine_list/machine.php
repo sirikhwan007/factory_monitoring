@@ -134,6 +134,20 @@ $conn->close();
       border-color: #adb5bd;
     }
 
+    .sidebar {
+      width: 250px;
+      min-width: 250px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      background: #ffffff;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      z-index: 1000;
+      transition: all .3s ease;
+      overflow-y: auto;
+    }
+
     @media (max-width: 992px) {
       .dashboard {
         margin-left: 0;
@@ -259,7 +273,8 @@ $conn->close();
   <script src="/dashboard/dashboard.js"></script>
   <script>
     <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
-        <script>
+        <
+        script >
         Swal.fire({
           title: 'ลบข้อมูลสำเร็จ!',
           text: 'เครื่องจักรและไฟล์ที่เกี่ยวข้องถูกลบออกจากระบบแล้ว',

@@ -2,9 +2,6 @@
 session_start();
 include __DIR__ . "/../config.php";
 
-/* ===============================
-   1. ตรวจสอบ Login + Role
-================================ */
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Technician') {
     header("Location: ../login.php");
     exit();
@@ -14,10 +11,6 @@ $current_user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'] ?? 'ช่างเทคนิค';
 $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 
-/* ===============================
-   2. ดึงงานซ่อม
-================================ */
-// ดึงเฉพาะงานที่มีการระบุ ID ของช่างคนนี้ไว้เท่านั้น
 $sql = "SELECT * FROM repair_history
         WHERE technician_id = ?
         ORDER BY 
@@ -51,7 +44,6 @@ $result = $stmt->get_result();
             overflow-x: hidden;
         }
 
-        /* ================= Sidebar ================= */
         .sidebar {
             width: 250px;
             min-width: 250px;
@@ -66,7 +58,6 @@ $result = $stmt->get_result();
             overflow-y: auto;
         }
 
-        /* ================= Content ================= */
         .repair-history-container {
             margin-left: 250px;
             width: calc(100% - 250px);
@@ -74,7 +65,6 @@ $result = $stmt->get_result();
             transition: all .3s ease;
         }
 
-        /* ================= Title ================= */
         .page-title {
             font-size: 2.2rem;
             font-weight: 700;
@@ -90,7 +80,6 @@ $result = $stmt->get_result();
             font-size: 2.5rem;
         }
 
-        /* ================= Table Wrapper ================= */
         .table-wrapper {
             background: #ffffff;
             border-radius: 15px;
@@ -99,7 +88,6 @@ $result = $stmt->get_result();
             overflow-x: auto;
         }
 
-        /* ================= Table ================= */
         .repair-table {
             width: 100%;
             min-width: 1200px;
@@ -126,7 +114,6 @@ $result = $stmt->get_result();
             border-radius: 0 10px 10px 0;
         }
 
-        /* ================= Table Body ================= */
         .repair-table tbody td {
             background: #fff;
             padding: 15px 20px;
@@ -155,7 +142,6 @@ $result = $stmt->get_result();
             border-radius: 0 8px 8px 0;
         }
 
-        /* ================= Detail ================= */
         .detail-cell {
             max-width: 250px;
             min-width: 150px;
@@ -166,7 +152,6 @@ $result = $stmt->get_result();
             color: #666;
         }
 
-        /* ================= Status Badge ================= */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -202,7 +187,6 @@ $result = $stmt->get_result();
             border: 1px solid #dc3545;
         }
 
-        /* ================= Action Button ================= */
         .action-cell {
             display: flex;
             justify-content: center;
@@ -228,39 +212,66 @@ $result = $stmt->get_result();
             box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
         }
 
-        /* ================= Mobile ================= */
         @media (max-width: 992px) {
-            .sidebar {
-                left: -250px;
+            
+
+            .sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
             }
 
             .sidebar.active {
                 left: 0;
             }
 
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
+            }
+
             .repair-history-container {
                 margin-left: 0;
                 width: 100%;
-                padding: 15px;
+                padding: 60px;
             }
 
             .btn-hamburger {
-                display: block;
+                display: flex;
                 position: fixed;
                 top: 15px;
                 left: 15px;
-                z-index: 1100;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
                 background: #fff;
-                padding: 10px;
-                border-radius: 6px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
                 cursor: pointer;
             }
-        }
-
-        @media (min-width: 993px) {
-            .btn-hamburger {
+            .sidebar-overlay {
                 display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
             }
         }
     </style>
@@ -269,14 +280,14 @@ $result = $stmt->get_result();
 
 <body>
 
-    <button class="btn btn-light btn-hamburger" onclick="document.querySelector('.sidebar').classList.toggle('active')">
-        <i class="fas fa-bars"></i>
-    </button>
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
+    <div class="sidebar-wrapper">
+        <?php include __DIR__ . "/SidebarTechnician.php"; ?>
+    </div>
 
-    <!-- Sidebar -->
-    <?php include __DIR__ . '/SidebarTechnician.php'; ?>
-
-    <!-- Content -->
     <div class="repair-history-container">
         <h2 class="page-title">
             <i class="fas fa-tools text-primary"></i> งานซ่อมที่มี
@@ -303,12 +314,11 @@ $result = $stmt->get_result();
                     <?php
                     $no = 1;
                     while ($row = $result->fetch_assoc()):
-                        // 1. กำหนด Class ของสีตามสถานะ
                         $statusClass = match ($row['status']) {
                             'สำเร็จ' => 'success',
                             'กำลังซ่อม' => 'in-progress',
                             'ซ่อมไม่สำเร็จ' => 'failed',
-                            'ยกเลิก' => 'danger', // เพิ่ม: ถ้าสถานะเป็น 'ยกเลิก' ให้เป็นสีแดง (danger)
+                            'ยกเลิก' => 'danger',
                             default => 'pending'
                         };
                         $isAssigned = !is_null($row['technician_id']);
