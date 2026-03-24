@@ -209,7 +209,6 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
         }
 
         @media (max-width: 992px) {
-
             .sidebar-wrapper {
                 position: fixed;
                 top: 0;

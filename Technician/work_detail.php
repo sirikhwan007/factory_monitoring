@@ -2,9 +2,6 @@
 session_start();
 include __DIR__ . "/../config.php";
 
-// ===============================
-// ตรวจสอบ Login + Role
-// ===============================
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Technician') {
     header("Location: ../login.php");
     exit();
@@ -18,16 +15,12 @@ $repair_id = intval($_GET['id']);
 $user_id   = $_SESSION['user_id'];
 $username  = $_SESSION['username'] ?? 'ช่างเทคนิค';
 
-// ===============================
-// บันทึกการซ่อม
-// ===============================
 $msg = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $repair_note = $_POST['repair_note'] ?? '';
     $status      = $_POST['status'] ?? 'กำลังซ่อม';
 
-    // ถ้าสถานะเป็น "สำเร็จ" ให้ลงเวลาซ่อมเสร็จอัตโนมัติ
     if ($status === 'สำเร็จ') {
         $sql = "UPDATE repair_history
                 SET technician_id = ?,
@@ -86,9 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// ===============================
-// ดึงข้อมูลงานซ่อม
-// ===============================
 $sql = "SELECT r.*, m.location FROM repair_history r LEFT JOIN machines m ON r.machine_id = m.machine_id WHERE r.id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $repair_id);
@@ -101,7 +91,6 @@ if ($result->num_rows === 0) {
 
 $row = $result->fetch_assoc();
 
-// --- เตรียมข้อมูลสำหรับ Sidebar ---
 $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 ?>
 

@@ -290,7 +290,6 @@ $tasks = $stmt->get_result();
     </div>
 
     <div class="layout-wrapper">
-
         <div class="main-content">
             <div class="header-section">
                 <h2 style="margin:0;">🛠 แผนงานของฉัน</h2>
