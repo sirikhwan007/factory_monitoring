@@ -193,8 +193,23 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
         @media (max-width: 992px) {
             .sidebar-wrapper {
                 position: fixed;
-                left: -250px;
+                top: 0;
+                left: -260px;
+                width: 250px;
                 height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
+            }
+
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
             }
 
             .sidebar-wrapper.active {
@@ -203,11 +218,36 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 
             .content-container {
                 width: 100%;
-                padding: 15px;
+                padding: 30px;
                 padding-top: 60px;
             }
 
             .btn-hamburger {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                width: 35px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
+                cursor: pointer;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
+
+            .sidebar-overlay.active {
                 display: block;
             }
         }
@@ -216,9 +256,10 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 
 <body>
 
-    <div class="btn-hamburger">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
     <section class="main">
         <div class="sidebar-wrapper">
@@ -336,9 +377,6 @@ $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
                                             </button>
                                         <?php endif; ?>
                                     </div>
-
-                                    
-
                                 </div>
                             </div>
                         </div>
