@@ -50,9 +50,9 @@ $conn->close();
 
             .dashboard {
                 margin-left: 0;
-                padding: 15px;
+                padding: 20px;
                 border-radius: 0;
-                padding-top: 60px;
+                padding-top: 40px;
             }
 
             .sidebar-wrapper {
