@@ -50,9 +50,9 @@ $conn->close();
 
             .dashboard {
                 margin-left: 0;
-                padding: 15px;
+                padding: 20px;
                 border-radius: 0;
-                padding-top: 60px;
+                padding-top: 40px;
             }
 
             .sidebar-wrapper {
@@ -100,6 +100,7 @@ $conn->close();
             }
 
             .sidebar-overlay {
+                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(0, 0, 0, 0.5);

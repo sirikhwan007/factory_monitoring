@@ -1,5 +1,4 @@
 <?php
-// repair/reporthistory.php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -21,13 +20,11 @@ if ($tech_result->num_rows > 0) {
 $status_filter = $_GET['status'] ?? 'all';
 
 if ($status_filter !== 'all') {
-    // ใช้ Prepared Statement เพื่อความปลอดภัย
     $stmt = $conn->prepare("SELECT * FROM repair_history WHERE status = ? ORDER BY report_time DESC");
     $stmt->bind_param("s", $status_filter);
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    // ถ้าเป็น all หรือไม่มีค่าส่งมา ให้แสดงทั้งหมด
     $result = $conn->query("SELECT * FROM repair_history ORDER BY report_time DESC");
 }
 
@@ -40,9 +37,9 @@ $sidebar_paths = [
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
-    'Admin'      => '/admin/assets/css/index.css',
-    'Manager'    => '/Manager/assets/css/Sidebar.css',
-    'Operator'   => '/Operator/assets/css/SidebarOperator.css',
+    'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
+    'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
+    'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
@@ -62,10 +59,14 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <title>ประวัติการแจ้งซ่อม</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
-    <link rel="stylesheet" href="/repair/css/reporthistory.css">
+    <link rel="stylesheet" href="/factory_monitoring/repair/css/reporthistory.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        .btn-hamburger {
+            display: none;
+        }
+
         @media (max-width: 992px) {
             .main {
                 flex-direction: column;
