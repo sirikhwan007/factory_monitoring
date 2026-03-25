@@ -1,11 +1,14 @@
+body {
+  overflow-x: hidden;
+}
 
 .dashboard-header {
-  /* เปลี่ยนจาก header เป็น class */
   background: #2563eb;
   color: white;
   text-align: center;
   padding: 15px;
   font-size: 1.6em;
+  border-radius: 10px;
 }
 
 #status {
@@ -52,8 +55,83 @@ canvas {
 }
 
 .dashboard {
-    margin: 10px;
-    width: 100%;
-    border-radius: 10px;
-  }
+  margin: 10px;
+  width: 100%;
+  border-radius: 10px;
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  transition: all 0.3s ease;
+  min-height: 100vh;
+  padding: 10px;
+  background: #f4f9fd;
+}
 
+.main {
+  display: flex;
+  width: 100%;
+}
+
+.container.my-4 .card {
+  overflow: visible !important;
+}
+
+.card,
+.card-body,
+.col-md-8 {
+  overflow: visible !important;
+}
+
+.container .card.mb-3.shadow-sm:not(:first-child) {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.container .card:first-child {
+  position: relative !important;
+  z-index: 1050 !important;
+  /* ค่าสูงกว่ากราฟ */
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+}
+
+.action-buttons-container {
+  padding: 10px;
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  z-index: 1060 !important;
+}
+
+.dropdown-item {
+  font-size: 13px;
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+}
+
+.dropdown-menu {
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+.action-buttons-container {
+  z-index: 1000;
+}
+
+.dropdown {
+  pointer-events: auto;
+}
+
+.dropdown-item i {
+  width: 20px;
+  text-align: center;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
