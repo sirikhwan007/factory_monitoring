@@ -16,36 +16,15 @@ $page = 'dashboard';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>จัดการผู้ใช้งาน</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/admin/assets/css/users.css">
-    <link rel="stylesheet" href="/admin/assets/css/index.css">
+    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/users.css">
+    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @media (max-width: 992px) {
-            .main {
-                flex-direction: column;
-            }
-
-            .sidebar-wrapper * {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-
-            .sidebar-wrapper a,
-            .sidebar-wrapper .nav-link {
-                display: flex !important;
-                /* ใช้ Flexbox */
-                flex-direction: row !important;
-                /* บังคับเรียงแนวนอน (ซ้ายไปขวา) */
-                align-items: center !important;
-                /* จัดให้อยู่กึ่งกลางแนวตั้ง */
-                justify-content: flex-start !important;
-                /* ชิดซ้าย */
-                text-align: left !important;
-                /* ข้อความชิดซ้าย */
-                padding: 10px 20px !important;
-                /* เพิ่มระยะห่างรอบๆ ให้กดง่ายขึ้น */
+            .main-content {
+                margin-left: 0;
+                padding-top: 60px;
             }
 
             .sidebar-wrapper {
@@ -62,11 +41,16 @@ $page = 'dashboard';
 
             .sidebar-wrapper.active {
                 left: 0;
+                /* เลื่อนออกมาแสดง */
             }
 
-            .repair-history-container {
-                width: 100%;
-                padding: 60px 15px 15px;
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
             }
 
             .btn-hamburger {
@@ -87,6 +71,7 @@ $page = 'dashboard';
             }
 
             .sidebar-overlay {
+                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(0, 0, 0, 0.5);
@@ -101,20 +86,20 @@ $page = 'dashboard';
 </head>
 
 <body>
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
+    </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
+    <div class="sidebar-wrapper">
+        <?php include 'SidebarAdmin.php'; ?>
     </div>
 
     <div class="dashboard-container">
-        <div class="sidebar-wrapper">
-            <?php include 'SidebarAdmin.php'; ?>
-        </div>
 
         <div class="dashboard">
             <div class="main-content">
                 <h2>จัดการผู้ใช้งาน</h2>
 
-                <!-- Role Filter -->
                 <div class="role-filter">
                     <button onclick="filterRole('all')" class="btn">All</button>
                     <button onclick="filterRole('Admin')" class="btn">Admin</button>
@@ -124,10 +109,8 @@ $page = 'dashboard';
                 </div>
                 <button class="btn btn-success mb-3" onclick="openAddModal()">เพิ่มสมาชิก</button>
 
-                <!-- Search -->
                 <input type="text" id="searchInput" class="form-control mb-3" placeholder="ค้นหา username/email/phone...">
 
-                <!-- Users Table -->
                 <table class="user-table table table-striped">
                     <thead>
                         <tr>
@@ -148,16 +131,16 @@ $page = 'dashboard';
                         $result = $conn->query($sql);
 
                         while ($row = $result->fetch_assoc()) {
-                            
+
                             $serverPath = __DIR__ . '/uploads/' . $row['profile_image'];
 
                             if (!file_exists($serverPath) || empty($row['profile_image'])) {
 
-                                
+
                                 $profileImage = '/admin/uploads/default.png';
                             } else {
 
-                                
+
                                 $profileImage = '/admin/uploads/' . $row['profile_image'];
                             }
 
@@ -199,19 +182,16 @@ $page = 'dashboard';
     <script src="assets/js/users.js"></script>
     <script>
         $(document).ready(function() {
-            // ตรวจสอบค่า 'role' จาก URL (Query String)
             const urlParams = new URLSearchParams(window.location.search);
             const roleFilter = urlParams.get('role');
 
             if (roleFilter) {
-                // เรียกใช้ฟังก์ชันกรองข้อมูลที่มีอยู่แล้วใน assets/js/users.js
                 if (roleFilter === 'all') {
                     filterRole('all');
                 } else {
                     filterRole(roleFilter);
                 }
 
-                // (ทางเลือก) ปรับสถานะปุ่ม Filter ให้แสดงผลว่าเลือก Role นั้นอยู่
                 $(".role-filter .btn").each(function() {
                     if ($(this).text().trim() === roleFilter || (roleFilter === 'all' && $(this).text().trim() === 'All')) {
                         $(this).addClass("btn-primary text-white").siblings().removeClass("btn-primary text-white");

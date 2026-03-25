@@ -1,42 +1,13 @@
 $(document).ready(function () {
-
-  /* ===============================
-     Toggle Sub Menu (เฉพาะเมนูที่มี submenu)
-  =============================== */
-  $(".sb-ul li.has-sub > a").click(function (e) {
-    e.preventDefault(); // ❗ กันเฉพาะเมนูที่มี submenu
-
-    const parent = $(this).parent();
-
-    $(".sb-sub-ul").not(parent.find(".sb-sub-ul")).slideUp();
-    $(".chev-pos").not(parent.find(".chev-pos")).removeClass("chev-rotate");
-
-    parent.find(".sb-sub-ul").slideToggle();
-    parent.find(".chev-pos").toggleClass("chev-rotate");
+  // เมื่อคลิกปุ่ม Hamburger
+  $(".btn-hamburger").on("click", function () {
+    $(".sidebar-wrapper").toggleClass("active");
+    $(".sidebar-overlay").toggleClass("active");
   });
 
-  /* ===============================
-     Active Menu
-  =============================== */
-  $(".sb-ul li a").click(function () {
-    $(".sb-ul li a").removeClass("sb-ul-active");
-    $(this).addClass("sb-ul-active");
+  // เมื่อคลิกที่ Overlay ให้ปิด Sidebar
+  $(".sidebar-overlay").on("click", function () {
+    $(".sidebar-wrapper").removeClass("active");
+    $(this).removeClass("active");
   });
-
-  /* ===============================
-     Hamburger (Responsive)
-  =============================== */
-  $(".btn-hamburger").click(function () {
-  $(".sidebar-wrapper").toggleClass("active");
-});
-
-  /* ===============================
-     Auto show sidebar on desktop
-  =============================== */
-  $(window).on("resize", function () {
-    if ($(window).width() > 768) {
-      $(".sidebar").removeClass("sidebar-active");
-    }
-  });
-
 });
