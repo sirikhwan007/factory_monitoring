@@ -7,7 +7,9 @@
             flex: 1;
             padding: 20px;
         }
-
+        .table-responsive{
+            border-radius: 10px;
+        }
         .role-filter {
             display: flex;
             gap: 10px;

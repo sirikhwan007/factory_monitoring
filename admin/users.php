@@ -22,8 +22,14 @@ $page = 'dashboard';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @media (max-width: 992px) {
-            .main-content {
+            .main {
+                flex-direction: column;
+            }
+
+            .dashboard {
                 margin-left: 0;
+                padding: 15px;
+                border-radius: 0;
                 padding-top: 60px;
             }
 
@@ -41,7 +47,6 @@ $page = 'dashboard';
 
             .sidebar-wrapper.active {
                 left: 0;
-                /* เลื่อนออกมาแสดง */
             }
 
             .sidebar-wrapper .sidebar {
@@ -50,7 +55,9 @@ $page = 'dashboard';
                 width: 100% !important;
                 max-width: 100% !important;
                 display: flex !important;
-                padding-top: 60px;
+                flex-direction: column !important;
+                height: 100% !important;
+                padding-top: 20px;
             }
 
             .btn-hamburger {
@@ -71,7 +78,6 @@ $page = 'dashboard';
             }
 
             .sidebar-overlay {
-                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(0, 0, 0, 0.5);
@@ -90,11 +96,11 @@ $page = 'dashboard';
         <i class="fa-solid fa-bars"></i>
     </div>
     <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
-    <div class="sidebar-wrapper">
-        <?php include 'SidebarAdmin.php'; ?>
-    </div>
 
     <div class="dashboard-container">
+        <div class="sidebar-wrapper">
+            <?php include 'SidebarAdmin.php'; ?>
+        </div>
 
         <div class="dashboard">
             <div class="main-content">
@@ -110,41 +116,41 @@ $page = 'dashboard';
                 <button class="btn btn-success mb-3" onclick="openAddModal()">เพิ่มสมาชิก</button>
 
                 <input type="text" id="searchInput" class="form-control mb-3" placeholder="ค้นหา username/email/phone...">
+                <div class="table-responsive">
+                    <table class="user-table table table-striped">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Profile</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            require "../config.php";
+                            $sql = "SELECT * FROM users ORDER BY user_id ASC";
+                            $result = $conn->query($sql);
 
-                <table class="user-table table table-striped">
-                    <thead>
-                        <tr>
-                            <th>User ID</th>
-                            <th>Profile</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Role</th>
-                            <th>Created At</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        require "../config.php";
-                        $sql = "SELECT * FROM users ORDER BY user_id ASC";
-                        $result = $conn->query($sql);
+                            while ($row = $result->fetch_assoc()) {
 
-                        while ($row = $result->fetch_assoc()) {
+                                $serverPath = __DIR__ . '/uploads/' . $row['profile_image'];
 
-                            $serverPath = __DIR__ . '/uploads/' . $row['profile_image'];
-
-                            if (!file_exists($serverPath) || empty($row['profile_image'])) {
-
-
-                                $profileImage = '/admin/uploads/default.png';
-                            } else {
+                                if (!file_exists($serverPath) || empty($row['profile_image'])) {
 
 
-                                $profileImage = '/admin/uploads/' . $row['profile_image'];
-                            }
+                                    $profileImage = '/admin/uploads/default.png';
+                                } else {
 
-                            echo '<tr class="user-row" data-role="' . $row['role'] . '">
+
+                                    $profileImage = '/admin/uploads/' . $row['profile_image'];
+                                }
+
+                                echo '<tr class="user-row" data-role="' . $row['role'] . '">
 
                         <td>' . $row['user_id'] . '</td>
                         <td>
@@ -167,10 +173,11 @@ $page = 'dashboard';
                             </div>
                         </td>
                         </tr>';
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -178,7 +185,6 @@ $page = 'dashboard';
     <?php include 'users_modals.php'; ?>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="assets/js/SidebarAdmin.js"></script>
     <script src="assets/js/users.js"></script>
     <script>
         $(document).ready(function() {

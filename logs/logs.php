@@ -2,13 +2,11 @@
 session_start();
 include "../config.php";
 
-// ตรวจสอบล็อกอิน
 if (!isset($_SESSION['user_id'])) {
     header("Location: /login.php");
     exit();
 }
 
-//ย้ายฟังก์ชัน decodeUnicode ออกมานอกลูป foreach
 if (!function_exists('decodeUnicode')) {
     function decodeUnicode($str)
     {
@@ -18,7 +16,6 @@ if (!function_exists('decodeUnicode')) {
     }
 }
 
-// ดึงข้อมูล logs
 $logs = [];
 $sql = "SELECT l.log_id, l.user_id, u.username, l.role, l.action, l.description, l.created_at
         FROM logs l
@@ -51,20 +48,11 @@ $conn->close();
                 flex-direction: column;
             }
 
-            .sidebar-wrapper * {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-
-            .sidebar-wrapper a,
-            .sidebar-wrapper .nav-link {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                text-align: left !important;
-                padding: 10px 20px !important;
+            .dashboard {
+                margin-left: 0;
+                padding: 15px;
+                border-radius: 0;
+                padding-top: 60px;
             }
 
             .sidebar-wrapper {
@@ -83,9 +71,15 @@ $conn->close();
                 left: 0;
             }
 
-            .repair-history-container {
-                width: 100%;
-                padding: 60px 15px 15px;
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                height: 100% !important;
+                padding-top: 20px;
             }
 
             .btn-hamburger {
@@ -120,9 +114,10 @@ $conn->close();
 </head>
 
 <body>
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
     <section class="main">
         <div class="sidebar-wrapper">
@@ -132,9 +127,7 @@ $conn->close();
         <div class="dashboard">
             <div class="logs-container">
                 <h2><i class="fa-solid fa-list-check me-2"></i>ประวัติการเข้าใช้</h2>
-
                 <input type="text" id="searchInput" class="form-control search-input" placeholder="ค้นหา...">
-
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-active">
@@ -188,15 +181,13 @@ $conn->close();
                                             <?php
                                             $desc = $log['description'] ?? '';
 
-                                            // ตัด prefix เช่น "ลบเครื่องจักร:" ออก
                                             $pos = strpos($desc, '{');
                                             if ($pos !== false) {
                                                 $desc = substr($desc, $pos);
                                             }
 
-                                            $desc = decodeUnicode($desc); // ใช้งานฟังก์ชันที่ย้ายออกมา
+                                            $desc = decodeUnicode($desc);
 
-                                            // regex ดึง JSON
                                             preg_match('/\{.*\}/s', $desc, $match);
                                             $jsonText = $match[0] ?? '';
                                             $restText = trim(str_replace($jsonText, '', $desc));
@@ -216,9 +207,7 @@ $conn->close();
                                                     }
                                                 }
                                             }
-                                            // ลบ key ไม่ต้องการ
                                             unset($data['status'], $data['photo_url']);
-                                            // แสดงผลแบบ key:value
                                             $displayText = '';
                                             if (!empty($data)) {
                                                 $result = [];
@@ -230,13 +219,11 @@ $conn->close();
                                                 $displayText = implode(', ', $result);
                                             }
                                             if ($restText !== "") {
-                                                // เพิ่มรายละเอียดที่เหลือในส่วนท้าย
                                                 if ($displayText !== '') {
                                                     $displayText .= ", ";
                                                 }
                                                 $displayText .= $restText;
                                             }
-                                            // แสดงข้อความในตาราง และเก็บข้อมูลเต็มไว้ใน data-desc สำหรับ popup
                                             echo htmlspecialchars($displayText);
                                             ?>
                                             <span class="d-none" data-desc="<?= htmlspecialchars($displayText, ENT_QUOTES, 'UTF-8') ?>"></span>
@@ -252,16 +239,11 @@ $conn->close();
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
 
-
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        <script src="../admin/SidebarAdmin.js"></script>
-
         <script>
-            // ฟังก์ชันค้นหา
             document.getElementById('searchInput').addEventListener('input', function() {
                 const keyword = this.value.toLowerCase();
                 const rows = document.querySelectorAll('#logsTable tr');
@@ -272,7 +254,6 @@ $conn->close();
                 });
             });
 
-            // คลิกที่รายละเอียดแล้วเด้ง popup
             document.querySelectorAll('#logsTable .desc-cell').forEach(cell => {
                 cell.addEventListener('click', function() {
                     const hiddenSpan = this.querySelector('.d-none');
@@ -284,7 +265,6 @@ $conn->close();
                     let html = '';
 
                     if (action === 'UPDATE' && data.includes('---- หลังแก้ไข ----')) {
-                        // แยกสองคอลัมน์เฉพาะ UPDATE
                         let parts = data.split('---- หลังแก้ไข ----');
                         let before = parts[0].replace('---- ก่อนแก้ไข ----', '').trim();
                         let after = parts[1].trim();
@@ -303,7 +283,6 @@ $conn->close();
             </div>
             `;
                     } else {
-                        // INSERT / DELETE / อื่นๆ แสดงแบบข้อความปกติ
                         html = data.replace(/\n/g, '<br>');
                     }
 
@@ -315,23 +294,6 @@ $conn->close();
                         scrollbarPadding: false,
                         confirmButtonText: 'ปิด'
                     });
-                });
-            });
-
-            $(document).ready(function() {
-                // เมื่อคลิกที่ลิงก์ใน sidebar
-                $('.sidebar-wrapper a').click(function() {
-                    if (!$(this).hasClass('dropdown-toggle')) {
-                        $('.sidebar-wrapper').removeClass('active');
-                        $('.sidebar-overlay').removeClass('active'); // เพิ่มบรรทัดนี้
-                    }
-                });
-
-                // ปรับแต่งปุ่ม Hamburger ให้เปิด Overlay ด้วย
-                $('.btn-hamburger').click(function() {
-                    // ไม่ต้องแก้ใน HTML แต่แก้ logic ตรงนี้แทน หรือใช้แบบเดิมก็ได้
-                    // แต่ต้องมั่นใจว่า .sidebar-overlay มีคลาส active
-                    document.querySelector('.sidebar-overlay').classList.toggle('active');
                 });
             });
         </script>
