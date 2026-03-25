@@ -6,15 +6,14 @@ if (!isset($_SESSION['user_id'])) {
   header("Location: /login.php");
   exit();
 }
-// ตรวจสอบ Role ของผู้ใช้งาน (ดึงจาก session ที่คุณตั้งไว้ตอน Login)
+
 $user_role = $_SESSION['role'] ?? 'Operator';
-// รับค่า machine_id ที่ส่งมา
+
 $machine_id = $_GET['id'] ?? null;
 if (!$machine_id) {
   die("ไม่พบเครื่องจักรที่เลือก");
 }
 
-// ดึงข้อมูลเครื่องจักร
 $stmt = $conn->prepare("SELECT * FROM machines WHERE machine_id = ?");
 $stmt->bind_param("s", $machine_id);
 $stmt->execute();
@@ -23,7 +22,7 @@ $machine = $result->fetch_assoc();
 if (!$machine) {
   die("ไม่พบข้อมูลเครื่องจักร");
 }
-// ดึงไฟล์ Datasheet
+
 $doc = null;
 $q = $conn->prepare("SELECT file_path FROM machine_documents WHERE machine_id = ?");
 $q->bind_param("s", $machine_id);
@@ -38,14 +37,14 @@ $sidebar_paths = [
   'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
   'Technician' => __DIR__ . '/../Technician/SidebarTechnician.php',
 ];
-// เลือกไฟล์
+
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
-  'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
-  'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
-  'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
-  'Technician' => '/factory_monitoring/Technician/assets/css/sidebar_technician.css',
+  'Admin'      => '/admin/assets/css/index.css',
+  'Manager'    => '/Manager/assets/css/Sidebar.css',
+  'Operator'   => '/Operator/assets/css/SidebarOperator.css',
+  'Technician' => '/Technician/assets/css/sidebar_technician.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
@@ -61,20 +60,26 @@ $conn->close();
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Motor Monitoring Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/factory_monitoring/dashboard/dashboard.css">
+  <link rel="stylesheet" href="/dashboard/dashboard.css">
   <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
-    .dashboard {
-      margin-left: 250px;
-      transition: all 0.3s ease;
+    @media (min-width: 993px) {
+      .action-buttons-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 10px;
+        z-index: 1060 !important;
+      }
     }
 
     @media (max-width: 992px) {
@@ -82,27 +87,30 @@ $conn->close();
         margin-left: 0;
         padding: 15px;
         border-radius: 0;
-        padding-top: 50px;
+        width: 100%;
+        padding-top: 60px;
+      }
+
+      .action-buttons-container {
+        position: static;
+        margin-top: 15px;
+        display: block;
+        width: 100%;
+      }
+
+      .action-buttons-container .dropdown .btn {
+        width: 100%;
+        padding: 8px;
+      }
+
+      .dropdown-menu {
+        width: 100%;
+        position: static !important;
+        transform: none !important;
       }
 
       .main {
         flex-direction: column;
-      }
-
-      .sidebar-wrapper * {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-      }
-
-      .sidebar-wrapper a,
-      .sidebar-wrapper .nav-link {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        text-align: left !important;
-        padding: 10px 20px !important;
       }
 
       .sidebar-wrapper {
@@ -121,13 +129,22 @@ $conn->close();
         left: 0;
       }
 
+      .sidebar-wrapper .sidebar {
+        transform: translateX(0) !important;
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        padding-top: 60px;
+      }
+
       .btn-hamburger {
         display: flex;
         position: fixed;
         top: 15px;
         left: 15px;
-        width: 35px;
-        height: 35px;
+        width: 40px;
+        height: 40px;
         align-items: center;
         justify-content: center;
         background: #fff;
@@ -139,6 +156,7 @@ $conn->close();
       }
 
       .sidebar-overlay {
+        display: none;
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.5);
@@ -164,29 +182,27 @@ $conn->close();
 </head>
 
 <body>
-  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
     <i class="fa-solid fa-bars"></i>
   </div>
+  <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
+  
 
   <section class="main">
-
     <div class="sidebar-wrapper">
-      <?php include $sidebar_file; ?>
-    </div>
+    <?php include $sidebar_file; ?>
+  </div>
 
     <div class="dashboard">
       <div id="dashboard-content">
         <div class="dashboard-header">
           Motor Dashboard
         </div>
-        <!--เอาไว้แสดงข้อมูลเครื่องจักร-->
         <div class="container my-4">
           <div class="card mb-3 shadow-sm p-3">
             <div class="row g-3 align-items-center">
-              <!-- รูปเครื่องจักร -->
               <div class="col-md-4 text-center" onclick="location.href='/machine_list/machine_detail.php?id=<?php echo $machine['machine_id']; ?>'" style="cursor: pointer;">
                 <?php
-                // ตรวจสอบว่ามีข้อมูลชื่อไฟล์รูปภาพหรือไม่
                 $imgSrc = !empty($machine['photo_url'])
                   ? $machine['photo_url']
                   : "/assets/default-machine.png";
@@ -197,7 +213,6 @@ $conn->close();
                   style="max-height: 200px; object-fit: cover;">
               </div>
 
-              <!-- รายละเอียดเครื่องจักร -->
               <div class="col-md-8 position-relative">
                 <h4 class="mb-2"><?php echo $machine['name']; ?></h4>
                 <p class="mb-1"><strong>รหัสเครื่องจักร:</strong> <?php echo $machine['machine_id']; ?></p>
@@ -212,57 +227,66 @@ $conn->close();
                   <span id="influx-status" class="badge bg-secondary">ตรวจสอบการเชื่อมต่อ...</span>
                 </p>
 
-                <!--ปุ่ม-->
-                <div class="action-buttons-container position-absolute top-0 end-0 d-flex flex-column align-items-end gap-2">
+                <div class="action-buttons-container ">
+                  <div class="dropdown">
+                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 12px; padding: 4px 10px;">
+                      <i class="fa-solid fa-gear"></i> จัดการเครื่องจักร
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuButton" style="min-width: 200px;">
 
-                  <?php if ($user_role !== 'Operator' && $user_role !== 'Technician'): ?>
-                    <a href="/factory_monitoring/editmachine/machine_edit.php?id=<?= $machine['machine_id'] ?>"
-                      class="btn btn-warning btn-sm"
-                      style="padding: 4px 8px; font-size: 12px; width: fit-content;">
-                      <i class="fa-solid fa-pen-to-square"></i> แก้ไขข้อมูลเครื่องจักร
-                    </a>
+                      <?php if ($user_role !== 'Operator' && $user_role !== 'Technician'): ?>
+                        <li>
+                          <a class="dropdown-item text-warning" href="/editmachine/machine_edit.php?id=<?= $machine['machine_id'] ?>">
+                            <i class="fa-solid fa-pen-to-square"></i> แก้ไขข้อมูลเครื่องจักร
+                          </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item text-danger" href="/deletemachine/machine_delete.php?id=<?= $machine['machine_id'] ?>">
+                            <i class="fa-solid fa-trash"></i> ลบเครื่องจักร
+                          </a>
+                        </li>
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                      <?php endif; ?>
 
-                    <a href="/factory_monitoring/deletemachine/machine_delete.php?id=<?= $machine['machine_id'] ?>"
-                      class="btn btn-danger btn-sm"
-                      style="padding: 4px 8px; font-size: 12px; width: fit-content;">
-                      <i class="fa-solid fa-trash"></i> ลบเครื่องจักร
-                    </a>
-                  <?php endif; ?>
+                      <?php if ($user_role !== 'Technician'): ?>
+                        <li>
+                          <a class="dropdown-item" href="/repair/report.php?machine_id=<?= $machine['machine_id'] ?>" style="color: #ff8c00;">
+                            <i class="fa-solid fa-clipboard"></i> แจ้งซ่อม
+                          </a>
+                        </li>
+                      <?php endif; ?>
 
-                  <?php if ($user_role !== 'Technician'): ?>
-                  <a href="/factory_monitoring/repair/report.php?machine_id=<?= $machine['machine_id'] ?>"
-                    class="btn btn-warning btn-sm"
-                    style="padding: 4px 8px; font-size: 12px; background-color:#ff8c00; border-color:#ff8c00; width: fit-content;">
-                    <i class="fa-solid fa-clipboard"></i> แจ้งซ่อม
-                  </a>
-                  <?php endif; ?>
+                      <?php if ($user_role !== 'Operator' && $user_role !== 'Technician'): ?>
+                        <li>
+                          <a class="dropdown-item" href="/machine_list/maintenance_plan.php?machine_id=<?= urlencode($machine['machine_id']) ?>" style="color: #00CC99;">
+                            <i class="fa-solid fa-calendar-check"></i> แผนซ่อมตามรอบ
+                          </a>
+                        </li>
+                      <?php endif; ?>
 
-                  <?php if ($user_role !== 'Operator' && $user_role !== 'Technician'): ?>
-                    <a href="/factory_monitoring/machine_list/maintenance_plan.php?machine_id=<?= urlencode($machine['machine_id']) ?>"
-                      class="btn btn-primary btn-sm"
-                      style="padding: 4px 8px; font-size: 12px; background-color:#00CC99; border-color:#00CC99; width: fit-content;"
-                      onclick="event.stopPropagation(); window.location.href=this.href; return false;">
-                      <i class="fa-solid fa-calendar-check"></i> แผนซ่อมตามรอบ
-                    </a>
-                  <?php endif; ?>
+                      <?php if ($doc): ?>
+                        <li>
+                          <a class="dropdown-item text-success" href="<?= $doc['file_path'] ?>" target="_blank">
+                            <i class="fa-solid fa-file"></i> Datasheet
+                          </a>
+                        </li>
+                      <?php endif; ?>
 
-                  <?php if ($doc): ?>
-                    <a href="<?= $doc['file_path'] ?>"
-                      class="btn btn-success btn-sm"
-                      style="padding: 4px 8px; font-size: 12px; width: fit-content;"
-                      target="_blank">
-                      <i class="fa-solid fa-file"></i> Datasheet
-                    </a>
-                  <?php endif; ?>
-
-                  <button onclick="show24hHistory()" class="btn btn-info btn-sm text-white" style="padding: 4px 8px; font-size: 12px; width: fit-content;">
-                    <i class="fa-solid fa-clock-rotate-left"></i> ประวัติ 24 ชม.
-                  </button>
-
+                      <li>
+                        <hr class="dropdown-divider">
+                      </li>
+                      <li>
+                        <button onclick="show24hHistory()" class="dropdown-item text-info">
+                          <i class="fa-solid fa-clock-rotate-left"></i> ประวัติ 24 ชม.
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
 
               </div>
-              <!--สุดปุ่ม-->
 
             </div>
           </div>
@@ -380,16 +404,16 @@ $conn->close();
 
       </div>
     </div>
-    </div>
+  </section>
 
-    <!-- JavaScript ภายนอก -->
-    <script src="/factory_monitoring/dashboard/dashboard.js?v=<?php echo time(); ?>" defer></script>
-    <script src="/factory_monitoring/admin/SidebarAdmin.js"></script>
+  <!-- JavaScript ภายนอก -->
+  <script src="/dashboard/dashboard.js?v=<?php echo time(); ?>" defer></script>
+  <script src="/admin/SidebarAdmin.js"></script>
 
-    <script>
-      // เพิ่มบรรทัดนี้เพื่อส่งค่า MAC Address ให้ JavaScript
-      const MACHINE_MAC = "<?php echo $machine['mac_address']; ?>";
-    </script>
+  <script>
+    //ส่งค่า MAC Address ให้ JavaScript
+    const MACHINE_MAC = "<?php echo $machine['mac_address']; ?>";
+  </script>
 </body>
 
 </html>
