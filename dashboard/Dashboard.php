@@ -186,11 +186,12 @@ $conn->close();
     <i class="fa-solid fa-bars"></i>
   </div>
   <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
-  <div class="sidebar-wrapper">
-    <?php include $sidebar_file; ?>
-  </div>
+  
 
   <section class="main">
+    <div class="sidebar-wrapper">
+    <?php include $sidebar_file; ?>
+  </div>
 
     <div class="dashboard">
       <div id="dashboard-content">
