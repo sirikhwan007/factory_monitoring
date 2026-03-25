@@ -1,5 +1,4 @@
 <?php
-// เริ่ม session ถ้ายังไม่ได้เริ่ม
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -21,7 +20,6 @@ $stmt->bind_result($id, $username, $role, $email, $phone, $created_at, $profile_
 $stmt->fetch();
 $stmt->close();
 
-// จัดข้อมูลให้อยู่ใน array
 $user = [
     'user_id' => $id,
     'username' => $username ?? '',
@@ -39,10 +37,10 @@ $profileImage = $user['profile_image'];
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>โปรไฟล์ผู้ใช้</title>
-    <link rel="stylesheet" href="/admin/assets/css/profile.css">
+    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/profile.css">
     <style>
-        /* CSS จัดหน้าโปรไฟล์ */
         body {
             font-family: 'Kanit', sans-serif;
             background-color: #f4f6f9;
@@ -58,23 +56,29 @@ $profileImage = $user['profile_image'];
             width: 400px;
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
-        /* --- ส่วนที่เพิ่มใหม่เพื่อแก้รูปใหญ่เกิน --- */
         .profile-img {
-            width: 150px;        /* กำหนดความกว้าง */
-            height: 150px;       /* กำหนดความสูง */
-            object-fit: cover;   /* ตัดส่วนเกินออกไม่ให้รูปเบี้ยว */
-            border-radius: 50%;  /* ทำเป็นวงกลม */
-            border: 4px solid #ececec; /* ขอบรูปสีเทาจางๆ */
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #ececec;
             margin-bottom: 15px;
         }
-        /* ------------------------------------- */
 
-        h2 { margin: 10px 0 5px; color: #333; }
-        .role { color: #777; font-size: 0.9rem; margin-bottom: 20px; }
+        h2 {
+            margin: 10px 0 5px;
+            color: #333;
+        }
+
+        .role {
+            color: #777;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
 
         .info-box {
             background: #f8f9fa;
@@ -84,8 +88,17 @@ $profileImage = $user['profile_image'];
             margin-bottom: 20px;
             font-size: 0.95rem;
         }
-        .info-box p { margin: 8px 0; color: #555; }
-        .info-box strong { color: #333; min-width: 80px; display: inline-block;}
+
+        .info-box p {
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .info-box strong {
+            color: #333;
+            min-width: 80px;
+            display: inline-block;
+        }
 
         .btn-edit {
             background-color: #3498db;
@@ -97,19 +110,24 @@ $profileImage = $user['profile_image'];
             font-size: 1rem;
             transition: 0.3s;
         }
-        .btn-edit:hover { background-color: #2980b9; }
 
-        /* Modal Styles */
+        .btn-edit:hover {
+            background-color: #2980b9;
+        }
+
         .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 999; 
-            left: 0; top: 0; 
-            width: 100%; height: 100%; 
-            background-color: rgba(0,0,0,0.5);
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
             justify-content: center;
             align-items: center;
         }
+
         .modal-content {
             background-color: #fff;
             padding: 30px;
@@ -118,25 +136,38 @@ $profileImage = $user['profile_image'];
             max-width: 400px;
             position: relative;
         }
+
         .close {
             position: absolute;
-            top: 15px; right: 20px;
+            top: 15px;
+            right: 20px;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
             color: #aaa;
         }
-        .close:hover { color: #000; }
 
-        form label { display: block; text-align: left; margin-top: 10px; font-weight: bold; font-size: 0.9rem;}
-        form input { 
-            width: 100%; 
-            padding: 10px; 
-            margin-top: 5px; 
-            border: 1px solid #ddd; 
-            border-radius: 5px; 
-            box-sizing: border-box; /* สำคัญ: เพื่อไม่ให้ padding ดันกล่องล้น */
+        .close:hover {
+            color: #000;
         }
+
+        form label {
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
         form button {
             width: 100%;
             background-color: #2ecc71;
@@ -148,7 +179,10 @@ $profileImage = $user['profile_image'];
             cursor: pointer;
             font-size: 1rem;
         }
-        form button:hover { background-color: #27ae60; }
+
+        form button:hover {
+            background-color: #27ae60;
+        }
     </style>
 </head>
 
@@ -157,7 +191,6 @@ $profileImage = $user['profile_image'];
     <div class="profile-container">
 
         <?php
-        // เช็คว่าเป็น Base64 หรือไม่ ถ้าใช่ให้แสดงเลย ถ้าไม่ใช่ให้เติม Path
         $showImg = (strpos($profileImage, 'data:') === 0)
             ? $profileImage
             : "/admin/uploads/" . $profileImage;
@@ -176,7 +209,6 @@ $profileImage = $user['profile_image'];
         <button class="btn-edit" onclick="openEditModal()">แก้ไขข้อมูล</button>
     </div>
 
-    <!-- Modal แก้ไขข้อมูล -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeEditModal()">&times;</span>
@@ -194,7 +226,6 @@ $profileImage = $user['profile_image'];
                 <input type="text" name="phone"
                     value="<?php echo htmlspecialchars($user['phone']); ?>" required>
 
-                <!-- เพิ่มรหัสผ่าน -->
                 <label>รหัสผ่านใหม่ (ถ้าไม่เปลี่ยนให้เว้นว่าง)</label>
                 <input type="password" name="password" placeholder="New Password">
 
@@ -210,15 +241,14 @@ $profileImage = $user['profile_image'];
     </div>
 
     <script>
-        // เปิด modal
         function openEditModal() {
             document.getElementById("editModal").style.display = "flex";
         }
-        // ปิด modal
+
         function closeEditModal() {
             document.getElementById("editModal").style.display = "none";
         }
-        // ปิด modal เมื่อคลิกนอก modal-content
+
         window.onclick = function(event) {
             const modal = document.getElementById("editModal");
             if (event.target == modal) {

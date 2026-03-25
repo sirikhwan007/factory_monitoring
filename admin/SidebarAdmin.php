@@ -11,7 +11,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 <div class="sidebar">
   <div class="sidebar-top">
 
-    <a href="/admin/profile.php" class="profile-btn">
+    <a href="/factory_monitoring/admin/profile.php" class="profile-btn">
       <div class="sb-logo">
         <?php
         $showImg = (strpos($profileImage, 'data:') === 0)

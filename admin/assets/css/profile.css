@@ -1,4 +1,3 @@
-/* ================== Container หลัก ================== */
 .profile-container {
     max-width: 500px;
     margin: 50px auto;
@@ -10,7 +9,6 @@
     font-family: "Sarabun", sans-serif;
 }
 
-/* ================== รูปโปรไฟล์ ================== */
 .profile-img-card {
     width: 120px;
     height: 120px;
@@ -20,7 +18,6 @@
     border: 3px solid #3498db;
 }
 
-/* ================== ชื่อและบทบาท ================== */
 .profile-container h2 {
     margin: 10px 0 5px;
     font-size: 24px;
@@ -33,7 +30,6 @@
     font-size: 16px;
 }
 
-/* ================== กล่องข้อมูล ================== */
 .info-box {
     text-align: left;
     background-color: #f9f9f9;
@@ -49,7 +45,6 @@
     color: #555;
 }
 
-/* ================== ปุ่มแก้ไข ================== */
 .btn-edit {
     margin-top: 15px;
     padding: 10px 25px;
@@ -66,7 +61,6 @@
     background-color: #2980b9;
 }
 
-/* ================== Modal พื้นหลัง ================== */
 .modal {
     display: none;
     position: fixed;
@@ -80,7 +74,6 @@
     z-index: 1000;
 }
 
-/* ================== Modal Content ================== */
 .modal-content {
     background: #fff;
     padding: 25px 20px;
@@ -92,13 +85,11 @@
     box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 }
 
-/* ================== Animation Modal ================== */
 @keyframes slideDown {
     from { transform: translateY(-30px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
 
-/* ================== ปุ่มปิด modal ================== */
 .close {
     position: absolute;
     top: 12px;
@@ -113,53 +104,42 @@
     color: #000;
 }
 
-/* ================== ฟอร์มใน modal ================== */
-/* *** เพิ่ม/ตรวจสอบ CSS เหล่านี้ *** */
-
-/* สไตล์ของ Modal */
 .modal {
-    display: none; /* ซ่อน Modal ตามค่าเริ่มต้น */
+    display: none;
     position: fixed;
     z-index: 1; 
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* อนุญาตให้เลื่อนได้ถ้าเนื้อหามากเกินไป */
-    background-color: rgba(0,0,0,0.4); /* ฉากหลังทึบแสง */
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
 }
 
-/* สไตล์ของกล่องเนื้อหา Modal */
 .modal-content {
     background-color: #fefefe;
-    margin: 20% ; /* จัดให้อยู่กึ่งกลางในแนวตั้งและแนวนอน (10% จากด้านบน) */
+    margin: 20% ;
     padding: 70px;
     border: -10px solid #888;
-    /* *** จุดสำคัญที่ต้องปรับปรุง *** */
-    width: 100%; /* กำหนดความกว้างเริ่มต้น */
-     /* **จำกัดความกว้างสูงสุด** เพื่อไม่ให้กว้างเกินไปบนจอใหญ่ */
-    /* ***************************** */
+    width: 90%;
     border-radius: -10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
-/* --- Custom Properties (ตัวแปร) --- */
+
 :root {
-    --primary-color: #3498db; /* สีหลักสำหรับเน้น */
-    --success-color: #2ecc71; /* สีสำหรับปุ่มบันทึก */
+    --primary-color: #3498db;
+    --success-color: #2ecc71;
     --hover-success-color: #27ae60;
-    --text-color: #34495e; /* สีข้อความเข้ม */
-    --label-color: #7f8c8d; /* สีข้อความอ่อนสำหรับ Label */
-    --border-color: #bdc3c7; /* สีขอบ */
-    --border-radius: 8px; /* ความโค้งมน */
+    --text-color: #34495e;
+    --label-color: #7f8c8d;
+    --border-color: #bdc3c7;
+    --border-radius: 8px;
     --spacing-small: 10px;
     --spacing-medium: 15px;
     --font-size-label: 13px;
     --font-size-input: 15px;
 }
 
-/* --- Modal Content & Header Styles --- */
-
-/* ปรับปรุง Header */
 .modal-content h3 {
     margin-top: 0;
     margin-bottom: var(--spacing-medium);
@@ -170,25 +150,22 @@
     padding-bottom: var(--spacing-small);
 }
 
-/* --- Form Container Styles --- */
 .modal-content form {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-medium); /* ใช้ gap แทน margin-bottom ใน input/label */
+    gap: var(--spacing-medium); 
 }
 
-/* --- Label Styles --- */
 .modal-content form label {
     display: block;
     text-align: left;
-    margin-bottom: 4px; /* ลด margin-bottom ที่นี่ */
-    font-weight: 600; /* ให้ label ดูเด่นขึ้น */
+    margin-bottom: 4px;
+    font-weight: 600;
     color: var(--label-color);
     font-size: var(--font-size-label);
-    text-transform: uppercase; /* ตัวพิมพ์ใหญ่ทั้งหมดเล็กน้อย */
+    text-transform: uppercase; 
 }
 
-/* --- Input Styles --- */
 .modal-content form input[type="text"],
 .modal-content form input[type="email"],
 .modal-content form input[type="file"],
@@ -200,25 +177,22 @@
     font-size: var(--font-size-input);
     color: var(--text-color);
     transition: all 0.2s ease-in-out;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* เพิ่ม shadow เล็กน้อย */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* Focus State */
 .modal-content form input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); /* เน้นการ Focus */
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
     outline: none;
 }
 
-/* --- File Input (เพื่อจัดการช่องว่าง) --- */
 .modal-content form input[type="file"] {
-    padding: var(--spacing-small); /* อาจต้องปรับ padding สำหรับ file input */
+    padding: var(--spacing-small);
 }
 
-/* --- Button Styles --- */
 .modal-content form button {
     width: 100%;
-    padding: var(--spacing-small) 0; /* ปรับ padding เล็กน้อย */
+    padding: var(--spacing-small) 0;
     background-color: var(--success-color);
     border: none;
     border-radius: var(--border-radius);
@@ -227,8 +201,8 @@
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.1s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow ที่ปุ่ม */
-    margin-top: var(--spacing-medium); /* เพิ่มระยะห่างด้านบนปุ่ม */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: var(--spacing-medium);
 }
 
 .modal-content form button:hover {
@@ -237,22 +211,14 @@
 }
 
 .modal-content form button:active {
-    transform: scale(0.99); /* Feedback เมื่อกด */
+    transform: scale(0.99);
 }
-/* ================== Responsive ================== */
-@media (max-width: 768px) {
+
+@media (max-width: 992px) {
     .profile-container {
         margin: 30px 20px;
         padding: 25px 20px;
     }
-}
-
-@media (max-width: 480px) {
-    .profile-container {
-        margin: 20px 10px;
-        padding: 20px 15px;
-    }
-
     .profile-img-card {
         width: 100px;
         height: 100px;
@@ -265,8 +231,8 @@
     }
 
     .modal-content {
-        width: 95%;
+        width: 80%;
         padding: 15px 10px;
+        
     }
-
 }
