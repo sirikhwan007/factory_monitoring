@@ -1,6 +1,4 @@
 <?php
-// repair/reporthistory.php
-// ... (ส่วน PHP ด้านบนเหมือนเดิม ไม่ต้องแก้) ...
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -22,13 +20,11 @@ if ($tech_result->num_rows > 0) {
 $status_filter = $_GET['status'] ?? 'all';
 
 if ($status_filter !== 'all') {
-    // ใช้ Prepared Statement เพื่อความปลอดภัย
     $stmt = $conn->prepare("SELECT * FROM repair_history WHERE status = ? ORDER BY report_time DESC");
     $stmt->bind_param("s", $status_filter);
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    // ถ้าเป็น all หรือไม่มีค่าส่งมา ให้แสดงทั้งหมด
     $result = $conn->query("SELECT * FROM repair_history ORDER BY report_time DESC");
 }
 
@@ -67,6 +63,10 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        .btn-hamburger {
+            display: none;
+        }
+
         @media (max-width: 992px) {
             .main {
                 flex-direction: column;
