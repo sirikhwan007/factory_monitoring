@@ -12,7 +12,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// เตรียม statement
 $stmt = $conn->prepare("SELECT user_id, username, role, email, phone, created_at, profile_image FROM users WHERE user_id = ?");
 $stmt->bind_param("s", $user_id);
 $stmt->execute();
@@ -113,28 +112,6 @@ $profileImage = $user['profile_image'];
 
         .btn-edit:hover {
             background-color: #2980b9;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            position: relative;
         }
 
         .close {
