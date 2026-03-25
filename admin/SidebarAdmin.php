@@ -16,7 +16,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
         <?php
         $showImg = (strpos($profileImage, 'data:') === 0)
           ? $profileImage
-          : "/admin/uploads/" . $profileImage;
+          : "/factory_monitoring/admin/uploads/" . $profileImage;
         ?>
         <img src="<?php echo $showImg; ?>" class="profile-img" alt="Profile">
 
@@ -29,31 +29,31 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 
     <ul class="sb-ul">
       <li>
-        <a href="/admin/index.php">
+        <a href="/factory_monitoring/admin/index.php">
           <i class="fas fa-home"></i><span class="sb-text">หน้าหลัก</span>
         </a>
       </li>
 
       <li>
-        <a href="/machine_list/machine.php">
+        <a href="/factory_monitoring/machine_list/machine.php">
           <i class="fas fa-industry"></i><span class="sb-text">เครื่องจักร</span>
         </a>
       </li>
 
       <li>
-        <a href="/admin/users.php">
+        <a href="/factory_monitoring/admin/users.php">
           <i class="fas fa-user"></i><span class="sb-text">ผู้ใช้</span>
         </a>
       </li>
 
       <li>
-        <a href="/repair/reporthistory.php">
+        <a href="/factory_monitoring/repair/reporthistory.php">
           <i class="fas fa-history"></i><span class="sb-text">ประวัติการแจ้งซ่อม</span>
         </a>
       </li>
 
       <li>
-        <a href="/logs/logs.php">
+        <a href="/factory_monitoring/logs/logs.php">
           <i class="fas fa-clipboard-list"></i><span class="sb-text">ประวัติการเข้าใช้</span>
         </a>
       </li>
@@ -61,7 +61,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
   </div>
 
   <div class="sidebar-bottom">
-    <a href="/logout.php" class="btn btn-logout">
+    <a href="/factory_monitoring/logout.php" class="btn btn-logout">
       <i class="fas fa-sign-out-alt"></i>
       <span class="sb-text">ออกจากระบบ</span>
     </a>
