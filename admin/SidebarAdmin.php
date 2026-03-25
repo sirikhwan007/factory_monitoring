@@ -36,7 +36,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 
       <li>
         <a href="/machine_list/machine.php">
-          <i class="fas fa-industry"></i><span class="sb-text">เครื่องจักร</span>
+          <i class="fas fa-industry"></i><span class="sb-text">รายการเครื่องจักร</span>
         </a>
       </li>
 

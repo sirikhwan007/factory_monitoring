@@ -48,11 +48,6 @@ $completed = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ส
 $cancelled = $conn->query("SELECT COUNT(*) FROM repair_history WHERE status='ยกเลิก'")->fetch_row()[0];
 
 $sidebar_file = __DIR__ . "/SidebarAdmin.php";
-if (!file_exists($sidebar_file)) {
-    echo "❌ ไม่เจอ SidebarAdmin.php ที่ path นี้: " . $sidebar_file;
-    exit();
-}
-include $sidebar_file;
 
 
 $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 10");
@@ -92,25 +87,18 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
             animation: bell-ring 0.5s infinite;
             color: #dc3545 !important;
         }
+
         @media (max-width: 992px) {
             .main {
-                flex-direction: column;
+                margin-left: 0;
+                padding-top: 0;
             }
 
-            .sidebar-wrapper * {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-
-            .sidebar-wrapper a,
-            .sidebar-wrapper .nav-link {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                text-align: left !important;
-                padding: 10px 20px !important;
+            .dashboard {
+                margin-left: 0;
+                padding: 15px;
+                border-radius: 0;
+                padding-top: 60px;
             }
 
             .sidebar-wrapper {
@@ -129,9 +117,15 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                 left: 0;
             }
 
-            .repair-history-container {
-                width: 100%;
-                padding: 60px 15px 15px;
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                height: 100% !important;
+                padding-top: 20px;
             }
 
             .btn-hamburger {
@@ -139,8 +133,8 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                 position: fixed;
                 top: 15px;
                 left: 15px;
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 align-items: center;
                 justify-content: center;
                 background: #fff;
@@ -152,6 +146,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
             }
 
             .sidebar-overlay {
+                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(0, 0, 0, 0.5);
@@ -166,20 +161,17 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 </head>
 
 <body>
-    <div class="btn-hamburger">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
+    </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
+    <div class="sidebar-wrapper">
+        <?php include $sidebar_file; ?>
     </div>
 
     <section class="main">
-        <div class="sidebar-wrapper">
-            <?php include $sidebar_file; ?>
-        </div>
-
         <div class="container-fluid">
-
             <div class="dashboard">
-
-                <!-- Machine Overview -->
                 <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
                     <h4>ข้อมูลเครื่องจักร</h4>
                     <div id="notification-bell" class="position-relative" style="cursor: pointer; font-size: 1.5rem;">
@@ -327,7 +319,6 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
 
                 </div>
 
-                <!-- RECENT ACTIVITY -->
                 <h4 class="mt-4 mb-3">กิจกรรมล่าสุด</h4>
                 <div class="card shadow-sm p-3" style="max-height: 300px; overflow-y: auto;">
                     <ul class="list-group" style="cursor:pointer;" onclick="location.href='/logs/logs.php'">
@@ -345,22 +336,7 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
     </section>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="assets/js/SidebarAdmin.js"></script>
     <script src="assets/js/indexadmin.js"></script>
-    <script>
-        $(document).ready(function() {
-
-                $('.sidebar-wrapper a').click(function() {
-                    if (!$(this).hasClass('dropdown-toggle')) {
-                        $('.sidebar-wrapper').removeClass('active');
-                        $('.sidebar-overlay').removeClass('active');
-                    }
-                });
-                $('.btn-hamburger').click(function() {
-                    document.querySelector('.sidebar-overlay').classList.toggle('active');
-                });
-            });
-    </script>
 
 </body>
 

@@ -26,26 +26,11 @@ $page = 'dashboard';
                 flex-direction: column;
             }
 
-            .sidebar-wrapper * {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-
-            .sidebar-wrapper a,
-            .sidebar-wrapper .nav-link {
-                display: flex !important;
-                /* ใช้ Flexbox */
-                flex-direction: row !important;
-                /* บังคับเรียงแนวนอน (ซ้ายไปขวา) */
-                align-items: center !important;
-                /* จัดให้อยู่กึ่งกลางแนวตั้ง */
-                justify-content: flex-start !important;
-                /* ชิดซ้าย */
-                text-align: left !important;
-                /* ข้อความชิดซ้าย */
-                padding: 10px 20px !important;
-                /* เพิ่มระยะห่างรอบๆ ให้กดง่ายขึ้น */
+            .dashboard {
+                margin-left: 0;
+                padding: 15px;
+                border-radius: 0;
+                padding-top: 60px;
             }
 
             .sidebar-wrapper {
@@ -64,9 +49,15 @@ $page = 'dashboard';
                 left: 0;
             }
 
-            .repair-history-container {
-                width: 100%;
-                padding: 60px 15px 15px;
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                height: 100% !important;
+                padding-top: 20px;
             }
 
             .btn-hamburger {
@@ -101,9 +92,10 @@ $page = 'dashboard';
 </head>
 
 <body>
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
     <div class="dashboard-container">
         <div class="sidebar-wrapper">
@@ -114,7 +106,6 @@ $page = 'dashboard';
             <div class="main-content">
                 <h2>จัดการผู้ใช้งาน</h2>
 
-                <!-- Role Filter -->
                 <div class="role-filter">
                     <button onclick="filterRole('all')" class="btn">All</button>
                     <button onclick="filterRole('Admin')" class="btn">Admin</button>
@@ -124,44 +115,42 @@ $page = 'dashboard';
                 </div>
                 <button class="btn btn-success mb-3" onclick="openAddModal()">เพิ่มสมาชิก</button>
 
-                <!-- Search -->
                 <input type="text" id="searchInput" class="form-control mb-3" placeholder="ค้นหา username/email/phone...">
+                <div class="table-responsive">
+                    <table class="user-table table table-striped">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Profile</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            require "../config.php";
+                            $sql = "SELECT * FROM users ORDER BY user_id ASC";
+                            $result = $conn->query($sql);
 
-                <!-- Users Table -->
-                <table class="user-table table table-striped">
-                    <thead>
-                        <tr>
-                            <th>User ID</th>
-                            <th>Profile</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Role</th>
-                            <th>Created At</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        require "../config.php";
-                        $sql = "SELECT * FROM users ORDER BY user_id ASC";
-                        $result = $conn->query($sql);
+                            while ($row = $result->fetch_assoc()) {
 
-                        while ($row = $result->fetch_assoc()) {
-                            
-                            $serverPath = __DIR__ . '/uploads/' . $row['profile_image'];
+                                $serverPath = __DIR__ . '/uploads/' . $row['profile_image'];
 
-                            if (!file_exists($serverPath) || empty($row['profile_image'])) {
+                                if (!file_exists($serverPath) || empty($row['profile_image'])) {
 
-                                
-                                $profileImage = '/admin/uploads/default.png';
-                            } else {
 
-                                
-                                $profileImage = '/admin/uploads/' . $row['profile_image'];
-                            }
+                                    $profileImage = '/admin/uploads/default.png';
+                                } else {
 
-                            echo '<tr class="user-row" data-role="' . $row['role'] . '">
+
+                                    $profileImage = '/admin/uploads/' . $row['profile_image'];
+                                }
+
+                                echo '<tr class="user-row" data-role="' . $row['role'] . '">
 
                         <td>' . $row['user_id'] . '</td>
                         <td>
@@ -184,10 +173,11 @@ $page = 'dashboard';
                             </div>
                         </td>
                         </tr>';
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -195,23 +185,19 @@ $page = 'dashboard';
     <?php include 'users_modals.php'; ?>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="assets/js/SidebarAdmin.js"></script>
     <script src="assets/js/users.js"></script>
     <script>
         $(document).ready(function() {
-            // ตรวจสอบค่า 'role' จาก URL (Query String)
             const urlParams = new URLSearchParams(window.location.search);
             const roleFilter = urlParams.get('role');
 
             if (roleFilter) {
-                // เรียกใช้ฟังก์ชันกรองข้อมูลที่มีอยู่แล้วใน assets/js/users.js
                 if (roleFilter === 'all') {
                     filterRole('all');
                 } else {
                     filterRole(roleFilter);
                 }
 
-                // (ทางเลือก) ปรับสถานะปุ่ม Filter ให้แสดงผลว่าเลือก Role นั้นอยู่
                 $(".role-filter .btn").each(function() {
                     if ($(this).text().trim() === roleFilter || (roleFilter === 'all' && $(this).text().trim() === 'All')) {
                         $(this).addClass("btn-primary text-white").siblings().removeClass("btn-primary text-white");
