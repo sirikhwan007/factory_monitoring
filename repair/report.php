@@ -116,8 +116,10 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
         .dashboard {
             margin-left: 250px;
         }
+
         @media (max-width: 992px) {
             .dashboard {
+                width: 100%;
                 margin-left: 0;
                 padding: 15px;
                 border-radius: 0;
@@ -126,22 +128,6 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 
             .main {
                 flex-direction: column;
-            }
-
-            .sidebar-wrapper * {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-
-            .sidebar-wrapper a,
-            .sidebar-wrapper .nav-link {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                text-align: left !important;
-                padding: 10px 20px !important;
             }
 
             .sidebar-wrapper {
@@ -160,13 +146,22 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
                 left: 0;
             }
 
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
+            }
+
             .btn-hamburger {
                 display: flex;
                 position: fixed;
                 top: 15px;
                 left: 15px;
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 align-items: center;
                 justify-content: center;
                 background: #fff;
@@ -178,6 +173,7 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
             }
 
             .sidebar-overlay {
+                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(0, 0, 0, 0.5);
@@ -194,9 +190,10 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 
 <body>
 
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
     <section class="main">
         <div class="sidebar-wrapper">
@@ -326,7 +323,6 @@ $username = $_SESSION['username'] ?? 'ผู้ใช้งาน';
     </section>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="/admin/SidebarAdmin.js"></script>
 
 </body>
 

@@ -48,22 +48,6 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
                 flex-direction: column;
             }
 
-            .sidebar-wrapper * {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-
-            .sidebar-wrapper a,
-            .sidebar-wrapper .nav-link {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                text-align: left !important;
-                padding: 10px 20px !important;
-            }
-
             .sidebar-wrapper {
                 position: fixed;
                 top: 0;
@@ -80,9 +64,13 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
                 left: 0;
             }
 
-            .repair-history-container {
-                width: 100%;
-                padding: 60px 15px 15px;
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
             }
 
             .btn-hamburger {
@@ -90,8 +78,8 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
                 position: fixed;
                 top: 15px;
                 left: 15px;
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 align-items: center;
                 justify-content: center;
                 background: #fff;
@@ -103,6 +91,7 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
             }
 
             .sidebar-overlay {
+                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(0, 0, 0, 0.5);
@@ -118,9 +107,10 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
 </head>
 
 <body>
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
     <section class="main">
         <div class="sidebar-wrapper">

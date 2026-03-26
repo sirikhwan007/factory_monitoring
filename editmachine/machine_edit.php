@@ -79,22 +79,6 @@ $current_datasheet = $doc['file_path'] ?? "";
         flex-direction: column;
       }
 
-      .sidebar-wrapper * {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-      }
-
-      .sidebar-wrapper a,
-      .sidebar-wrapper .nav-link {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        text-align: left !important;
-        padding: 10px 20px !important;
-      }
-
       .sidebar-wrapper {
         position: fixed;
         top: 0;
@@ -111,13 +95,22 @@ $current_datasheet = $doc['file_path'] ?? "";
         left: 0;
       }
 
+      .sidebar-wrapper .sidebar {
+        transform: translateX(0) !important;
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        padding-top: 60px;
+      }
+
       .btn-hamburger {
         display: flex;
         position: fixed;
         top: 15px;
         left: 15px;
-        width: 35px;
-        height: 35px;
+        width: 40px;
+        height: 40px;
         align-items: center;
         justify-content: center;
         background: #fff;
@@ -129,6 +122,7 @@ $current_datasheet = $doc['file_path'] ?? "";
       }
 
       .sidebar-overlay {
+        display: none;
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.5);
@@ -155,9 +149,10 @@ $current_datasheet = $doc['file_path'] ?? "";
 
 <body>
 
-  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
     <i class="fa-solid fa-bars"></i>
   </div>
+  <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
   <section class="main">
 
@@ -301,8 +296,6 @@ $current_datasheet = $doc['file_path'] ?? "";
         </div>
       </div>
     </div>
-
-    <script src="/admin/SidebarAdmin.js"></script>
     <script>
       document.getElementById('photo').addEventListener('change', function() {
         const preview = document.getElementById('image-preview');
