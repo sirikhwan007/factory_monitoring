@@ -73,21 +73,6 @@ row.style.display = text.includes(filter)?'':'none';
 });
 });
 
-function filterRole(role) {
-    const rows = document.querySelectorAll("#userTableBody tr");
-    rows.forEach(row => {
-        // สมมติว่าคอลัมน์ Role คือคอลัมน์ที่ 5 (index 4)
-        const roleCell = row.cells[4].innerText.trim(); 
-        
-        if (role === 'all' || roleCell === role) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
-    });
-}
-
-
 function checkBinary(input) {
     const val = input.value;
     const warning = document.getElementById('id_warning');
