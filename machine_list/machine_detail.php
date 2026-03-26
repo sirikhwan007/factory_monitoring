@@ -1,24 +1,20 @@
 <?php
 session_start();
-include __DIR__ . "/../config.php"; // ตรวจสอบ path config ให้ถูกต้อง
+include __DIR__ . "/../config.php";
 
 
 $user_role = $_SESSION['role'] ?? 'Operator';
 
-
-// ตรวจสอบข้อมูล Session สำหรับ Sidebar
 $profileImage = $_SESSION['profile_image'] ?? 'default_profile.png';
 $username     = $_SESSION['username'] ?? 'ผู้ใช้งาน';
 $role         = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
 
-// ตรวจสอบว่ามีการส่ง ID มาหรือไม่
 if (!isset($_GET['id'])) {
     die("Error: ไม่พบ ID เครื่องจักร");
 }
 
 $machine_id = $_GET['id'];
 
-// ดึงข้อมูลเครื่องจักรจากตาราง machines
 $stmt = $conn->prepare("SELECT * FROM machines WHERE machine_id = ?");
 $stmt->bind_param("s", $machine_id);
 $stmt->execute();
@@ -35,7 +31,6 @@ $sidebar_paths = [
     'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
 ];
 
-// เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
@@ -45,7 +40,6 @@ $sidebar_css_paths = [
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
-// ตรวจสอบรูปภาพ
 $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://placehold.co/600x400?text=No+Image';
 ?>
 
@@ -61,7 +55,6 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
-        /* --- General & Layout Styles --- */
         body {
             background-color: #f8fafd;
             font-family: 'Kanit', sans-serif;
@@ -69,14 +62,12 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
             overflow-x: hidden;
         }
 
-        /* จัด Layout เป็น Flexbox ซ้าย-ขวา */
         .main {
             display: flex;
             width: 100%;
             min-height: 100vh;
         }
 
-        /* Sidebar Wrapper Settings */
         .sidebar-wrapper {
             width: 250px;
             min-width: 250px;
@@ -87,7 +78,6 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
             z-index: 1000;
         }
 
-        /* Content Area Settings */
         .content-container {
             flex-grow: 1;
             padding: 30px;
@@ -95,7 +85,6 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
             overflow-y: auto;
         }
 
-        /* --- Machine Detail Specific Styles --- */
         .card-machine {
             border: none;
             border-radius: 15px;
@@ -219,6 +208,17 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
             .img-cover {
                 height: 250px;
             }
+
+            .modal {
+                padding-top: 30px;
+            }
+
+            .btn-back {
+                margin: 5px auto;
+                padding: 5px 15px ;
+                width: max-content;
+                font-size: 15px;
+            }
         }
     </style>
 </head>
@@ -319,12 +319,10 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                     </div>
                 </div>
 
-                <!-- ส่วนรายงานการแจ้งซ่อม -->
                 <div class="mt-5">
                     <h3 class="text-primary mb-4"><i class="fas fa-history"></i> ประวัติการแจ้งซ่อมของเครื่องนี้</h3>
 
                     <?php
-                    // ดึงข้อมูลประวัติการแจ้งซ่อมของเครื่องนี้
                     $repair_stmt = $conn->prepare("SELECT * FROM repair_history WHERE machine_id = ? ORDER BY report_time DESC");
                     $repair_stmt->bind_param("s", $machine_id);
                     $repair_stmt->execute();
@@ -400,7 +398,6 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
         </div>
     </section>
 
-    <!-- Modal สำหรับดูรายละเอียดการแจ้งซ่อม -->
     <div class="modal fade" id="repairDetailModal" tabindex="-1" aria-labelledby="repairDetailLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -462,16 +459,16 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
             </div>
         </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script>
-        const MACHINE_MAC = "<?php echo $machine['mac_address']; ?>";
-    </script>
     <script src="/machine_list/js/machine_detail.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/admin/assets/js/SidebarAdmin.js"></script>
     <script src="/Manager/assets/js/SidebarManager.js"></script>
-
     <script src="/dashboard/dashboard.js"></script>
+    <script>
+        const MACHINE_MAC = "<?php echo $machine['mac_address']; ?>";
+    </script>
 
 </body>
 
