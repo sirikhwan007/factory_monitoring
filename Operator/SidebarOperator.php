@@ -14,7 +14,7 @@ $activePage = $activePage ?? '';
 <div class="sidebar">
 
     <div class="op-top">
-        <a href="/operator/profile.php" class="op-profile-btn">
+        <a href="/Operator/profile.php" class="op-profile-btn">
             <div class="op-logo">
                 <?php
                 $showImg = (strpos($profileImage, 'data:') === 0)
