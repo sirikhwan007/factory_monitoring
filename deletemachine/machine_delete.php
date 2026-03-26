@@ -28,10 +28,10 @@ $sidebar_paths = [
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
-  'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
-  'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
-  'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
-  'Technician' => '/factory_monitoring/Technician/assets/css/sidebar_technician.css',
+  'Admin'      => '/admin/assets/css/index.css',
+  'Manager'    => '/Manager/assets/css/Sidebar.css',
+  'Operator'   => '/Operator/assets/css/SidebarOperator.css',
+  'Technician' => '/Technician/assets/css/sidebar_technician.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
@@ -56,6 +56,7 @@ if (!$machine) {
     .dashboard {
       margin-left: 250px;
     }
+
     @media (max-width: 992px) {
       .dashboard {
         margin-left: 0;
@@ -66,22 +67,6 @@ if (!$machine) {
 
       .main {
         flex-direction: column;
-      }
-
-      .sidebar-wrapper * {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-      }
-
-      .sidebar-wrapper a,
-      .sidebar-wrapper .nav-link {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        text-align: left !important;
-        padding: 10px 20px !important;
       }
 
       .sidebar-wrapper {
@@ -100,13 +85,22 @@ if (!$machine) {
         left: 0;
       }
 
+      .sidebar-wrapper .sidebar {
+        transform: translateX(0) !important;
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        padding-top: 60px;
+      }
+
       .btn-hamburger {
         display: flex;
         position: fixed;
         top: 15px;
         left: 15px;
-        width: 35px;
-        height: 35px;
+        width: 40px;
+        height: 40px;
         align-items: center;
         justify-content: center;
         background: #fff;
@@ -118,6 +112,7 @@ if (!$machine) {
       }
 
       .sidebar-overlay {
+        display: none;
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.5);
@@ -144,16 +139,17 @@ if (!$machine) {
 
 <body>
 
-  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
     <i class="fa-solid fa-bars"></i>
   </div>
+  <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
   <section class="main">
 
     <div class="sidebar-wrapper">
       <?php include $sidebar_file; ?>
     </div>
-    
+
     <div class="dashboard">
       <div class="container my-5">
         <div class="card shadow-lg border-0">
@@ -169,14 +165,12 @@ if (!$machine) {
               <!-- รูปเครื่องจักร -->
               <div class="text-center mb-4">
                 <?php if (!empty($machine['photo_url'])): ?>
-<<<<<<< HEAD
-                  <img src="<?= $machine['photo_url'] ?>" style="max-width:200px;" class="img-thumbnail">
-=======
-                  <img src="/factory_monitoring/<?= $machine['photo_url'] ?>" style="max-width:30%;" class="img-thumbnail">
->>>>>>> lnw007V2
-                <?php else: ?>
-                  <p class="text-muted">ไม่มีรูปภาพ</p>
-                <?php endif; ?>
+
+                    <img src="<?= $machine['photo_url'] ?>" style="max-width:200px;" class="img-thumbnail">
+
+                  <?php else: ?>
+                    <p class="text-muted">ไม่มีรูปภาพ</p>
+                  <?php endif; ?>
               </div>
 
               <div class="row g-3">
@@ -248,7 +242,6 @@ if (!$machine) {
     </div>
   </section>
 
-  <script src="/admin/SidebarAdmin.js"></script>
   <script>
     document.getElementById('delete-btn').addEventListener('click', function() {
       const reason = document.getElementById('delete_reason').value.trim();

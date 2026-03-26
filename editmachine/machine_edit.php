@@ -38,10 +38,10 @@ $sidebar_paths = [
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
-  'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
-  'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
-  'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
-  'Technician' => '/factory_monitoring/Technician/assets/css/sidebar_technician.css',
+  'Admin'      => '/admin/assets/css/index.css',
+  'Manager'    => '/Manager/assets/css/Sidebar.css',
+  'Operator'   => '/Operator/assets/css/SidebarOperator.css',
+  'Technician' => '/Technician/assets/css/sidebar_technician.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
@@ -58,7 +58,7 @@ $current_datasheet = $doc['file_path'] ?? "";
   <title>แก้ไขข้อมูลเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
-  <link rel="stylesheet" href="/factory_monitoring/editmachine/edit.css">
+  <link rel="stylesheet" href="/editmachine/edit.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -79,22 +79,6 @@ $current_datasheet = $doc['file_path'] ?? "";
         flex-direction: column;
       }
 
-      .sidebar-wrapper * {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-      }
-
-      .sidebar-wrapper a,
-      .sidebar-wrapper .nav-link {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        text-align: left !important;
-        padding: 10px 20px !important;
-      }
-
       .sidebar-wrapper {
         position: fixed;
         top: 0;
@@ -111,13 +95,22 @@ $current_datasheet = $doc['file_path'] ?? "";
         left: 0;
       }
 
+      .sidebar-wrapper .sidebar {
+        transform: translateX(0) !important;
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        padding-top: 60px;
+      }
+
       .btn-hamburger {
         display: flex;
         position: fixed;
         top: 15px;
         left: 15px;
-        width: 35px;
-        height: 35px;
+        width: 40px;
+        height: 40px;
         align-items: center;
         justify-content: center;
         background: #fff;
@@ -129,6 +122,7 @@ $current_datasheet = $doc['file_path'] ?? "";
       }
 
       .sidebar-overlay {
+        display: none;
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.5);
@@ -155,9 +149,10 @@ $current_datasheet = $doc['file_path'] ?? "";
 
 <body>
 
-  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+  <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
     <i class="fa-solid fa-bars"></i>
   </div>
+  <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
   <section class="main">
 
@@ -301,8 +296,6 @@ $current_datasheet = $doc['file_path'] ?? "";
         </div>
       </div>
     </div>
-
-    <script src="/admin/SidebarAdmin.js"></script>
     <script>
       document.getElementById('photo').addEventListener('change', function() {
         const preview = document.getElementById('image-preview');

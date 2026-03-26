@@ -2,7 +2,6 @@
 session_start();
 require_once __DIR__ . '/../config.php';
 
-/* ================= AUTH ================= */
 if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['Admin', 'Manager'])) {
     header("Location: /login.php");
     exit();
@@ -10,13 +9,11 @@ if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['Admin', 'Mana
 
 $user_role = $_SESSION['role'];
 
-/* ================= PARAM ================= */
 $machine_id = $_GET['machine_id'] ?? '';
 if ($machine_id === '') {
     die("ไม่พบ Machine ID");
 }
 
-/* ================= SIDEBAR ================= */
 $sidebar_paths = [
     'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
     'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
@@ -25,13 +22,12 @@ $sidebar_paths = [
 $sidebar_file = $sidebar_paths[$user_role] ?? null;
 
 $sidebar_css_paths = [
-    'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
-    'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
-    'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
+    'Admin'      => '/admin/assets/css/index.css',
+    'Manager'    => '/Manager/assets/css/Sidebar.css',
+    'Operator'   => '/Operator/assets/css/SidebarOperator.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
-/* ================= ADD PLAN ================= */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['task_name'])) {
 
     $task_name      = trim($_POST['task_name']);
@@ -86,7 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['task_name'])) {
     exit();
 }
 
-/* ================= FETCH PLANS ================= */
 $plans_stmt = $conn->prepare("
     SELECT
         mp.task_name,
@@ -107,7 +102,6 @@ $plans_stmt->bind_param("s", $machine_id);
 $plans_stmt->execute();
 $plans = $plans_stmt->get_result();
 
-/* ================= FETCH TECHNICIANS ================= */
 $techs = $conn->query("
     SELECT user_id, username
     FROM users
@@ -189,95 +183,83 @@ $techs = $conn->query("
         }
 
         @media (max-width: 992px) {
-      .main-content {
-        margin-left: 0;
-        padding: 15px;
-        border-radius: 0;
-        padding-top: 60px;
-      }
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+                border-radius: 0;
+                padding-top: 60px;
+            }
 
-      
+            .sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 250px;
+                height: 100vh;
+                z-index: 2000;
+                background-color: #fff;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease-in-out;
+            }
 
-      .sidebar-wrapper * {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-      }
+            .sidebar-wrapper.active {
+                left: 0;
+            }
 
-      .sidebar-wrapper a,
-      .sidebar-wrapper .nav-link {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        text-align: left !important;
-        padding: 10px 20px !important;
-      }
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
+            }
 
-      .sidebar-wrapper {
-        position: fixed;
-        top: 0;
-        left: -260px;
-        width: 250px;
-        height: 100vh;
-        z-index: 2000;
-        background-color: #fff;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease-in-out;
-      }
+            .btn-hamburger {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                width: 40px;
+                height: 40px;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                z-index: 3000;
+                font-size: 20px;
+                cursor: pointer;
+            }
 
-      .sidebar-wrapper.active {
-        left: 0;
-      }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1900;
+            }
 
-      .btn-hamburger {
-        display: flex;
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        width: 35px;
-        height: 35px;
-        align-items: center;
-        justify-content: center;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        z-index: 3000;
-        font-size: 20px;
-        cursor: pointer;
-      }
-
-      .sidebar-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1900;
-      }
-
-      .sidebar-overlay.active {
-        display: block;
-      }
-    }
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
     <div class="layout-wrapper">
-
-        <!-- SIDEBAR -->
         <div class="sidebar-wrapper">
             <?php include $sidebar_file; ?>
         </div>
 
-        <!-- MAIN -->
         <div class="main-content">
-
             <h2>🛠 แผนซ่อมตามรอบ : <?= htmlspecialchars($machine_id) ?></h2>
-
             <!-- ADD PLAN -->
             <div class="card">
                 <h3>เพิ่มแผนซ่อม</h3>
@@ -321,7 +303,7 @@ $techs = $conn->query("
                             รอบ: ทุก <?= $p['interval_month'] ?> เดือน<br>
                             รอบถัดไป: <?= $p['next_maintenance'] ?><br>
                             ช่าง: <?= htmlspecialchars($p['technician_name'] ?? 'ไม่ระบุ') ?><br>
-                            
+
                         </div>
                     <?php endwhile; ?>
                 <?php endif; ?>
