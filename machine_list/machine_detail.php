@@ -39,9 +39,9 @@ $sidebar_paths = [
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
-    'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
-    'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
-    'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
+    'Admin'      => '/admin/assets/css/index.css',
+    'Manager'    => '/Manager/assets/css/Sidebar.css',
+    'Operator'   => '/Operator/assets/css/SidebarOperator.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
@@ -139,7 +139,6 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
             margin-bottom: 20px;
         }
 
-        /* --- Responsive Styles --- */
         .btn-hamburger {
             display: none;
             position: fixed;
@@ -170,6 +169,15 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                 left: 0;
             }
 
+            .sidebar-wrapper .sidebar {
+                transform: translateX(0) !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                padding-top: 60px;
+            }
+
             .content-container {
                 width: 100%;
                 padding: 20px;
@@ -184,8 +192,8 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
                 position: fixed;
                 top: 15px;
                 left: 15px;
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 align-items: center;
                 justify-content: center;
                 background: #fff;
@@ -197,6 +205,7 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
             }
 
             .sidebar-overlay {
+                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(0, 0, 0, 0.5);
@@ -215,10 +224,10 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
 </head>
 
 <body>
-
-    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active')">
+    <div class="btn-hamburger" onclick="document.querySelector('.sidebar-wrapper').classList.toggle('active'); document.querySelector('.sidebar-overlay').classList.toggle('active');">
         <i class="fa-solid fa-bars"></i>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
 
     <section class="main">
 
@@ -457,7 +466,7 @@ $machine_img = !empty($machine['photo_url']) ? $machine['photo_url'] : 'https://
     <script>
         const MACHINE_MAC = "<?php echo $machine['mac_address']; ?>";
     </script>
-    <script src="/factory_monitoring/machine_list/js/machine_detail.js"></script>
+    <script src="/machine_list/js/machine_detail.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/admin/assets/js/SidebarAdmin.js"></script>
     <script src="/Manager/assets/js/SidebarManager.js"></script>
