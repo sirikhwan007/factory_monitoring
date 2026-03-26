@@ -201,7 +201,7 @@ $conn->close();
         <div class="container my-4">
           <div class="card mb-3 shadow-sm p-3">
             <div class="row g-3 align-items-center">
-              <div class="col-md-4 text-center" onclick="location.href='/machine_list/machine_detail.php?id=<?php echo $machine['machine_id']; ?>'" style="cursor: pointer;">
+              <div class="col-md-4 text-center" onclick="location.href='/factory_monitoring/machine_list/machine_detail.php?id=<?php echo $machine['machine_id']; ?>'" style="cursor: pointer;">
                 <?php
                 $imgSrc = !empty($machine['photo_url'])
                   ? $machine['photo_url']
