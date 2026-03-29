@@ -206,6 +206,7 @@ $page = 'dashboard';
                 });
             }
         });
+        
     </script>
 </body>
 
