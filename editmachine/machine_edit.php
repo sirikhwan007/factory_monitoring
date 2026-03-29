@@ -242,10 +242,9 @@ $current_datasheet_name = $doc['file_name'] ?? "";
               <!-- ปุ่มอัปโหลดรูป -->
               <div class="col-12 text-center mt-3">
                 <label class="form-label d-block mb-2">เปลี่ยนรูปภาพ:</label>
-
+                <small class="text-muted d-block text-center mt-2">*รองรับไฟล์รูปภาพเท่านั้น (สูงสุด 2MB)</small>
                 <div class="d-flex justify-content-center align-items-center gap-3">
                   <input type="file" id="photo" name="photo" accept="image/*" class="d-none">
-                  <small class="text-muted d-block text-center mt-2">*รองรับไฟล์รูปภาพเท่านั้น (สูงสุด 2MB)</small>
                   <label for="photo" class="custom-upload-button">
                     UPLOAD <i class="fas fa-upload"></i>
                   </label>
