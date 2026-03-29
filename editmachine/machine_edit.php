@@ -240,7 +240,7 @@ $current_datasheet = $doc['file_path'] ?? "";
               <!-- ปุ่มอัปโหลดรูป -->
               <div class="col-12 text-center mt-3">
                 <label class="form-label d-block mb-2">เปลี่ยนรูปภาพ:</label>
-
+                <small class="text-muted d-block text-center mt-2">*รองรับไฟล์รูปภาพเท่านั้น (สูงสุด 2MB)</small>
                 <div class="d-flex justify-content-center align-items-center gap-3">
                   <input type="file" id="photo" name="photo" accept="image/*" class="d-none">
                   <label for="photo" class="custom-upload-button">
@@ -278,6 +278,9 @@ $current_datasheet = $doc['file_path'] ?? "";
                   <!-- ปุ่มอัปโหลด -->
                   <input type="file" id="datasheet" name="datasheet"
                     accept=".pdf,.doc,.docx,.xls,.xlsx" class="d-none">
+                  <small class="text-muted d-block text-center mt-2">
+                    *รองรับไฟล์ PDF หรือเอกสารเท่านั้น (สูงสุด 2MB)
+                  </small>
 
                   <label for="datasheet" class="custom-upload-button mt-2">
                     UPLOAD DATASHEET <i class="fas fa-file-upload"></i>

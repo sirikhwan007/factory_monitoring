@@ -180,7 +180,7 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
                                         UPLOAD <i class="fas fa-upload"></i>
                                     </label>
                                 </div>
-                                <small class="text-muted d-block text-center mt-2">*รองรับไฟล์รูปภาพเท่านั้น (สูงสุด 5MB)</small>
+                                <small class="text-muted d-block text-center mt-2">*รองรับไฟล์รูปภาพเท่านั้น (สูงสุด 2MB)</small>
                             </div>
 
                             <!--datasheet-->
@@ -201,7 +201,7 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
                                 </div>
 
                                 <small class="text-muted d-block text-center mt-2">
-                                    *รองรับไฟล์ PDF หรือเอกสารเท่านั้น (สูงสุด 10MB)
+                                    *รองรับไฟล์ PDF หรือเอกสารเท่านั้น (สูงสุด 2MB)
                                 </small>
                             </div>
 
