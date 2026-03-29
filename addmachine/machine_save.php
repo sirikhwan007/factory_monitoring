@@ -123,9 +123,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "amp" => $amp,
             "hp" => $hp,
             "rpm" => $rpm,
-            "photo_url" => $photo_url,
+            "photo_url" => isset($_FILES['photo']['name']) ? $_FILES['photo']['name'] : null,
             "installed_at" => $installed_at,
-            "datasheet" => $datasheet_path
+            "datasheet" => $datasheet_name
         ];
 
         $description = "เพิ่มเครื่องจักรใหม่: " . json_encode($machine_data, JSON_UNESCAPED_UNICODE);
