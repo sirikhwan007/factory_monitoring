@@ -239,7 +239,6 @@ $current_datasheet_name = $doc['file_name'] ?? "";
                 </div>
               </div>
 
-              <!-- ปุ่มอัปโหลดรูป -->
               <div class="col-12 text-center mt-3">
                 <label class="form-label d-block mb-2">เปลี่ยนรูปภาพ:</label>
                 <small class="text-muted d-block text-center mt-2">*รองรับไฟล์รูปภาพเท่านั้น (สูงสุด 2MB)</small>
@@ -277,7 +276,6 @@ $current_datasheet_name = $doc['file_name'] ?? "";
                     <?php endif; ?>
                   </p>
 
-                  <!-- ปุ่มอัปโหลด -->
                   <input type="file" id="datasheet" name="datasheet"
                     accept=".pdf,.doc,.docx,.xls,.xlsx" class="d-none">
                   <small class="text-muted d-block text-center mt-2">
@@ -335,8 +333,7 @@ $current_datasheet_name = $doc['file_name'] ?? "";
         }
       });
       const urlParams = new URLSearchParams(window.location.search);
-      // 1. กรณีอัปเดตสำเร็จ
-      // 2. กรณีเกิดข้อผิดพลาด
+
       if (urlParams.get('status') === 'error') {
         Swal.fire({
           title: 'เกิดข้อผิดพลาด!',
@@ -369,7 +366,7 @@ $current_datasheet_name = $doc['file_name'] ?? "";
           confirmButtonColor: '#d33',
           confirmButtonText: 'ตกลง'
         }).then(() => {
-          // ลบ parameter ออกจาก URL เพื่อป้องกันป๊อปอัพเด้งซ้ำตอน Refresh
+
           window.history.replaceState({}, document.title, window.location.pathname + '?id=' + urlParams.get('id'));
         });
       }
