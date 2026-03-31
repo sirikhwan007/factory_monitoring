@@ -176,15 +176,33 @@ function updateGauge(gauge, value, maxValue) {
 function updateLineChart(chart, value, timeDateObject, smooth = true) {
   if (!chart) return;
 
-  chart.data.labels.push(timeDateObject);
-  chart.data.datasets[0].data.push(value ?? 0);
+  const labels = chart.data.labels;
+  const dataArray = chart.data.datasets[0].data;
 
-  if (chart.data.labels.length > 5000) {
-    chart.data.labels.shift();
-    chart.data.datasets[0].data.shift();
+  if (labels.length > 0) {
+    const lastTime = labels[labels.length - 1];
+
+    const timeDiff = timeDateObject.getTime() - lastTime.getTime();
+
+    const TIMEOUT_GAP = 60000; 
+
+    if (timeDiff > TIMEOUT_GAP) {
+
+      chart.data.labels.push(new Date(lastTime.getTime() + 1000));
+      dataArray.push(0);
+
+      chart.data.labels.push(new Date(timeDateObject.getTime() - 1000));
+      dataArray.push(0);
+    }
   }
 
-  
+  chart.data.labels.push(timeDateObject);
+  dataArray.push(value ?? 0);
+
+  while (chart.data.labels.length > 5000) {
+    chart.data.labels.shift();
+    dataArray.shift();
+  }
 
   chart.update('none');
 }
