@@ -26,8 +26,8 @@ foreach ($machines as $m) {
         $power = $data['power'] ?? 0;
 
         // เกณฑ์การวัด
-        $isDanger = ($temp >= 35 || $vib >= 15 || $cur >= 8 || $volt >= 300 || $power >= 20);
-        $isWarning = ($temp >= 34 || $vib >= 5 || $cur >= 5 || $volt >= 250 || $power >= 15);
+        $isDanger = ($temp >= 60 || $vib >= 80 || $cur >= 8 || $volt >= 280 || $power >= 1000);
+        $isWarning = ($temp >= 50 || $vib >= 50 || $cur >= 5 || $volt >= 230 || $power >= 800);
         $isRunning = ($power > 0.5);
 
         // 2. แยก Logic การนับให้ชัดเจน (ต้องเช็ก Danger ก่อนเสมอ)

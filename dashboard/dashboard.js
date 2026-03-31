@@ -3,8 +3,6 @@ const urlParams = new URLSearchParams(window.location.search);
 const API_BASE = "https://factory-monitoring.onrender.com";
 
 
-// --- 1. Plugin และ Utility Functions ---
-
 // Plugin สำหรับเข็ม (Needle) ของ Gauge
 const gaugeNeedlePlugin = {
   id: 'gaugeNeedle',
@@ -301,8 +299,8 @@ if (statusEl) {
     const energy = data.energy || 0;
 
     // กำหนดเงื่อนไข Danger และ Warning
-    const isDanger = (temp >= 80 || vib >= 80 || cur >= 8 || volt >= 300 || power >= 1000 || energy >= 3000);
-    const isWarning = (temp >= 70 || vib >= 50 || cur >= 5 || volt >= 250 || power >= 800 || energy >= 2500);
+    const isDanger = (temp >= 60 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1000 || energy >= 3000);
+    const isWarning = (temp >= 50 || vib >= 50 || cur >= 5 || volt >= 230 || power >= 800 || energy >= 2500);
     const isRunning = (power > 0.5); // เช็คว่าเครื่องเปิดอยู่หรือไม่
 
     if (isDanger) {
@@ -381,8 +379,7 @@ async function show24hHistory() {
             didOpen: () => {
                 const ctx = document.getElementById('historyChart').getContext('2d');
                 
-                // รวมข้อมูลทุก Field เข้าด้วยกันเพื่อหา Labels (เวลา)
-                // หมายเหตุ: ปรับโครงสร้างข้อมูลตามที่ API ส่งกลับมา
+                
                 const labels = history.temperature.map(p => new Date(p.time));
 
                 new Chart(ctx, {
