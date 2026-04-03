@@ -126,27 +126,24 @@ const createLineChart = (ctx, label, color) => {
     }
   });
 
-  // --- เพิ่ม Event Listener: ดับเบิ้ลคลิกเพื่อเปลี่ยนสเกลเวลา ---
   if (ctx.canvas) {
     ctx.canvas.addEventListener('dblclick', (e) => {
         const scaleX = chart.scales.x; // เข้าถึง Scale ปัจจุบัน
-        
-        // เช็คว่ากด Shift ค้างไว้ไหม (ถ้ากด Shift+Double Click ให้รีเซ็ตการซูม)
+
         if (e.shiftKey) {
             delete chart.options.scales.x.min;
             delete chart.options.scales.x.max;
             console.log(`${label}: Zoom Reset`);
         } else {
-            // คำนวณช่วงเวลาปัจจุบัน (Range)
+
             const min = scaleX.min;
             const max = scaleX.max;
             const range = max - min;
             
-            // กำหนดความแรงในการซูม (เช่น 0.5 คือซูมเข้า 50% หรือทีละ 2 เท่า)
+
             const zoomFactor = 0.5; 
             const newRange = range * zoomFactor;
-            
-            // คำนวณค่า min/max ใหม่ โดยให้ซูมเข้าหา "จุดกึ่งกลาง" ของช่วงปัจจุบัน
+
             const center = min + (range / 2);
             chart.options.scales.x.min = center - (newRange / 2);
             chart.options.scales.x.max = center + (newRange / 2);
@@ -317,8 +314,8 @@ if (statusEl) {
     const energy = data.energy || 0;
 
     // กำหนดเงื่อนไข Danger และ Warning
-    const isDanger = (temp >= 60 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1000 || energy >= 3000);
-    const isWarning = (temp >= 50 || vib >= 50 || cur >= 5 || volt >= 230 || power >= 800 || energy >= 2500);
+    const isDanger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1000 || energy >= 3000);
+    const isWarning = (temp >= 45 || vib >= 50 || cur >= 5 || volt >= 230 || power >= 800 || energy >= 2500);
     const isRunning = (power > 0.5); // เช็คว่าเครื่องเปิดอยู่หรือไม่
 
     if (isDanger) {
