@@ -33,7 +33,10 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     try:
-        payload = json.loads(msg.payload.decode())
+        raw_payload = msg.payload.decode('utf-8', errors='ignore')
+        
+
+        payload = json.loads(raw_payload)
         mac = payload.get("mac", "unknown")
         points = []
 
