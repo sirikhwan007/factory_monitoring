@@ -22,7 +22,7 @@ $(document).ready(function() {
 
             // เกณฑ์ Danger และ Warning ตามมาตรฐานหน้า Dashboard
             const isDanger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1000);
-            const isWarning = (temp >= 45 || vib >= 50 || cur >= 5 || volt >= 230 || power >= 800);
+            const isWarning = (temp >= 45 || vib >= 60 || cur >= 5 || volt >= 230 || power >= 800);
             const isRunning = (power > 0.5); 
 
             let statusText = "";
@@ -30,16 +30,16 @@ $(document).ready(function() {
 
             if (isDanger) {
                 statusText = "อันตราย";
-                statusColor = "#dc3545"; // สีแดง (bg-danger)
+                statusColor = "#dc3545"; 
             } else if (isWarning) {
                 statusText = "ผิดปกติ";
-                statusColor = "#ffc107"; // สีเหลือง (bg-warning)
+                statusColor = "#ffc107"; 
             } else if (isRunning) {
                 statusText = "กำลังทำงาน";
-                statusColor = "#28a745"; // สีเขียว (bg-success)
+                statusColor = "#28a745"; 
             } else {
                 statusText = "หยุดทำงาน";
-                statusColor = "#6c757d"; // สีเทา (bg-secondary)
+                statusColor = "#6c757d"; 
             }
 
             // อัปเดตการแสดงผลในหน้า machine_detail.php
