@@ -29,16 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             switch ($user['role']) {
                 case 'Admin':
-                    header("Location: /admin/index.php");
+                    header("Location: /factory_monitoring/admin/index.php");
                     break;
                 case 'Manager':
-                    header("Location: /Manager/dashboard.php");
+                    header("Location: /factory_monitoring/Manager/dashboard.php");
                     break;
                 case 'Technician':
-                    header("Location: /Technician/dashboard.php");
+                    header("Location: /factory_monitoring/Technician/dashboard.php");
                     break;
                 case 'Operator':
-                    header("Location: /Operator/dashboard.php");
+                    header("Location: /factory_monitoring/Operator/dashboard.php");
                     break;
                 default:
                     header("Location: login.php");
