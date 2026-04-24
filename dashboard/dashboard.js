@@ -314,8 +314,8 @@ if (statusEl) {
     const energy = data.energy || 0;
 
     // กำหนดเงื่อนไข Danger และ Warning
-    const isDanger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1000 || energy >= 3000);
-    const isWarning = (temp >= 45 || vib >= 60 || cur >= 5 || volt >= 230 || power >= 800 || energy >= 2500);
+    const isDanger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1700 || energy >= 3000);
+    const isWarning = (temp >= 45 || vib >= 60 || cur >= 4 || volt >= 230 || power >= 800 || energy >= 2500);
     const isRunning = (power > 0.5); // เช็คว่าเครื่องเปิดอยู่หรือไม่
 
     if (isDanger) {

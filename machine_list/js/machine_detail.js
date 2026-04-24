@@ -21,8 +21,8 @@ $(document).ready(function() {
             const power = data.power || 0;
 
             // เกณฑ์ Danger และ Warning ตามมาตรฐานหน้า Dashboard
-            const isDanger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1000);
-            const isWarning = (temp >= 45 || vib >= 60 || cur >= 5 || volt >= 230 || power >= 800);
+            const isDanger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1700);
+            const isWarning = (temp >= 45 || vib >= 60 || cur >= 4 || volt >= 230 || power >= 800);
             const isRunning = (power > 0.5); 
 
             let statusText = "";
