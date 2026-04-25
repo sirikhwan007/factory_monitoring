@@ -56,7 +56,22 @@ function filterStatus(status) {
     });
 }
 
-// ฟังก์ชันอัปเดตสถานะเครื่องจักรจาก API
+// ==========================================
+// 1. สร้างระบบ Cache สำหรับเก็บเกณฑ์แจ้งเตือน
+// ==========================================
+const thresholdsCache = {};
+
+// ตั้งเวลาล้าง Cache ทุกๆ 1 นาที เพื่อให้ไปโหลดเกณฑ์ใหม่จาก Database
+setInterval(() => {
+    for (let mac in thresholdsCache) {
+        delete thresholdsCache[mac];
+    }
+}, 60000);
+
+
+// ==========================================
+// 2. ฟังก์ชันอัปเดตสถานะเครื่องจักรจาก API (แก้ไขใหม่)
+// ==========================================
 async function updateMachineStatus(cardElement) {
     const macAddress = cardElement.getAttribute('data-mac-address');
     const machineIdText = cardElement.querySelector('.machine-id').textContent;
@@ -66,22 +81,53 @@ async function updateMachineStatus(cardElement) {
     if (!macAddress) return;
 
     try {
+        // ดึงข้อมูลเซ็นเซอร์ล่าสุด (จาก InfluxDB)
         const res = await fetch(`${API_BASE}/api/latest/${macAddress}`);
         if (!res.ok) throw new Error('Network error');
         const data = await res.json();
 
         if (!data || Object.keys(data).length === 0) return;
 
-        // --- ตรรกะการตัดสินใจ (Copy มาจาก machine_detail.js) ---
-        const temp  = Number(data.temperature) || 0;
-        const vib   = Number(data.vibration) || 0;
-        const cur   = Number(data.current) || 0;
-        const volt  = Number(data.voltage) || 0;
-        const power = Number(data.power) || 0;
+        // ดึงข้อมูลเกณฑ์ (Threshold) ของเครื่องนี้จากระบบ Cache
+        let t = thresholdsCache[macAddress];
+        if (!t) {
+            // ถ้าใน Cache ยังไม่มี ให้ยิง API ไปขอจาก Server มาเก็บไว้
+            const thRes = await fetch(`${API_BASE}/api/thresholds/${macAddress}`);
+            if (thRes.ok) {
+                t = await thRes.json();
+                thresholdsCache[macAddress] = t; 
+            } else {
+                return; // ถ้ายิงไม่สำเร็จ ให้รอโหลดรอบถัดไป
+            }
+        }
 
-        // เกณฑ์ตามมาตรฐานหน้า Detail/Dashboard
-        const isDanger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1700);
-        const isWarning = (temp >= 45 || vib >= 60 || cur >= 4 || volt >= 230 || power >= 800);
+        // --- ตรรกะการตัดสินใจ ---
+        const temp   = Number(data.temperature) || 0;
+        const vib    = Number(data.vibration) || 0;
+        const cur    = Number(data.current) || 0;
+        const volt   = Number(data.voltage) || 0;
+        const power  = Number(data.power) || 0;
+        const energy = Number(data.energy) || 0;
+
+        // ใช้เกณฑ์จากตาราง Database (ตัวแปร t) แทนที่การกำหนดตัวเลขตายตัว
+        const isDanger = (
+            temp >= t.danger_temp || 
+            vib >= t.danger_vib || 
+            cur >= t.danger_cur || 
+            volt >= t.danger_volt || 
+            power >= t.danger_power ||
+            energy >= t.danger_energy
+        );
+        
+        const isWarning = (
+            temp >= t.warn_temp || 
+            vib >= t.warn_vib || 
+            cur >= t.warn_cur || 
+            volt >= t.warn_volt || 
+            power >= t.warn_power ||
+            energy >= t.warn_energy
+        );
+        
         const isRunning = (power > 0.5); 
 
         let statusText = "";
@@ -101,8 +147,6 @@ async function updateMachineStatus(cardElement) {
             color = "#6c757d";
         }
 
-
-        // เก็บสถานะไว้ที่ตัว Card เพื่อใช้ในการกรอง (Filter)
         cardElement.dataset.statusText = statusText;
 
         if (statusElement) {
