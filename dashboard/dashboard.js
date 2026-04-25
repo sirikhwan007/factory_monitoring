@@ -204,26 +204,7 @@ function updateLineChart(chart, value, timeDateObject, smooth = true) {
   chart.update('none');
 }
 
-// สร้างตัวแปรเก็บเกณฑ์ไว้ในความจำของหน้าเว็บ
-  let currentThresholds = null;
 
-  
-  async function loadThresholdsForDashboard() {
-      try {
-          const res = await fetch(`${API_BASE}/api/thresholds/${MACHINE_MAC}`);
-          if (res.ok) {
-              currentThresholds = await res.json();
-          } else {
-              console.error("ดึงข้อมูล Threshold ไม่สำเร็จ (เซิร์ฟเวอร์อาจจะยังไม่อัปเดต API)");
-          }
-      } catch (err) {
-          console.error("การเชื่อมต่อ API Threshold มีปัญหา:", err);
-      }
-  }
-
-
-  loadThresholdsForDashboard();
-  setInterval(loadThresholdsForDashboard, 30000);
 // --- 4. Main Execution ---
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -320,61 +301,41 @@ async function checkInfluxStatus() {
       const elPow = document.getElementById("pow"); if(elPow) elPow.textContent = data.power?.toFixed(2) ?? "--";
       const elEnergy = document.getElementById("energy"); if(elEnergy) elEnergy.textContent = data.energy?.toFixed(2) ?? "--";
 
-      
+      // อัปเดตสถานะเครื่องจักรตาม Power (W)
+      // ในฟังก์ชัน fetchData()
 // อัปเดตสถานะเครื่องจักรตามค่าเซ็นเซอร์หลายตัว (สอดคล้องกับ Logic ของ Server)
-      // อัปเดตสถานะเครื่องจักร
-      const statusEl = document.getElementById("machine-status");
-      if (statusEl) {
-          // ถ้ายังโหลดเกณฑ์จาก Server ไม่สำเร็จ ให้ข้ามการประมวลผลไปก่อน
-          if (!currentThresholds) {
-              statusEl.className = "badge bg-secondary";
-              statusEl.textContent = "กำลังโหลด...";
-              return; 
-          }
+const statusEl = document.getElementById("machine-status");
+if (statusEl) {
+    const temp = data.temperature || 0;
+    const vib = data.vibration || 0;
+    const cur = data.current || 0;
+    const volt = data.voltage || 0;
+    const power = data.power || 0;
+    const energy = data.energy || 0;
 
-          const temp = data.temperature || 0;
-          const vib = data.vibration || 0;
-          const cur = data.current || 0;
-          const volt = data.voltage || 0;
-          const power = data.power || 0;
-          const energy = data.energy || 0;
-          const t = currentThresholds; // ดึงค่าเกณฑ์จากตัวแปรในความจำมาใช้
+    // กำหนดเงื่อนไข Danger และ Warning
+    const isDanger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1700 || energy >= 3000);
+    const isWarning = (temp >= 45 || vib >= 60 || cur >= 4 || volt >= 230 || power >= 800 || energy >= 2500);
+    const isRunning = (power > 0.5); // เช็คว่าเครื่องเปิดอยู่หรือไม่
 
-          // กำหนดเงื่อนไข Danger และ Warning
-          const isDanger = (
-              temp >= t.danger_temp || 
-              vib >= t.danger_vib || 
-              cur >= t.danger_cur || 
-              volt >= t.danger_volt || 
-              power >= t.danger_power || 
-              energy >= t.danger_energy
-          );
-          
-          const isWarning = (
-              temp >= t.warn_temp || 
-              vib >= t.warn_vib || 
-              cur >= t.warn_cur || 
-              volt >= t.warn_volt || 
-              power >= t.warn_power || 
-              energy >= t.warn_energy
-          );
-          
-          const isRunning = (power > 0.5); 
-
-          if (isDanger) {
-              statusEl.className = "badge bg-danger";
-              statusEl.textContent = "อันตราย";
-          } else if (isWarning) {
-              statusEl.className = "badge bg-warning text-dark";
-              statusEl.textContent = "ผิดปกติ";
-          } else if (isRunning) {
-              statusEl.className = "badge bg-success";
-              statusEl.textContent = "กำลังทำงาน";
-          } else {
-              statusEl.className = "badge bg-secondary"; 
-              statusEl.textContent = "หยุดทำงาน";
-          }
-      }
+    if (isDanger) {
+        // สถานะผิดปกติรุนแรง (เทียบเท่าไฟสีแดง)
+        statusEl.className = "badge bg-danger";
+        statusEl.textContent = "อันตราย";
+    } else if (isWarning) {
+        // สถานะเตือน (เทียบเท่าไฟสีเหลือง)
+        statusEl.className = "badge bg-warning text-dark"; // ใช้ text-dark เพื่อให้ชัดเจนบนสีเหลือง
+        statusEl.textContent = "ผิดปกติ";
+    } else if (isRunning) {
+        // สถานะทำงานปกติ (เทียบเท่าไฟสีเขียว)
+        statusEl.className = "badge bg-success";
+        statusEl.textContent = "กำลังทำงาน";
+    } else {
+        // สถานะหยุดทำงาน
+        statusEl.className = "badge bg-secondary"; 
+        statusEl.textContent = "หยุดทำงาน";
+    }
+}
         
       const updatedEl = document.getElementById("updated");
       if (updatedEl) updatedEl.textContent = "Last update: " + now.toLocaleTimeString();
