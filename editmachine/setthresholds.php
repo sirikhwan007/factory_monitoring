@@ -392,7 +392,7 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
                         confirmButtonColor: '#3085d6'
                     }).then(() => {
                         
-                        window.location.href = 'manage_machines.php';
+                        window.location.href = '../dashboard/Dashboard.php';
                     });
                 } else {
                     const resData = await response.json();
