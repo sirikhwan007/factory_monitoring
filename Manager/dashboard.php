@@ -153,8 +153,25 @@ $repairs  = $conn->query("
     </div>
 
     <section class="main-content">
-        <h3>Manager Control Panel</h3>
-        <p class="text-muted">ภาพรวมระบบโรงงาน</p>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3>Manager Control Panel</h3>
+                <p class="text-muted mb-0">ภาพรวมระบบโรงงาน</p>
+            </div>
+            
+            <div id="maintenance-alert" class="position-relative" style="cursor: pointer; font-size: 1.8rem;" 
+                 title="มีแผนซ่อมบำรุง <?= $unassignedPlanCount ?> รายการที่ยังไม่มีผู้รับผิดชอบ!" 
+                 onclick="location.href='/machine_list/machine.php'">
+                
+                <i class="fa-solid fa-bell <?= $unassignedPlanCount > 0 ? 'ring-active' : 'text-secondary' ?>"></i>
+                
+                <?php if ($unassignedPlanCount > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                        <?= $unassignedPlanCount ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+        </div>
 
         <div class="row g-4 mb-4">
             <?php
