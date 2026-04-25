@@ -264,7 +264,7 @@ $conn->close();
 
                       <?php if ($user_role !== 'Operator' && $user_role !== 'Technician'): ?>
                         <li>
-                          <a class="dropdown-item" href="/machine_list/maintenance_plan.php?machine_id=<?= urlencode($machine['machine_id']) ?>" style="color: #00CC99;">
+                          <a class="dropdown-item" href="/factory_monitoring/machine_list/maintenance_plan.php?machine_id=<?= urlencode($machine['machine_id']) ?>" style="color: #00CC99;">
                             <i class="fa-solid fa-calendar-check"></i> แผนซ่อมตามรอบ
                           </a>
                         </li>
