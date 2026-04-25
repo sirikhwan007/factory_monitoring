@@ -287,6 +287,14 @@ $repairs  = $conn->query("
 
         const API_BASE = "https://factory-monitoring.onrender.com";
 
+        const thresholdsCache = {};
+
+        setInterval(() => {
+            for (let mac in thresholdsCache) {
+                delete thresholdsCache[mac];
+            }
+        }, 60000);
+
         async function updateAllStatuses() {
             let onlineCount = 0;
             const rows = document.querySelectorAll('.machine-row');
@@ -296,20 +304,54 @@ $repairs  = $conn->query("
                 const id = row.getAttribute('data-id');
                 const statusCell = row.querySelector('.status-cell');
 
+                // ข้ามถ้าไม่มี MAC Address
+                if (!mac || mac === "") {
+                    statusCell.innerHTML = `<span class="badge bg-secondary">No MAC</span>`;
+                    continue;
+                }
                 try {
                     const res = await fetch(`${API_BASE}/api/latest/${mac}`);
+                    if (!res.ok) throw new Error("Network response was not ok");
                     const data = await res.json();
 
-                    if (!data || Object.keys(data).length === 0) throw new Error();
+                    if (!data || Object.keys(data).length === 0) throw new Error("No data");
+
+                    let t = thresholdsCache[mac];
+                    if (!t) {
+                        const thRes = await fetch(`${API_BASE}/api/thresholds/${mac}`);
+                        if (thRes.ok) {
+                            t = await thRes.json();
+                            thresholdsCache[mac] = t;
+                        } else {
+                            throw new Error("Cannot fetch threshold");
+                        }
+                    }
 
                     const temp = Number(data.temperature) || 0;
                     const vib = Number(data.vibration) || 0;
                     const cur = Number(data.current) || 0;
                     const volt = Number(data.voltage) || 0;
                     const pow = Number(data.power) || 0;
+                    const energy = Number(data.energy) || 0;
 
-                    const isDanger = (temp >= 35 || vib >= 15 || cur >= 8 || volt >= 300 || pow >= 20);
-                    const isWarning = (temp >= 34 || vib >= 5 || cur >= 5 || volt >= 250 || pow >= 15);
+                    const isDanger = (
+                        temp >= t.danger_temp ||
+                        vib >= t.danger_vib ||
+                        cur >= t.danger_cur ||
+                        volt >= t.danger_volt ||
+                        pow >= t.danger_power ||
+                        energy >= t.danger_energy
+                    );
+
+                    const isWarning = (
+                        temp >= t.warn_temp ||
+                        vib >= t.warn_vib ||
+                        cur >= t.warn_cur ||
+                        volt >= t.warn_volt ||
+                        pow >= t.warn_power ||
+                        energy >= t.warn_energy
+                    );
+
                     const isRunning = (pow > 0.5);
 
                     let statusText = "";
@@ -336,13 +378,11 @@ $repairs  = $conn->query("
                     statusCell.innerHTML = `<span class="badge bg-dark">Offline</span>`;
                 }
             }
-
             document.getElementById('onlineCount').innerText = onlineCount;
         }
-
         $(document).ready(function() {
             updateAllStatuses();
-            setInterval(updateAllStatuses, 5000);
+            setInterval(updateAllStatuses, 5000); // ดึงข้อมูลทุก 5 วินาที
         });
     </script>
 

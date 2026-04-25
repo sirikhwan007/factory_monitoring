@@ -1,29 +1,67 @@
 $(document).ready(function() {
     const API_BASE = "https://factory-monitoring.onrender.com";
+    let currentThresholds = null;
+
+    async function loadThresholdsForDetail() {
+
+        if (typeof MACHINE_MAC === 'undefined' || !MACHINE_MAC) return;
+        
+        try {
+            const res = await fetch(`${API_BASE}/api/thresholds/${MACHINE_MAC}`);
+            if (res.ok) {
+                currentThresholds = await res.json();
+            }
+        } catch (err) {
+            console.error("Error loading thresholds:", err);
+        }
+    }
+
+    loadThresholdsForDetail();
+    setInterval(loadThresholdsForDetail, 60000);
 
     async function updateDetailStatus() {
-        // ตรวจสอบว่ามีการประกาศ MACHINE_MAC มาจากหน้า PHP หรือไม่
-        if (typeof MACHINE_MAC === 'undefined') return;
+        if (typeof MACHINE_MAC === 'undefined' || !MACHINE_MAC) return;
 
         try {
-            // ดึงข้อมูลล่าสุดผ่าน MAC Address เหมือนใน dashboard.js
             const res = await fetch(`${API_BASE}/api/latest/${MACHINE_MAC}`);
             if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
 
-            if (!data || Object.keys(data).length === 0) return;
+            if (!data || Object.keys(data).length === 0) throw new Error("No data");
 
-            // --- ตรรกะการตัดสินใจ (Copy มาจาก Dashboard.js) ---
-            const temp = data.temperature || 0;
-            const vib = data.vibration || 0;
-            const cur = data.current || 0;
-            const volt = data.voltage || 0;
-            const power = data.power || 0;
+            if (!currentThresholds) {
+                $('#detail-status-display')
+                    .html('<span class="text-secondary">กำลังโหลดเกณฑ์...</span>');
+                return;
+            }
 
-            // เกณฑ์ Danger และ Warning ตามมาตรฐานหน้า Dashboard
-            const isDanger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1700);
-            const isWarning = (temp >= 45 || vib >= 60 || cur >= 4 || volt >= 230 || power >= 800);
-            const isRunning = (power > 0.5); 
+            const t = currentThresholds;
+            const temp = Number(data.temperature) || 0;
+            const vib = Number(data.vibration) || 0;
+            const cur = Number(data.current) || 0;
+            const volt = Number(data.voltage) || 0;
+            const pow = Number(data.power) || 0;
+            const energy = Number(data.energy) || 0;
+
+            const isDanger = (
+                temp >= t.danger_temp || 
+                vib >= t.danger_vib || 
+                cur >= t.danger_cur || 
+                volt >= t.danger_volt || 
+                pow >= t.danger_power ||
+                energy >= t.danger_energy
+            );
+            
+            const isWarning = (
+                temp >= t.warn_temp || 
+                vib >= t.warn_vib || 
+                cur >= t.warn_cur || 
+                volt >= t.warn_volt || 
+                pow >= t.warn_power ||
+                energy >= t.warn_energy
+            );
+
+            const isRunning = (pow > 0.5);
 
             let statusText = "";
             let statusColor = "";
@@ -36,26 +74,24 @@ $(document).ready(function() {
                 statusColor = "#ffc107"; 
             } else if (isRunning) {
                 statusText = "กำลังทำงาน";
-                statusColor = "#28a745"; 
+                statusColor = "#198754"; 
             } else {
                 statusText = "หยุดทำงาน";
                 statusColor = "#6c757d"; 
             }
 
-            // อัปเดตการแสดงผลในหน้า machine_detail.php
             $('#detail-status-display')
                 .text(statusText)
                 .css('color', statusColor);
 
         } catch (error) {
-            console.error("Error fetching status:", error);
             $('#detail-status-display')
-                .text("เชื่อมต่อผิดพลาด")
+                .text("Offline")
                 .css('color', '#bbbbbb');
         }
     }
 
-    // เรียกทำงานทันทีและตั้ง Loop ทุก 5 วินาที
+    // เรียกทำงานทันทีและวนซ้ำทุกๆ 5 วินาที
     updateDetailStatus();
     setInterval(updateDetailStatus, 5000);
 });
