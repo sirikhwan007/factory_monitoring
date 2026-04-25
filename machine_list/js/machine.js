@@ -66,7 +66,7 @@ setInterval(() => {
     for (let mac in thresholdsCache) {
         delete thresholdsCache[mac];
     }
-}, 60000);
+}, 10000);
 
 
 // ==========================================
