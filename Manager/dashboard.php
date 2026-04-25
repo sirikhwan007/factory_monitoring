@@ -17,6 +17,7 @@ $monthRepair    = $conn->query("
     WHERE MONTH(report_time)=MONTH(CURDATE())
       AND YEAR(report_time)=YEAR(CURDATE())
 ")->fetch_assoc()['c'];
+$unassignedPlanCount = $conn->query("SELECT COUNT(*) c FROM maintenance_plan WHERE technician_id IS NULL OR technician_id = ''")->fetch_assoc()['c'];
 $machines_sql = $conn->query("SELECT machine_id, name, mac_address FROM machines ORDER BY machine_id");
 
 $statusLabels = $statusCounts = [];
@@ -56,6 +57,29 @@ $repairs  = $conn->query("
     <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        @keyframes bell-ring {
+
+            0%,
+            100% {
+                transform: rotate(0);
+            }
+
+            20%,
+            60% {
+                transform: rotate(15deg);
+            }
+
+            40%,
+            80% {
+                transform: rotate(-15deg);
+            }
+        }
+
+        .ring-active {
+            animation: bell-ring 0.5s infinite;
+            color: #dc3545 !important;
+        }
+
         @media (max-width: 992px) {
             .main-content {
                 margin-left: 0;
