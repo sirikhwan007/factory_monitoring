@@ -186,12 +186,12 @@ $conn->close();
     <i class="fa-solid fa-bars"></i>
   </div>
   <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
-  
+
 
   <section class="main">
     <div class="sidebar-wrapper">
-    <?php include $sidebar_file; ?>
-  </div>
+      <?php include $sidebar_file; ?>
+    </div>
 
     <div class="dashboard">
       <div id="dashboard-content">
@@ -233,7 +233,11 @@ $conn->close();
                       <i class="fa-solid fa-gear"></i> จัดการเครื่องจักร
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuButton" style="min-width: 200px;">
-
+                      <li>
+                        <a class="dropdown-item text-primary" href="/editmachine/setthresholds.php?id=<?= $machine['machine_id'] ?>">
+                          <i class="fab fa-cloudscale"></i> ตั่งค่าเกณ์การแจ้งเตือน
+                        </a>
+                      </li>
                       <?php if ($user_role !== 'Operator' && $user_role !== 'Technician'): ?>
                         <li>
                           <a class="dropdown-item text-warning" href="/editmachine/machine_edit.php?id=<?= $machine['machine_id'] ?>">
