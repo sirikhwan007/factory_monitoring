@@ -29,6 +29,15 @@ if ($result && $result->num_rows > 0) {
   }
 }
 
+$unassigned_machines = [];
+$unassigned_sql = "SELECT DISTINCT machine_id FROM maintenance_plan WHERE technician_id IS NULL OR technician_id = ''";
+$unassigned_res = $conn->query($unassigned_sql);
+if ($unassigned_res && $unassigned_res->num_rows > 0) {
+    while ($row = $unassigned_res->fetch_assoc()) {
+        $unassigned_machines[] = $row['machine_id'];
+    }
+}
+
 $sidebar_paths = [
   'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
   'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
@@ -40,7 +49,7 @@ $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
   'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
-  'Manager'    => '/Manager/assets/css/Sidebar.css',
+  'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
   'Operator'   => '/Operator/assets/css/SidebarOperator.css',
   'Technician' => '/Technician/assets/css/sidebar_technician.css',
 ];
@@ -243,9 +252,16 @@ $conn->close();
       <div class="machine-cards-wrapper">
         <?php if (count($machines) > 0): ?>
           <?php foreach ($machines as $m): ?>
-            <div class="machine-card"
+            <div class="machine-card position-relative"
               data-mac-address="<?php echo htmlspecialchars($m['mac_address']); ?>"
               onclick="location.href='../dashboard/Dashboard.php?id=<?php echo $m['machine_id']; ?>'">
+
+              <?php if (in_array($m['machine_id'], $unassigned_machines)): ?>
+                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-2 border-white rounded-circle shadow" 
+                      title="มีแผนซ่อมบำรุงที่ยังไม่มีผู้รับผิดชอบ" 
+                      style="z-index: 10;">
+                </span>
+              <?php endif; ?>
 
               <img src="<?php echo $m['photo_url']; ?>" alt="รูปเครื่องจักร">
               <div class="machine-name"><?php echo htmlspecialchars($m['name']); ?></div>

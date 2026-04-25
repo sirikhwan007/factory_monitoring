@@ -17,6 +17,7 @@ $monthRepair    = $conn->query("
     WHERE MONTH(report_time)=MONTH(CURDATE())
       AND YEAR(report_time)=YEAR(CURDATE())
 ")->fetch_assoc()['c'];
+$unassignedPlanCount = $conn->query("SELECT COUNT(*) c FROM maintenance_plan WHERE technician_id IS NULL OR technician_id = ''")->fetch_assoc()['c'];
 $machines_sql = $conn->query("SELECT machine_id, name, mac_address FROM machines ORDER BY machine_id");
 
 $statusLabels = $statusCounts = [];
@@ -52,10 +53,33 @@ $repairs  = $conn->query("
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/Manager/assets/css/dashboard.css">
-    <link rel="stylesheet" href="/Manager/assets/css/Sidebar.css">
+    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/dashboard.css">
+    <link rel="stylesheet" href="/factory_monitoring/Manager/assets/css/Sidebar.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        @keyframes bell-ring {
+
+            0%,
+            100% {
+                transform: rotate(0);
+            }
+
+            20%,
+            60% {
+                transform: rotate(15deg);
+            }
+
+            40%,
+            80% {
+                transform: rotate(-15deg);
+            }
+        }
+
+        .ring-active {
+            animation: bell-ring 0.5s infinite;
+            color: #dc3545 !important;
+        }
+
         @media (max-width: 992px) {
             .main-content {
                 margin-left: 0;
@@ -129,8 +153,25 @@ $repairs  = $conn->query("
     </div>
 
     <section class="main-content">
-        <h3>Manager Control Panel</h3>
-        <p class="text-muted">ภาพรวมระบบโรงงาน</p>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3>Manager Control Panel</h3>
+                <p class="text-muted mb-0">ภาพรวมระบบโรงงาน</p>
+            </div>
+            
+            <div id="maintenance-alert" class="position-relative" style="cursor: pointer; font-size: 1.8rem;" 
+                 title="มีแผนซ่อมบำรุง <?= $unassignedPlanCount ?> รายการที่ยังไม่มีผู้รับผิดชอบ!" 
+                 onclick="location.href='/factory_monitoring/machine_list/machine.php'">
+                
+                <i class="fa-solid fa-bell <?= $unassignedPlanCount > 0 ? 'ring-active' : 'text-secondary' ?>"></i>
+                
+                <?php if ($unassignedPlanCount > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                        <?= $unassignedPlanCount ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+        </div>
 
         <div class="row g-4 mb-4">
             <?php
