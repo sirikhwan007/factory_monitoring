@@ -204,7 +204,26 @@ function updateLineChart(chart, value, timeDateObject, smooth = true) {
   chart.update('none');
 }
 
+// สร้างตัวแปรเก็บเกณฑ์ไว้ในความจำของหน้าเว็บ
+  let currentThresholds = null;
 
+  
+  async function loadThresholdsForDashboard() {
+      try {
+          const res = await fetch(`${API_BASE}/api/thresholds/${MACHINE_MAC}`);
+          if (res.ok) {
+              currentThresholds = await res.json();
+          } else {
+              console.error("ดึงข้อมูล Threshold ไม่สำเร็จ (เซิร์ฟเวอร์อาจจะยังไม่อัปเดต API)");
+          }
+      } catch (err) {
+          console.error("การเชื่อมต่อ API Threshold มีปัญหา:", err);
+      }
+  }
+
+
+  loadThresholdsForDashboard();
+  setInterval(loadThresholdsForDashboard, 30000);
 // --- 4. Main Execution ---
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -303,61 +322,57 @@ async function checkInfluxStatus() {
 
       
 // อัปเดตสถานะเครื่องจักรตามค่าเซ็นเซอร์หลายตัว (สอดคล้องกับ Logic ของ Server)
+      // อัปเดตสถานะเครื่องจักร
       const statusEl = document.getElementById("machine-status");
       if (statusEl) {
+          // ถ้ายังโหลดเกณฑ์จาก Server ไม่สำเร็จ ให้ข้ามการประมวลผลไปก่อน
+          if (!currentThresholds) {
+              statusEl.className = "badge bg-secondary";
+              statusEl.textContent = "กำลังโหลด...";
+              return; 
+          }
+
           const temp = data.temperature || 0;
           const vib = data.vibration || 0;
           const cur = data.current || 0;
           const volt = data.voltage || 0;
           const power = data.power || 0;
           const energy = data.energy || 0;
+          const t = currentThresholds; // ดึงค่าเกณฑ์จากตัวแปรในความจำมาใช้
 
-          // 1. ดึงค่า Threshold จาก API ก่อนตัดสินใจ
-          try {
-              const thRes = await fetch(`${API_BASE}/api/thresholds/${MACHINE_MAC}`);
-              const t = await thRes.json();
+          // กำหนดเงื่อนไข Danger และ Warning
+          const isDanger = (
+              temp >= t.danger_temp || 
+              vib >= t.danger_vib || 
+              cur >= t.danger_cur || 
+              volt >= t.danger_volt || 
+              power >= t.danger_power || 
+              energy >= t.danger_energy
+          );
+          
+          const isWarning = (
+              temp >= t.warn_temp || 
+              vib >= t.warn_vib || 
+              cur >= t.warn_cur || 
+              volt >= t.warn_volt || 
+              power >= t.warn_power || 
+              energy >= t.warn_energy
+          );
+          
+          const isRunning = (power > 0.5); 
 
-              // กำหนดเงื่อนไข Danger และ Warning โดยอิงจาก t (Threshold ที่ได้จาก Database)
-              const isDanger = (
-                  temp >= t.danger_temp || 
-                  vib >= t.danger_vib || 
-                  cur >= t.danger_cur || 
-                  volt >= t.danger_volt || 
-                  power >= t.danger_power || 
-                  energy >= t.danger_energy
-              );
-              
-              const isWarning = (
-                  temp >= t.warn_temp || 
-                  vib >= t.warn_vib || 
-                  cur >= t.warn_cur || 
-                  volt >= t.warn_volt || 
-                  power >= t.warn_power || 
-                  energy >= t.warn_energy
-              );
-              
-              const isRunning = (power > 0.5); // เช็คว่าเครื่องเปิดอยู่หรือไม่
-
-              // อัปเดตข้อความและสีของ Badge
-              if (isDanger) {
-                  statusEl.className = "badge bg-danger";
-                  statusEl.textContent = "อันตราย";
-              } else if (isWarning) {
-                  statusEl.className = "badge bg-warning text-dark";
-                  statusEl.textContent = "ผิดปกติ";
-              } else if (isRunning) {
-                  statusEl.className = "badge bg-success";
-                  statusEl.textContent = "กำลังทำงาน";
-              } else {
-                  statusEl.className = "badge bg-secondary"; 
-                  statusEl.textContent = "หยุดทำงาน";
-              }
-
-          } catch (err) {
-              console.error("ไม่สามารถดึงค่า Threshold ได้:", err);
-              // กรณีดึง API ล้มเหลว ให้ตั้งสถานะเป็นสีเทาหรือแสดงข้อผิดพลาดชั่วคราว
-              statusEl.className = "badge bg-secondary";
-              statusEl.textContent = "กำลังโหลด...";
+          if (isDanger) {
+              statusEl.className = "badge bg-danger";
+              statusEl.textContent = "อันตราย";
+          } else if (isWarning) {
+              statusEl.className = "badge bg-warning text-dark";
+              statusEl.textContent = "ผิดปกติ";
+          } else if (isRunning) {
+              statusEl.className = "badge bg-success";
+              statusEl.textContent = "กำลังทำงาน";
+          } else {
+              statusEl.className = "badge bg-secondary"; 
+              statusEl.textContent = "หยุดทำงาน";
           }
       }
         
