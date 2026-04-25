@@ -163,7 +163,7 @@ $repairs  = $conn->query("
                  title="มีแผนซ่อมบำรุง <?= $unassignedPlanCount ?> รายการที่ยังไม่มีผู้รับผิดชอบ!" 
                  onclick="location.href='/machine_list/machine.php'">
                 
-                <i class="fa-solid fa-bell <?= $unassignedPlanCount > 0 ? 'ring-active' : 'text-secondary' ?>"></i>
+                <i class="fa-solid fas fa-user-circle <?= $unassignedPlanCount > 0 ? 'ring-active' : 'text-secondary' ?>"></i>
                 
                 <?php if ($unassignedPlanCount > 0): ?>
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
