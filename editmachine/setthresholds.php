@@ -47,7 +47,7 @@ $sidebar_paths = [
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
-    'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
+    'Admin'      => '/admin/assets/css/index.css',
     'Manager'    => '/Manager/assets/css/Sidebar.css',
     'Operator'   => '/Operator/assets/css/SidebarOperator.css',
     'Technician' => '/Technician/assets/css/sidebar_technician.css',
@@ -376,7 +376,7 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
             }
             
             try {
-                const response = await fetch('https://factory-monitoring.onrender.com', {
+                const response = await fetch('https://factory-monitoring.onrender.com/api/thresholds', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
