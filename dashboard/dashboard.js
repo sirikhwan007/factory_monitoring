@@ -301,41 +301,65 @@ async function checkInfluxStatus() {
       const elPow = document.getElementById("pow"); if(elPow) elPow.textContent = data.power?.toFixed(2) ?? "--";
       const elEnergy = document.getElementById("energy"); if(elEnergy) elEnergy.textContent = data.energy?.toFixed(2) ?? "--";
 
-      // อัปเดตสถานะเครื่องจักรตาม Power (W)
-      // ในฟังก์ชัน fetchData()
+      
 // อัปเดตสถานะเครื่องจักรตามค่าเซ็นเซอร์หลายตัว (สอดคล้องกับ Logic ของ Server)
-const statusEl = document.getElementById("machine-status");
-if (statusEl) {
-    const temp = data.temperature || 0;
-    const vib = data.vibration || 0;
-    const cur = data.current || 0;
-    const volt = data.voltage || 0;
-    const power = data.power || 0;
-    const energy = data.energy || 0;
+      const statusEl = document.getElementById("machine-status");
+      if (statusEl) {
+          const temp = data.temperature || 0;
+          const vib = data.vibration || 0;
+          const cur = data.current || 0;
+          const volt = data.voltage || 0;
+          const power = data.power || 0;
+          const energy = data.energy || 0;
 
-    // กำหนดเงื่อนไข Danger และ Warning
-    const isDanger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1700 || energy >= 3000);
-    const isWarning = (temp >= 45 || vib >= 60 || cur >= 4 || volt >= 230 || power >= 800 || energy >= 2500);
-    const isRunning = (power > 0.5); // เช็คว่าเครื่องเปิดอยู่หรือไม่
+          // 1. ดึงค่า Threshold จาก API ก่อนตัดสินใจ
+          try {
+              const thRes = await fetch(`${API_BASE}/api/thresholds/${MACHINE_MAC}`);
+              const t = await thRes.json();
 
-    if (isDanger) {
-        // สถานะผิดปกติรุนแรง (เทียบเท่าไฟสีแดง)
-        statusEl.className = "badge bg-danger";
-        statusEl.textContent = "อันตราย";
-    } else if (isWarning) {
-        // สถานะเตือน (เทียบเท่าไฟสีเหลือง)
-        statusEl.className = "badge bg-warning text-dark"; // ใช้ text-dark เพื่อให้ชัดเจนบนสีเหลือง
-        statusEl.textContent = "ผิดปกติ";
-    } else if (isRunning) {
-        // สถานะทำงานปกติ (เทียบเท่าไฟสีเขียว)
-        statusEl.className = "badge bg-success";
-        statusEl.textContent = "กำลังทำงาน";
-    } else {
-        // สถานะหยุดทำงาน
-        statusEl.className = "badge bg-secondary"; 
-        statusEl.textContent = "หยุดทำงาน";
-    }
-}
+              // กำหนดเงื่อนไข Danger และ Warning โดยอิงจาก t (Threshold ที่ได้จาก Database)
+              const isDanger = (
+                  temp >= t.danger_temp || 
+                  vib >= t.danger_vib || 
+                  cur >= t.danger_cur || 
+                  volt >= t.danger_volt || 
+                  power >= t.danger_power || 
+                  energy >= t.danger_energy
+              );
+              
+              const isWarning = (
+                  temp >= t.warn_temp || 
+                  vib >= t.warn_vib || 
+                  cur >= t.warn_cur || 
+                  volt >= t.warn_volt || 
+                  power >= t.warn_power || 
+                  energy >= t.warn_energy
+              );
+              
+              const isRunning = (power > 0.5); // เช็คว่าเครื่องเปิดอยู่หรือไม่
+
+              // อัปเดตข้อความและสีของ Badge
+              if (isDanger) {
+                  statusEl.className = "badge bg-danger";
+                  statusEl.textContent = "อันตราย";
+              } else if (isWarning) {
+                  statusEl.className = "badge bg-warning text-dark";
+                  statusEl.textContent = "ผิดปกติ";
+              } else if (isRunning) {
+                  statusEl.className = "badge bg-success";
+                  statusEl.textContent = "กำลังทำงาน";
+              } else {
+                  statusEl.className = "badge bg-secondary"; 
+                  statusEl.textContent = "หยุดทำงาน";
+              }
+
+          } catch (err) {
+              console.error("ไม่สามารถดึงค่า Threshold ได้:", err);
+              // กรณีดึง API ล้มเหลว ให้ตั้งสถานะเป็นสีเทาหรือแสดงข้อผิดพลาดชั่วคราว
+              statusEl.className = "badge bg-secondary";
+              statusEl.textContent = "กำลังโหลด...";
+          }
+      }
         
       const updatedEl = document.getElementById("updated");
       if (updatedEl) updatedEl.textContent = "Last update: " + now.toLocaleTimeString();
