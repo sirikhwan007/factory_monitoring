@@ -39,7 +39,7 @@ $sidebar_paths = [
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
-  'Admin'      => '/admin/assets/css/index.css',
+  'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
   'Manager'    => '/Manager/assets/css/Sidebar.css',
   'Operator'   => '/Operator/assets/css/SidebarOperator.css',
   'Technician' => '/Technician/assets/css/sidebar_technician.css',
@@ -57,7 +57,7 @@ $conn->close();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>รายการเครื่องจักร</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/machine_list/css/machine_list.css">
+  <link rel="stylesheet" href="/factory_monitoring/machine_list/css/machine_list.css">
   <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

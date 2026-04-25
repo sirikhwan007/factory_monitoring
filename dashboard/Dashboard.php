@@ -41,7 +41,7 @@ $sidebar_paths = [
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
-  'Admin'      => '/admin/assets/css/index.css',
+  'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
   'Manager'    => '/Manager/assets/css/Sidebar.css',
   'Operator'   => '/Operator/assets/css/SidebarOperator.css',
   'Technician' => '/Technician/assets/css/sidebar_technician.css',
@@ -60,7 +60,7 @@ $conn->close();
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Motor Monitoring Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/dashboard/dashboard.css">
+  <link rel="stylesheet" href="/factory_monitoring/dashboard/dashboard.css">
   <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -186,12 +186,12 @@ $conn->close();
     <i class="fa-solid fa-bars"></i>
   </div>
   <div class="sidebar-overlay" onclick="document.querySelector('.sidebar-wrapper').classList.remove('active'); this.classList.remove('active')"></div>
-  
+
 
   <section class="main">
     <div class="sidebar-wrapper">
-    <?php include $sidebar_file; ?>
-  </div>
+      <?php include $sidebar_file; ?>
+    </div>
 
     <div class="dashboard">
       <div id="dashboard-content">
@@ -233,7 +233,11 @@ $conn->close();
                       <i class="fa-solid fa-gear"></i> จัดการเครื่องจักร
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuButton" style="min-width: 200px;">
-
+                      <li>
+                        <a class="dropdown-item text-primary" href="/factory_monitoring/editmachine/setthresholds.php?id=<?= $machine['machine_id'] ?>">
+                          <i class="fab fa-cloudscale"></i> ตั่งค่าเกณ์การแจ้งเตือน
+                        </a>
+                      </li>
                       <?php if ($user_role !== 'Operator' && $user_role !== 'Technician'): ?>
                         <li>
                           <a class="dropdown-item text-warning" href="/editmachine/machine_edit.php?id=<?= $machine['machine_id'] ?>">
@@ -407,7 +411,7 @@ $conn->close();
   </section>
 
   <!-- JavaScript ภายนอก -->
-  <script src="/dashboard/dashboard.js?v=<?php echo time(); ?>" defer></script>
+  <script src="/factory_monitoring/dashboard/dashboard.js?v=<?php echo time(); ?>" defer></script>
   <script src="/admin/SidebarAdmin.js"></script>
 
   <script>
