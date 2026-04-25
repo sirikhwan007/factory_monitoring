@@ -157,6 +157,46 @@ $conn->close();
       border-color: #adb5bd;
     }
 
+    @keyframes alert-vibrate {
+        0%, 100% { transform: rotate(0deg); }
+        10%, 30%, 50%, 70%, 90% { transform: translate(-1px, -1px) rotate(-3deg); }
+        20%, 40%, 60%, 80% { transform: translate(1px, 1px) rotate(3deg); }
+    }
+
+    .unassigned-alert-badge {
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        z-index: 10;
+
+        background-color: #dc3545; 
+        border: 2px solid #ffffff; 
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3); 
+        color: white;
+        border-radius: 50%;
+
+        width: 25px;
+        height: 25px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    /* 3. สไตล์ Animation สั่นวนลูป (ทำงานตลอด) */
+    .vibrating-alert {
+        animation: alert-vibrate 0.7s infinite;
+        animation-delay: 1.5s;
+    }
+
+    
+    .unassigned-alert-badge:hover {
+        animation-play-state: paused;
+        cursor: pointer;
+    }
+
     @media (max-width: 992px) {
       .dashboard {
         margin-left: 0;
@@ -257,10 +297,9 @@ $conn->close();
               onclick="location.href='../dashboard/Dashboard.php?id=<?php echo $m['machine_id']; ?>'">
 
               <?php if (in_array($m['machine_id'], $unassigned_machines)): ?>
-                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-2 border-white rounded-circle shadow" 
-                      title="มีแผนซ่อมบำรุงที่ยังไม่มีผู้รับผิดชอบ" 
-                      style="z-index: 10;">
-                </span>
+                <span class="unassigned-alert-badge vibrating-alert" 
+                      title="มีแผนซ่อมบำรุงที่ยังไม่มีผู้รับผิดชอบ">
+                    </span>
               <?php endif; ?>
 
               <img src="<?php echo $m['photo_url']; ?>" alt="รูปเครื่องจักร">
