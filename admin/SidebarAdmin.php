@@ -35,13 +35,13 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
       </li>
 
       <li>
-        <a href="/machine_list/machine.php">
+        <a href="/factory_monitoring/machine_list/machine.php">
           <i class="fas fa-industry"></i><span class="sb-text">รายการเครื่องจักร</span>
         </a>
       </li>
 
       <li>
-        <a href="/admin/users.php">
+        <a href="/factory_monitoring/admin/users.php">
           <i class="fas fa-user"></i><span class="sb-text">ผู้ใช้</span>
         </a>
       </li>

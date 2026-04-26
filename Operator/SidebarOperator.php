@@ -39,7 +39,7 @@ $activePage = $activePage ?? '';
                 </a>
             </li>
             <li>
-                <a href="/machine_list/machine.php"
+                <a href="/factory_monitoring/machine_list/machine.php"
                     class="<?= $activePage === 'machines' ? 'active' : '' ?>">
                     <i class="fa-solid fa-industry"></i>
                     <span class="sb-text">รายการเครื่องจักร</span>

@@ -13,10 +13,10 @@ $sidebar_paths = [
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
 
 $sidebar_css_paths = [
-    'Admin'      => '/admin/assets/css/index.css',
-    'Manager'    => '/Manager/assets/css/Sidebar.css',
-    'Operator'   => '/Operator/assets/css/SidebarOperator.css',
-    'Technician' => '/Technician/assets/css/sidebar_technician.css',
+    'Admin'      => '/factory_monitoring/admin/assets/css/index.css',
+    'Manager'    => '/factory_monitoring/Manager/assets/css/Sidebar.css',
+    'Operator'   => '/factory_monitoring/Operator/assets/css/SidebarOperator.css',
+    'Technician' => '/factory_monitoring/Technician/assets/css/sidebar_technician.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
@@ -31,13 +31,32 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
     <title>รายการเครื่องจักร</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="/addmachine/machine.css">
+    <link rel="stylesheet" href="/factory_monitoring/addmachine/machine.css">
     <link rel="stylesheet" href="<?php echo $current_sidebar_css; ?>">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        
+        .main {
+            width: 100%;
+            height: 100vh;
+            overflow: auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .dashboard {
+            flex: 1;
+            overflow: auto;
+            background: #f4f9fd;
+            border-radius: 20px;
+            padding: 30px;
+            margin-left: 250px;
+        }
+
         @media (max-width: 992px) {
             .dashboard {
                 margin-left: 0;
