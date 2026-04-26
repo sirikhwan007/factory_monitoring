@@ -38,6 +38,24 @@ $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Ope
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        .main {
+            width: 100%;
+            height: 100vh;
+            overflow: auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .dashboard {
+            flex: 1;
+            overflow: auto;
+            background: #f4f9fd;
+            border-radius: 20px;
+            padding: 30px;
+            margin-left: 250px;
+        }
+
         @media (max-width: 992px) {
             .dashboard {
                 margin-left: 0;
