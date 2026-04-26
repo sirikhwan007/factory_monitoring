@@ -16,7 +16,7 @@ $sidebar_css_paths = [
     'Admin'      => '/admin/assets/css/index.css',
     'Manager'    => '/Manager/assets/css/Sidebar.css',
     'Operator'   => '/Operator/assets/css/SidebarOperator.css',
-    'Technician' => '/Technician/assets/css/SidebarTechnician.css',
+    'Technician' => '/Technician/assets/css/sidebar_technician.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
