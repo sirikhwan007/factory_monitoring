@@ -42,8 +42,8 @@ $result = $conn->query($sql);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/users.css">
-    <link rel="stylesheet" href="/factory_monitoring/admin/assets/css/index.css">
+    <link rel="stylesheet" href="/admin/assets/css/users.css">
+    <link rel="stylesheet" href="/admin/assets/css/index.css">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -244,7 +244,7 @@ $result = $conn->query($sql);
 
                 if (!result.isConfirmed) return;
 
-                fetch("/factory_monitoring/admin/actions/approve_user.php", {
+                fetch("/admin/actions/approve_user.php", {
                         method: "POST",
                         body: new URLSearchParams({
                             user_id: userId
@@ -270,7 +270,7 @@ $result = $conn->query($sql);
 
                 if (!result.isConfirmed) return;
 
-                fetch("/factory_monitoring/admin/actions/reject_user.php", {
+                fetch("/admin/actions/reject_user.php", {
                         method: "POST",
                         body: new URLSearchParams({
                             user_id: userId
@@ -337,7 +337,7 @@ $result = $conn->query($sql);
             e.preventDefault();
             const formData = new FormData(this);
 
-            fetch("/factory_monitoring/admin/actions/update_user.php", {
+            fetch("/admin/actions/update_user.php", {
                     method: "POST",
                     body: formData
                 })
@@ -374,7 +374,7 @@ $result = $conn->query($sql);
             }).then((result) => {
                 if (result.isConfirmed) {
                     
-                    fetch("/factory_monitoring/admin/actions/delete_user.php", {
+                    fetch("/admin/actions/delete_user.php", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded",
