@@ -25,6 +25,7 @@ $role_manager    = $conn->query("SELECT COUNT(*) FROM users WHERE role='Manager'
 $role_technician = $conn->query("SELECT COUNT(*) FROM users WHERE role='Technician'")->fetch_row()[0];
 $role_operator   = $conn->query("SELECT COUNT(*) FROM users WHERE role='Operator'")->fetch_row()[0];
 
+$total_pending_users = $conn->query("SELECT COUNT(*) FROM users WHERE status='pending'")->fetch_row()[0];
 
 $sql_total = "SELECT COUNT(*) AS total FROM repair_requests";
 $total_repair = $conn->query($sql_total)->fetch_assoc()['total'];
@@ -268,7 +269,19 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
                     </div>
                 </div>
 
-                <h4 class="mt-4 mb-3">ข้อมูลผู้ใช้งานระบบ</h4>
+                <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+                    <h4>ข้อมูลผู้ใช้งานระบบ</h4>
+                    <div class="position-relative" style="cursor: pointer; font-size: 1.5rem;"
+                        title="รอการอนุมัติ <?= $total_pending_users ?> รายการ"
+                        onclick="location.href='/admin/users.php?status=pending'">
+
+                        <i class="fa-solid fa-user-clock text-secondary <?= $total_pending_users > 0 ? 'ring-active' : '' ?>"></i>
+
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark <?= $total_pending_users > 0 ? '' : 'd-none' ?>">
+                            <?= $total_pending_users ?>
+                        </span>
+                    </div>
+                </div>
 
                 <div class="row g-3">
 
