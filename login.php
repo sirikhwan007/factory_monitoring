@@ -9,44 +9,64 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = trim($_POST['password']);
 
     $stmt = $conn->prepare("
-        SELECT user_id, username, password, role, profile_image 
-        FROM users 
+        SELECT user_id, username, password, role, profile_image, status
+        FROM users
         WHERE username = ? LIMIT 1
     ");
+
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $res = $stmt->get_result();
 
     if ($res && $res->num_rows === 1) {
         $user = $res->fetch_assoc();
+
         if (password_verify($password, $user['password'])) {
 
-            $_SESSION['user_id']  = $user['user_id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['role']     = $user['role'];
+            if ($user['status'] == 'pending') {
+                $error = "บัญชีของคุณกำลังรอการอนุมัติจากผู้ดูแลระบบ";
+            } elseif ($user['status'] == 'rejected') {
+                $error = "บัญชีของคุณไม่ได้รับการอนุมัติ กรุณาติดต่อผู้ดูแลระบบ";
+            } elseif ($user['status'] == 'approved') {
 
-            $_SESSION['profile_image'] = !empty($user['profile_image']) ? $user['profile_image'] : 'default.png';
+                $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['role'] = $user['role'];
 
-            switch ($user['role']) {
-                case 'Admin':
-                    header("Location: /admin/index.php");
-                    break;
-                case 'Manager':
-                    header("Location: /Manager/dashboard.php");
-                    break;
-                case 'Technician':
-                    header("Location: /Technician/dashboard.php");
-                    break;
-                case 'Operator':
-                    header("Location: /Operator/dashboard.php");
-                    break;
-                default:
-                    header("Location: login.php");
+                $_SESSION['profile_image'] =
+                    !empty($user['profile_image'])
+                    ? $user['profile_image']
+                    : 'default.png';
+
+                switch ($user['role']) {
+                    case 'Admin':
+                        header("Location: /factory_monitoring/admin/index.php");
+                        break;
+
+                    case 'Manager':
+                        header("Location: /factory_monitoring/Manager/dashboard.php");
+                        break;
+
+                    case 'Technician':
+                        header("Location: /factory_monitoring/Technician/dashboard.php");
+                        break;
+
+                    case 'Operator':
+                        header("Location: /factory_monitoring/Operator/dashboard.php");
+                        break;
+
+                    default:
+                        header("Location: login.php");
+                }
+
+                exit;
             }
-            exit;
+        } else {
+            $error = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
         }
+    } else {
+        $error = "ไม่พบชื่อผู้ใช้นี้";
     }
-    $error = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
 }
 ?>
 
@@ -57,7 +77,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factory Monitoring</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
@@ -73,7 +92,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             justify-content: center;
             align-items: center;
             background: #eef2f7;
-            /* สีรอง ไม่แย่งสายตา */
         }
 
         .container {
@@ -152,8 +170,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 0 8px 16px rgba(0, 0, 0, 0.06);
         }
 
-
-        /* LEFT */
         .left {
             flex: 1.2;
             background: #f5f7fa;
@@ -161,30 +177,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             flex-direction: column;
             justify-content: center;
             align-items: center;
-
             padding: 30px;
-            /* ลดจาก 40 */
             gap: 12px;
-            /* คุมระยะทุก element */
         }
 
-        /* IMAGE */
         .left img {
             max-width: 85%;
-            /* ไม่ให้รูปใหญ่เกิน */
+
             margin-bottom: 6px;
-            /* ระยะเล็กๆ ใต้รูป */
+
         }
 
-        /* TITLE */
         .left h3 {
             margin: 0;
-            /* ตัด margin เดิมทิ้ง */
             font-weight: 600;
             text-align: center;
         }
 
-        /* DESCRIPTION */
         .left p {
             margin: 0;
             font-size: 14px;
@@ -199,10 +208,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            
+
         }
 
-        /* HEADER */
         .login-header {
 
             display: flex;
@@ -222,17 +230,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             opacity: 0.65;
         }
 
-        /* ERROR */
         .error {
             margin-bottom: 18px;
         }
 
-        /* FORM */
         .login-form {
             display: flex;
             flex-direction: column;
             gap: 18px;
-            /* คุม rhythm ทั้งฟอร์ม */
         }
 
         .form-group {
@@ -252,7 +257,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             outline: none;
         }
 
-        /* BUTTON */
         button {
             margin-top: 6px;
             padding: 12px;
@@ -270,13 +274,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         @media (max-width: 992px) {
             .container {
-                
+
                 max-width: 350px;
                 max-height: auto;
             }
-            .right{
+
+            .right {
                 max-width: 200px;
             }
+        }
+
+        .register-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .register-link p {
+            margin: 0;
+            font-size: 13px;
+            opacity: 0.7;
+        }
+
+        .register-link a {
+            display: inline-block;
+            margin-top: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #1e5eff;
+            transition: 0.2s;
+        }
+
+        .register-link a:hover {
+            color: #1748c5;
         }
     </style>
 </head>
@@ -315,6 +344,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div>
 
                 <button type="submit">Sign in</button>
+
+                <div class="register-link">
+                    <p>ยังไม่มีบัญชี?</p>
+                    <a href="register.php">สร้างบัญชีใหม่</a>
+                </div>
             </form>
 
         </div>
