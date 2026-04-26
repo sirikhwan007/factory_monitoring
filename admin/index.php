@@ -17,7 +17,7 @@ $page = 'dashboard';
 
 $total_machines  = $conn->query("SELECT COUNT(*) FROM machines")->fetch_row()[0];
 $total_danger = $conn->query("SELECT COUNT(*) FROM machines WHERE status='อันตราย'")->fetch_row()[0];
-
+$total_problems = $conn->query("SELECT COUNT(*) FROM machines WHERE status IN ('ผิดปกติ', 'อันตราย', 'หยุดทำงาน')")->fetch_row()[0];
 
 $total_users     = $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0];
 $role_admin      = $conn->query("SELECT COUNT(*) FROM users WHERE role='Admin'")->fetch_row()[0];
@@ -174,10 +174,10 @@ $recent_logs = $conn->query("SELECT * FROM logs ORDER BY created_at DESC LIMIT 1
             <div class="dashboard">
                 <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
                     <h4>ข้อมูลเครื่องจักร</h4>
-                    <div id="notification-bell" class="position-relative" style="cursor: pointer; font-size: 1.5rem;">
-                        <i class="fa-solid fa-bell text-secondary"></i>
-                        <span id="alert-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
-                            !
+                    <div id="notification-bell" class="position-relative" style="cursor: pointer; font-size: 1.5rem;" title="เครื่องจักรมีปัญหา <?= $total_problems ?> รายการ">
+                        <i class="fa-solid fa-bell text-secondary <?= $total_problems > 0 ? 'ring-active' : '' ?>"></i>
+                        <span id="alert-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger <?= $total_problems > 0 ? '' : 'd-none' ?>">
+                            <?= $total_problems ?>
                         </span>
                     </div>
                 </div>
