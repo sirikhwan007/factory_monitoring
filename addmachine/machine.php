@@ -7,6 +7,7 @@ $sidebar_paths = [
     'Admin'    => __DIR__ . '/../admin/SidebarAdmin.php',
     'Manager'  => __DIR__ . '/../Manager/partials/SidebarManager.php',
     'Operator' => __DIR__ . '/../Operator/SidebarOperator.php',
+    'Technician' => __DIR__ . '/../Technician/SidebarTechnician.php',
 ];
 // เลือกไฟล์
 $sidebar_file = $sidebar_paths[$user_role] ?? $sidebar_paths['Operator'];
@@ -15,6 +16,7 @@ $sidebar_css_paths = [
     'Admin'      => '/admin/assets/css/index.css',
     'Manager'    => '/Manager/assets/css/Sidebar.css',
     'Operator'   => '/Operator/assets/css/SidebarOperator.css',
+    'Technician' => '/Technician/assets/css/SidebarTechnician.css',
 ];
 $current_sidebar_css = $sidebar_css_paths[$user_role] ?? $sidebar_css_paths['Operator'];
 
