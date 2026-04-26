@@ -1,3 +1,4 @@
+console.log("users.js loaded");
 /* Open/Close Modals */
 function openAddModal() { document.getElementById('addModal').style.display = 'block'; }
 function closeAddModal() { document.getElementById('addModal').style.display = 'none'; }
@@ -164,3 +165,63 @@ function checkBinary(input) {
         input.style.borderColor = '';
     }
 }
+
+function rejectUser(userId) {
+    Swal.fire({
+        title: 'ยืนยันการ Reject?',
+        text: "ผู้ใช้นี้จะไม่ได้รับการอนุมัติ",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ใช่, Reject',
+        cancelButtonText: 'ยกเลิก'
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+
+            const formData = new FormData();
+            formData.append("user_id", userId);
+
+            fetch("actions/reject_user.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สำเร็จ!',
+                        text: 'Reject ผู้ใช้เรียบร้อยแล้ว',
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        location.reload();
+                    });
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ผิดพลาด',
+                        text: data.error
+                    });
+                }
+
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: err
+                });
+            });
+
+        }
+    });
+}
+
+function approveUser(userId) {
+    console.log("approve clicked", userId);
+    alert("approve = " + userId);
+}
+

@@ -41,7 +41,7 @@ $role = $_SESSION['role'] ?? 'ไม่ทราบสิทธิ์';
       </li>
 
       <li>
-        <a href="/admin/users.php">
+        <a href="/factory_monitoring/admin/users.php">
           <i class="fas fa-user"></i><span class="sb-text">ผู้ใช้</span>
         </a>
       </li>

@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($user['status'] == 'pending') {
                 $error = "บัญชีของคุณกำลังรอการอนุมัติจากผู้ดูแลระบบ";
             } elseif ($user['status'] == 'rejected') {
-                $error = "บัญชีของคุณไม่ได้รับการอนุมัติ";
+                $error = "บัญชีของคุณไม่ได้รับการอนุมัติ กรุณาติดต่อผู้ดูแลระบบ";
             } elseif ($user['status'] == 'approved') {
 
                 $_SESSION['user_id'] = $user['user_id'];
@@ -77,7 +77,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factory Monitoring</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
@@ -93,7 +92,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             justify-content: center;
             align-items: center;
             background: #eef2f7;
-            /* สีรอง ไม่แย่งสายตา */
         }
 
         .container {
@@ -172,8 +170,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 0 8px 16px rgba(0, 0, 0, 0.06);
         }
 
-
-        /* LEFT */
         .left {
             flex: 1.2;
             background: #f5f7fa;
@@ -181,30 +177,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             flex-direction: column;
             justify-content: center;
             align-items: center;
-
             padding: 30px;
-            /* ลดจาก 40 */
             gap: 12px;
-            /* คุมระยะทุก element */
         }
 
-        /* IMAGE */
         .left img {
             max-width: 85%;
-            /* ไม่ให้รูปใหญ่เกิน */
+
             margin-bottom: 6px;
-            /* ระยะเล็กๆ ใต้รูป */
+
         }
 
-        /* TITLE */
         .left h3 {
             margin: 0;
-            /* ตัด margin เดิมทิ้ง */
             font-weight: 600;
             text-align: center;
         }
 
-        /* DESCRIPTION */
         .left p {
             margin: 0;
             font-size: 14px;
@@ -222,7 +211,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         }
 
-        /* HEADER */
         .login-header {
 
             display: flex;
@@ -242,17 +230,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             opacity: 0.65;
         }
 
-        /* ERROR */
         .error {
             margin-bottom: 18px;
         }
 
-        /* FORM */
         .login-form {
             display: flex;
             flex-direction: column;
             gap: 18px;
-            /* คุม rhythm ทั้งฟอร์ม */
         }
 
         .form-group {
@@ -272,7 +257,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             outline: none;
         }
 
-        /* BUTTON */
         button {
             margin-top: 6px;
             padding: 12px;
