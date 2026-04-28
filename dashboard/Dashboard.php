@@ -286,6 +286,12 @@ $conn->close();
                           <i class="fa-solid fa-clock-rotate-left"></i> ประวัติ 24 ชม.
                         </button>
                       </li>
+
+                      <li>
+                        <button onclick="show7dHistory()" class="dropdown-item text-info">
+                          <i class="fa-solid fa-clock-rotate-left"></i> ประวัติ 7 วัน
+                        </button>
+                      </li>
                     </ul>
                   </div>
                 </div>

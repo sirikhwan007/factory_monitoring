@@ -470,3 +470,60 @@ async function show24hHistory() {
         Swal.fire('ผิดพลาด', 'ไม่สามารถดึงข้อมูลย้อนหลังได้', 'error');
     }
 }
+async function show7dHistory() {
+    // แสดง Loading ระหว่างรอข้อมูล
+    Swal.fire({
+        title: 'กำลังดึงข้อมูลย้อนหลัง...',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    try {
+        
+        const res = await fetch(`${API_BASE}/api/history?range=7d&mac=${MACHINE_MAC}`);
+        const history = await res.json();
+
+        // ปิด Loading และเปิดหน้าต่างกราฟ
+        Swal.fire({
+            title: `ประวัติการทำงาน 7 วัน (${MACHINE_MAC})`,
+            html: '<canvas id="historyChart" width="400" height="250"></canvas>',
+            width: '80%',
+            confirmButtonText: 'ปิด',
+            didOpen: () => {
+                const ctx = document.getElementById('historyChart').getContext('2d');
+                
+                
+                const labels = history.temperature.map(p => new Date(p.time));
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: 'Temp (°C)', data: history.temperature.map(p => p.value), borderColor: '#f87171', tension: 0.2, pointRadius: 0 },
+                            { label: 'Vib (g)', data: history.vibration.map(p => p.value), borderColor: '#facc15', tension: 0.2, pointRadius: 0 },
+                            { label: 'Power (W)', data: history.power.map(p => p.value), borderColor: '#a78bfa', tension: 0.2, pointRadius: 0 },
+                            { label: 'Energy (Wh)', data: history.energy.map(p => p.value), borderColor: '#f472b6', tension: 0.2, pointRadius: 0 },
+                            { label: 'Volt (V)', data: history.voltage.map(p => p.value), borderColor: '#60a5fa', tension: 0.2, pointRadius: 0 },
+                            { label: 'Curr (A)', data: history.current.map(p => p.value), borderColor: '#34d399', tension: 0.2, pointRadius: 0 }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: { 
+                                type: 'time', 
+                                time: { unit: 'hour', displayFormats: { hour: 'HH:mm' } },
+                                title: { display: true, text: 'เวลา' }
+                            },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+        });
+    } catch (err) {
+        console.error("History Error:", err);
+        Swal.fire('ผิดพลาด', 'ไม่สามารถดึงข้อมูลย้อนหลังได้', 'error');
+    }
+}
