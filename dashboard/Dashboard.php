@@ -288,7 +288,7 @@ $conn->close();
                       </li>
 
                       <li>
-                        <button onclick="show7dHistory()" class="dropdown-item text-info">
+                        <button onclick="show7dHistory()" class="dropdown-item text-primary">
                           <i class="fa-solid fa-clock-rotate-left"></i> ประวัติ 7 วัน
                         </button>
                       </li>
