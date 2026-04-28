@@ -86,16 +86,16 @@ const createLineChart = (ctx, label, color) => {
 
   const chart = new Chart(ctx, {
     type: 'line',
-    data: { 
-        labels: [], 
-        datasets: [{ 
-            label, 
-            data: [], 
-            borderColor: color, 
-            tension: 0.3, 
-            fill: false,
-            pointRadius: 0 // ซ่อนจุดเล็กๆ เพื่อให้กราฟดูสะอาดตาเมื่อข้อมูลเยอะ
-        }] 
+    data: {
+      labels: [],
+      datasets: [{
+        label,
+        data: [],
+        borderColor: color,
+        tension: 0.3,
+        fill: false,
+        pointRadius: 0 // ซ่อนจุดเล็กๆ เพื่อให้กราฟดูสะอาดตาเมื่อข้อมูลเยอะ
+      }]
     },
     options: {
       responsive: true,
@@ -119,8 +119,8 @@ const createLineChart = (ctx, label, color) => {
             text: 'Time'
           }
         },
-        y: { 
-          beginAtZero: true 
+        y: {
+          beginAtZero: true
         }
       }
     }
@@ -128,32 +128,32 @@ const createLineChart = (ctx, label, color) => {
 
   if (ctx.canvas) {
     ctx.canvas.addEventListener('dblclick', (e) => {
-        const scaleX = chart.scales.x; // เข้าถึง Scale ปัจจุบัน
+      const scaleX = chart.scales.x; // เข้าถึง Scale ปัจจุบัน
 
-        if (e.shiftKey) {
-            delete chart.options.scales.x.min;
-            delete chart.options.scales.x.max;
-            console.log(`${label}: Zoom Reset`);
-        } else {
+      if (e.shiftKey) {
+        delete chart.options.scales.x.min;
+        delete chart.options.scales.x.max;
+        console.log(`${label}: Zoom Reset`);
+      } else {
 
-            const min = scaleX.min;
-            const max = scaleX.max;
-            const range = max - min;
-            
+        const min = scaleX.min;
+        const max = scaleX.max;
+        const range = max - min;
 
-            const zoomFactor = 0.5; 
-            const newRange = range * zoomFactor;
 
-            const center = min + (range / 2);
-            chart.options.scales.x.min = center - (newRange / 2);
-            chart.options.scales.x.max = center + (newRange / 2);
-            
-            console.log(`${label}: Zoom In`);
-        }
+        const zoomFactor = 0.5;
+        const newRange = range * zoomFactor;
 
-        chart.update(); // อัปเดตกราฟ
+        const center = min + (range / 2);
+        chart.options.scales.x.min = center - (newRange / 2);
+        chart.options.scales.x.max = center + (newRange / 2);
+
+        console.log(`${label}: Zoom In`);
+      }
+
+      chart.update(); // อัปเดตกราฟ
     });
-}
+  }
 
   return chart;
 };
@@ -181,7 +181,7 @@ function updateLineChart(chart, value, timeDateObject, smooth = true) {
 
     const timeDiff = timeDateObject.getTime() - lastTime.getTime();
 
-    const TIMEOUT_GAP = 60000; 
+    const TIMEOUT_GAP = 60000;
 
     if (timeDiff > TIMEOUT_GAP) {
 
@@ -205,31 +205,31 @@ function updateLineChart(chart, value, timeDateObject, smooth = true) {
 }
 
 // สร้างตัวแปรเก็บเกณฑ์ไว้ในหน่วยความจำของหน้าเว็บ
-  let currentThresholds = null;
+let currentThresholds = null;
 
-  // ฟังก์ชันสำหรับดึงเกณฑ์จาก Server
-  async function loadThresholdsForDashboard() {
-      try {
-          const res = await fetch(`${API_BASE}/api/thresholds/${MACHINE_MAC}`);
-          if (res.ok) {
-              currentThresholds = await res.json();
-          } else {
-              console.error("ไม่สามารถดึงข้อมูล Threshold ได้");
-          }
-      } catch (err) {
-          console.error("การเชื่อมต่อ API Threshold มีปัญหา:", err);
-      }
+// ฟังก์ชันสำหรับดึงเกณฑ์จาก Server
+async function loadThresholdsForDashboard() {
+  try {
+    const res = await fetch(`${API_BASE}/api/thresholds/${MACHINE_MAC}`);
+    if (res.ok) {
+      currentThresholds = await res.json();
+    } else {
+      console.error("ไม่สามารถดึงข้อมูล Threshold ได้");
+    }
+  } catch (err) {
+    console.error("การเชื่อมต่อ API Threshold มีปัญหา:", err);
   }
+}
 
-  // เรียกใช้ครั้งแรกทันทีที่เปิดหน้าเว็บ
-  loadThresholdsForDashboard();
-  
-  // สั่งให้อัปเดตเกณฑ์ใหม่ทุกๆ 1 นาที (เผื่อมีการไปแก้ค่าที่หน้าเว็บตั้งค่า)
-  setInterval(loadThresholdsForDashboard, 10000);
+// เรียกใช้ครั้งแรกทันทีที่เปิดหน้าเว็บ
+loadThresholdsForDashboard();
+
+// สั่งให้อัปเดตเกณฑ์ใหม่ทุกๆ 1 นาที (เผื่อมีการไปแก้ค่าที่หน้าเว็บตั้งค่า)
+setInterval(loadThresholdsForDashboard, 10000);
 // --- 4. Main Execution ---
 
 document.addEventListener("DOMContentLoaded", async () => {
-  
+
   // สร้างกราฟ
   const tempChart = createLineChart(document.getElementById("tempChart"), "Temperature", "#f87171");
   const vibChart = createLineChart(document.getElementById("vibChart"), "Vibration", "#facc15");
@@ -247,60 +247,60 @@ document.addEventListener("DOMContentLoaded", async () => {
   const energyGauge = createGauge(document.getElementById("energyGauge"), 5000);
 
 
- async function loadHistory() {
-  try {
-    const res = await fetch(
-      `${API_BASE}/api/history?range=1h&mac=${MACHINE_MAC}`
-    );
-    const history = await res.json();
+  async function loadHistory() {
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/history?range=1h&mac=${MACHINE_MAC}`
+      );
+      const history = await res.json();
 
-    history.temperature.forEach(p =>
-      updateLineChart(tempChart, p.value, new Date(p.time), false)
-    );
-    history.vibration.forEach(p =>
-      updateLineChart(vibChart, p.value, new Date(p.time), false)
-    );
-    history.voltage.forEach(p =>
-      updateLineChart(voltChart, p.value, new Date(p.time), false)
-    );
-    history.current.forEach(p =>
-      updateLineChart(currChart, p.value, new Date(p.time), false)
-    );
-    history.power.forEach(p =>
-      updateLineChart(powChart, p.value, new Date(p.time), false)
-    );
-    history.energy.forEach(p =>
-      updateLineChart(energyChart, p.value, new Date(p.time), false)
-    );
-  } catch (err) {
-    console.error("History load error:", err);
+      history.temperature.forEach(p =>
+        updateLineChart(tempChart, p.value, new Date(p.time), false)
+      );
+      history.vibration.forEach(p =>
+        updateLineChart(vibChart, p.value, new Date(p.time), false)
+      );
+      history.voltage.forEach(p =>
+        updateLineChart(voltChart, p.value, new Date(p.time), false)
+      );
+      history.current.forEach(p =>
+        updateLineChart(currChart, p.value, new Date(p.time), false)
+      );
+      history.power.forEach(p =>
+        updateLineChart(powChart, p.value, new Date(p.time), false)
+      );
+      history.energy.forEach(p =>
+        updateLineChart(energyChart, p.value, new Date(p.time), false)
+      );
+    } catch (err) {
+      console.error("History load error:", err);
+    }
   }
-}
 
-await loadHistory(); // เรียกใช้งาน!
+  await loadHistory(); // เรียกใช้งาน!
   fetchData();
 
   // ตรวจสอบสถานะ InfluxDB
-async function checkInfluxStatus() {
-  const influxStatusEl = document.getElementById("influx-status");
-  try {
-    const res = await fetch(`${API_BASE}/api/status`);
-    const data = await res.json();
-    if (influxStatusEl) {
-      influxStatusEl.textContent = data.connected 
-        ? "เชื่อมต่อสำเร็จ" 
-        : "เชื่อมต่อล้มเหลว";
-      influxStatusEl.className = data.connected 
-        ? "badge bg-success" 
-        : "badge bg-danger";
-    }
-  } catch {
-    if (influxStatusEl) {
-      influxStatusEl.textContent = "ไม่สามารถติดต่อ API ได้";
-      influxStatusEl.className = "badge bg-danger";
+  async function checkInfluxStatus() {
+    const influxStatusEl = document.getElementById("influx-status");
+    try {
+      const res = await fetch(`${API_BASE}/api/status`);
+      const data = await res.json();
+      if (influxStatusEl) {
+        influxStatusEl.textContent = data.connected
+          ? "เชื่อมต่อสำเร็จ"
+          : "เชื่อมต่อล้มเหลว";
+        influxStatusEl.className = data.connected
+          ? "badge bg-success"
+          : "badge bg-danger";
+      }
+    } catch {
+      if (influxStatusEl) {
+        influxStatusEl.textContent = "ไม่สามารถติดต่อ API ได้";
+        influxStatusEl.className = "badge bg-danger";
+      }
     }
   }
-}
 
 
   // ดึงข้อมูลจาก API
@@ -315,69 +315,69 @@ async function checkInfluxStatus() {
       const now = new Date();
 
       // อัปเดตตัวเลข Text
-      const elTemp = document.getElementById("temp"); if(elTemp) elTemp.textContent = data.temperature?.toFixed(2) ?? "--";
-      const elVib = document.getElementById("vib"); if(elVib) elVib.textContent = data.vibration?.toFixed(2) ?? "--";
-      const elVolt = document.getElementById("volt"); if(elVolt) elVolt.textContent = data.voltage?.toFixed(2) ?? "--";
-      const elCurr = document.getElementById("curr"); if(elCurr) elCurr.textContent = data.current?.toFixed(2) ?? "--";
-      const elPow = document.getElementById("pow"); if(elPow) elPow.textContent = data.power?.toFixed(2) ?? "--";
-      const elEnergy = document.getElementById("energy"); if(elEnergy) elEnergy.textContent = data.energy?.toFixed(2) ?? "--";
+      const elTemp = document.getElementById("temp"); if (elTemp) elTemp.textContent = data.temperature?.toFixed(2) ?? "--";
+      const elVib = document.getElementById("vib"); if (elVib) elVib.textContent = data.vibration?.toFixed(2) ?? "--";
+      const elVolt = document.getElementById("volt"); if (elVolt) elVolt.textContent = data.voltage?.toFixed(2) ?? "--";
+      const elCurr = document.getElementById("curr"); if (elCurr) elCurr.textContent = data.current?.toFixed(2) ?? "--";
+      const elPow = document.getElementById("pow"); if (elPow) elPow.textContent = data.power?.toFixed(2) ?? "--";
+      const elEnergy = document.getElementById("energy"); if (elEnergy) elEnergy.textContent = data.energy?.toFixed(2) ?? "--";
 
 
-// อัปเดตสถานะเครื่องจักรตามค่าเซ็นเซอร์หลายตัว 
+      // อัปเดตสถานะเครื่องจักรตามค่าเซ็นเซอร์หลายตัว 
       const statusEl = document.getElementById("machine-status");
       if (statusEl) {
-          // ถ้ายังโหลดเกณฑ์จาก Server ไม่เสร็จ ให้ขึ้นข้อความรอไปก่อน
-          if (!currentThresholds) {
-              statusEl.className = "badge bg-secondary";
-              statusEl.textContent = "กำลังโหลด...";
-              return; 
-          }
+        // ถ้ายังโหลดเกณฑ์จาก Server ไม่เสร็จ ให้ขึ้นข้อความรอไปก่อน
+        if (!currentThresholds) {
+          statusEl.className = "badge bg-secondary";
+          statusEl.textContent = "กำลังโหลด...";
+          return;
+        }
 
-          const temp = data.temperature || 0;
-          const vib = data.vibration || 0;
-          const cur = data.current || 0;
-          const volt = data.voltage || 0;
-          const power = data.power || 0;
-          const energy = data.energy || 0;
-          
-          const t = currentThresholds; // นำเกณฑ์ที่ดึงมาเก็บไว้ในตัวแปรแบบสั้นๆ
+        const temp = data.temperature || 0;
+        const vib = data.vibration || 0;
+        const cur = data.current || 0;
+        const volt = data.voltage || 0;
+        const power = data.power || 0;
+        const energy = data.energy || 0;
 
-          // กำหนดเงื่อนไข Danger และ Warning โดยอิงจากฐานข้อมูล
-          const isDanger = (
-              temp >= t.danger_temp || 
-              vib >= t.danger_vib || 
-              cur >= t.danger_cur || 
-              volt >= t.danger_volt || 
-              power >= t.danger_power || 
-              energy >= t.danger_energy
-          );
-          
-          const isWarning = (
-              temp >= t.warn_temp || 
-              vib >= t.warn_vib || 
-              cur >= t.warn_cur || 
-              volt >= t.warn_volt || 
-              power >= t.warn_power || 
-              energy >= t.warn_energy
-          );
-          
-          const isRunning = (power > 0.5); // เช็คว่าเครื่องเปิดอยู่หรือไม่
+        const t = currentThresholds; // นำเกณฑ์ที่ดึงมาเก็บไว้ในตัวแปรแบบสั้นๆ
 
-          if (isDanger) {
-              statusEl.className = "badge bg-danger";
-              statusEl.textContent = "อันตราย";
-          } else if (isWarning) {
-              statusEl.className = "badge bg-warning text-dark";
-              statusEl.textContent = "ผิดปกติ";
-          } else if (isRunning) {
-              statusEl.className = "badge bg-success";
-              statusEl.textContent = "กำลังทำงาน";
-          } else {
-              statusEl.className = "badge bg-secondary"; 
-              statusEl.textContent = "หยุดทำงาน";
-          }
+        // กำหนดเงื่อนไข Danger และ Warning โดยอิงจากฐานข้อมูล
+        const isDanger = (
+          temp >= t.danger_temp ||
+          vib >= t.danger_vib ||
+          cur >= t.danger_cur ||
+          volt >= t.danger_volt ||
+          power >= t.danger_power ||
+          energy >= t.danger_energy
+        );
+
+        const isWarning = (
+          temp >= t.warn_temp ||
+          vib >= t.warn_vib ||
+          cur >= t.warn_cur ||
+          volt >= t.warn_volt ||
+          power >= t.warn_power ||
+          energy >= t.warn_energy
+        );
+
+        const isRunning = (power > 0.5); // เช็คว่าเครื่องเปิดอยู่หรือไม่
+
+        if (isDanger) {
+          statusEl.className = "badge bg-danger";
+          statusEl.textContent = "อันตราย";
+        } else if (isWarning) {
+          statusEl.className = "badge bg-warning text-dark";
+          statusEl.textContent = "ผิดปกติ";
+        } else if (isRunning) {
+          statusEl.className = "badge bg-success";
+          statusEl.textContent = "กำลังทำงาน";
+        } else {
+          statusEl.className = "badge bg-secondary";
+          statusEl.textContent = "หยุดทำงาน";
+        }
       }
-        
+
       const updatedEl = document.getElementById("updated");
       if (updatedEl) updatedEl.textContent = "Last update: " + now.toLocaleTimeString();
 
@@ -406,7 +406,7 @@ async function checkInfluxStatus() {
   checkInfluxStatus();
   //await loadHistory();
   fetchData();
-  
+
   // Loop การทำงาน
   setInterval(fetchData, 1000);       // ดึงข้อมูลทุก 1 วินาที
   setInterval(checkInfluxStatus, 5000); // เช็คสถานะทุก 5 วินาที
@@ -414,116 +414,125 @@ async function checkInfluxStatus() {
 
 // ฟังก์ชันแสดงประวัติ 24 ชั่วโมงด้วย SweetAlert2
 async function show24hHistory() {
-    // แสดง Loading ระหว่างรอข้อมูล
+  // แสดง Loading ระหว่างรอข้อมูล
+  Swal.fire({
+    title: 'กำลังดึงข้อมูลย้อนหลัง...',
+    allowOutsideClick: false,
+    didOpen: () => { Swal.showLoading(); }
+  });
+
+  try {
+    // ดึงข้อมูลจาก API (ใช้ range=24h)
+    const res = await fetch(`${API_BASE}/api/history?range=24h&mac=${MACHINE_MAC}`);
+    const history = await res.json();
+
+    // ปิด Loading และเปิดหน้าต่างกราฟ
     Swal.fire({
-        title: 'กำลังดึงข้อมูลย้อนหลัง...',
-        allowOutsideClick: false,
-        didOpen: () => { Swal.showLoading(); }
-    });
+      title: `ประวัติการทำงาน 24 ชม. (${MACHINE_MAC})`,
+      html: '<canvas id="historyChart" width="400" height="250"></canvas>',
+      width: '80%',
+      confirmButtonText: 'ปิด',
+      didOpen: () => {
+        const ctx = document.getElementById('historyChart').getContext('2d');
 
-    try {
-        // ดึงข้อมูลจาก API (ใช้ range=24h)
-        const res = await fetch(`${API_BASE}/api/history?range=7d&mac=${MACHINE_MAC}`);
-        const history = await res.json();
 
-        // ปิด Loading และเปิดหน้าต่างกราฟ
-        Swal.fire({
-            title: `ประวัติการทำงาน 24 ชม. (${MACHINE_MAC})`,
-            html: '<canvas id="historyChart" width="400" height="250"></canvas>',
-            width: '80%',
-            confirmButtonText: 'ปิด',
-            didOpen: () => {
-                const ctx = document.getElementById('historyChart').getContext('2d');
-                
-                
-                const labels = history.temperature.map(p => new Date(p.time));
+        const labels = history.temperature.map(p => new Date(p.time));
 
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            { label: 'Temp (°C)', data: history.temperature.map(p => p.value), borderColor: '#f87171', tension: 0.2, pointRadius: 0 },
-                            { label: 'Vib (g)', data: history.vibration.map(p => p.value), borderColor: '#facc15', tension: 0.2, pointRadius: 0 },
-                            { label: 'Power (W)', data: history.power.map(p => p.value), borderColor: '#a78bfa', tension: 0.2, pointRadius: 0 },
-                            { label: 'Energy (Wh)', data: history.energy.map(p => p.value), borderColor: '#f472b6', tension: 0.2, pointRadius: 0 },
-                            { label: 'Volt (V)', data: history.voltage.map(p => p.value), borderColor: '#60a5fa', tension: 0.2, pointRadius: 0 },
-                            { label: 'Curr (A)', data: history.current.map(p => p.value), borderColor: '#34d399', tension: 0.2, pointRadius: 0 }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            x: { 
-                                type: 'time', 
-                                time: { unit: 'hour', displayFormats: { hour: 'HH:mm' } },
-                                title: { display: true, text: 'เวลา' }
-                            },
-                            y: { beginAtZero: true }
-                        }
-                    }
-                });
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              { label: 'Temp (°C)', data: history.temperature.map(p => p.value), borderColor: '#f87171', tension: 0.2, pointRadius: 0 },
+              { label: 'Vib (g)', data: history.vibration.map(p => p.value), borderColor: '#facc15', tension: 0.2, pointRadius: 0 },
+              { label: 'Power (W)', data: history.power.map(p => p.value), borderColor: '#a78bfa', tension: 0.2, pointRadius: 0 },
+              { label: 'Energy (Wh)', data: history.energy.map(p => p.value), borderColor: '#f472b6', tension: 0.2, pointRadius: 0 },
+              { label: 'Volt (V)', data: history.voltage.map(p => p.value), borderColor: '#60a5fa', tension: 0.2, pointRadius: 0 },
+              { label: 'Curr (A)', data: history.current.map(p => p.value), borderColor: '#34d399', tension: 0.2, pointRadius: 0 }
+            ]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                type: 'time',
+                time: { unit: 'hour', displayFormats: { hour: 'HH:mm' } },
+                title: { display: true, text: 'เวลา' }
+              },
+              y: { beginAtZero: true }
             }
+          }
         });
-    } catch (err) {
-        console.error("History Error:", err);
-        Swal.fire('ผิดพลาด', 'ไม่สามารถดึงข้อมูลย้อนหลังได้', 'error');
-    }
+      }
+    });
+  } catch (err) {
+    console.error("History Error:", err);
+    Swal.fire('ผิดพลาด', 'ไม่สามารถดึงข้อมูลย้อนหลังได้', 'error');
+  }
 }
 async function show7dHistory() {
-    // แสดง Loading ระหว่างรอข้อมูล
+  // แสดง Loading ระหว่างรอข้อมูล
+  Swal.fire({
+    title: 'กำลังดึงข้อมูลย้อนหลัง...',
+    allowOutsideClick: false,
+    didOpen: () => { Swal.showLoading(); }
+  });
+
+  try {
+
+    const res = await fetch(`${API_BASE}/api/history?range=7d&mac=${MACHINE_MAC}`);
+    const history = await res.json();
+
+    // ปิด Loading และเปิดหน้าต่างกราฟ
     Swal.fire({
-        title: 'กำลังดึงข้อมูลย้อนหลัง...',
-        allowOutsideClick: false,
-        didOpen: () => { Swal.showLoading(); }
-    });
+      title: `ประวัติการทำงาน 7 วัน (${MACHINE_MAC})`,
+      html: '<canvas id="historyChart" width="400" height="250"></canvas>',
+      width: '80%',
+      confirmButtonText: 'ปิด',
+      didOpen: () => {
+        const ctx = document.getElementById('historyChart').getContext('2d');
 
-    try {
-        
-        const res = await fetch(`${API_BASE}/api/history?range=7d&mac=${MACHINE_MAC}`);
-        const history = await res.json();
 
-        // ปิด Loading และเปิดหน้าต่างกราฟ
-        Swal.fire({
-            title: `ประวัติการทำงาน 7 วัน (${MACHINE_MAC})`,
-            html: '<canvas id="historyChart" width="400" height="250"></canvas>',
-            width: '80%',
-            confirmButtonText: 'ปิด',
-            didOpen: () => {
-                const ctx = document.getElementById('historyChart').getContext('2d');
-                
-                
-                const labels = history.temperature.map(p => new Date(p.time));
+        const labels = history.temperature.map(p => new Date(p.time));
 
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            { label: 'Temp (°C)', data: history.temperature.map(p => p.value), borderColor: '#f87171', tension: 0.2, pointRadius: 0 },
-                            { label: 'Vib (g)', data: history.vibration.map(p => p.value), borderColor: '#facc15', tension: 0.2, pointRadius: 0 },
-                            { label: 'Power (W)', data: history.power.map(p => p.value), borderColor: '#a78bfa', tension: 0.2, pointRadius: 0 },
-                            { label: 'Energy (Wh)', data: history.energy.map(p => p.value), borderColor: '#f472b6', tension: 0.2, pointRadius: 0 },
-                            { label: 'Volt (V)', data: history.voltage.map(p => p.value), borderColor: '#60a5fa', tension: 0.2, pointRadius: 0 },
-                            { label: 'Curr (A)', data: history.current.map(p => p.value), borderColor: '#34d399', tension: 0.2, pointRadius: 0 }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            x: { 
-                                type: 'time', 
-                                time: { unit: 'hour', displayFormats: { hour: 'HH:mm' } },
-                                title: { display: true, text: 'เวลา' }
-                            },
-                            y: { beginAtZero: true }
-                        }
-                    }
-                });
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              { label: 'Temp (°C)', data: history.temperature.map(p => p.value), borderColor: '#f87171', tension: 0.2, pointRadius: 0 },
+              { label: 'Vib (g)', data: history.vibration.map(p => p.value), borderColor: '#facc15', tension: 0.2, pointRadius: 0 },
+              { label: 'Power (W)', data: history.power.map(p => p.value), borderColor: '#a78bfa', tension: 0.2, pointRadius: 0 },
+              { label: 'Energy (Wh)', data: history.energy.map(p => p.value), borderColor: '#f472b6', tension: 0.2, pointRadius: 0 },
+              { label: 'Volt (V)', data: history.voltage.map(p => p.value), borderColor: '#60a5fa', tension: 0.2, pointRadius: 0 },
+              { label: 'Curr (A)', data: history.current.map(p => p.value), borderColor: '#34d399', tension: 0.2, pointRadius: 0 }
+            ]
+          },
+          options: {
+            responsive: true,
+            scales: {
+
+              x: {
+                type: 'time',
+                time: {
+                  unit: 'hour',
+                  stepSize: 12,
+                  displayFormats: {
+                    hour: 'DD/MM HH:mm',
+                    day: 'DD/MM/YYYY'
+                  },
+                  tooltipFormat: 'DD/MM/YYYY HH:mm:ss'
+                },
+                title: { display: true, text: 'เวลา' }
+              },
+              y: { beginAtZero: true }
             }
+          }
         });
-    } catch (err) {
-        console.error("History Error:", err);
-        Swal.fire('ผิดพลาด', 'ไม่สามารถดึงข้อมูลย้อนหลังได้', 'error');
-    }
+      }
+    });
+  } catch (err) {
+    console.error("History Error:", err);
+    Swal.fire('ผิดพลาด', 'ไม่สามารถดึงข้อมูลย้อนหลังได้', 'error');
+  }
 }
