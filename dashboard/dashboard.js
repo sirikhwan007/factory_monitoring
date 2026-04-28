@@ -423,7 +423,7 @@ async function show24hHistory() {
 
     try {
         // ดึงข้อมูลจาก API (ใช้ range=24h)
-        const res = await fetch(`${API_BASE}/api/history?range=24h&mac=${MACHINE_MAC}`);
+        const res = await fetch(`${API_BASE}/api/history?range=7d&mac=${MACHINE_MAC}`);
         const history = await res.json();
 
         // ปิด Loading และเปิดหน้าต่างกราฟ
