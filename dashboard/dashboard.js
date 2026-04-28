@@ -518,10 +518,10 @@ async function show7dHistory() {
                   unit: 'hour',
                   stepSize: 12,
                   displayFormats: {
-                    hour: 'DD/MM HH:mm',
-                    day: 'DD/MM/YYYY'
+                    hour: 'dd/MM HH:mm',
+                    day: 'dd/MM/yyyy'
                   },
-                  tooltipFormat: 'DD/MM/YYYY HH:mm:ss'
+                  tooltipFormat: 'dd/MM/yyyy HH:mm:ss'
                 },
                 title: { display: true, text: 'เวลา' }
               },
