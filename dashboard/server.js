@@ -15,10 +15,10 @@ const INFLUX_ORG = process.env.INFLUX_ORG;
 const INFLUX_BUCKET = process.env.INFLUX_BUCKET;
 
 const dbConfig = {
-    host: 'bft7bcehnrmpxwyzktj4-mysql.services.clever-cloud.com',   // หรือ IP ของ Database Server
+    host: 'bft7bcehnrmpxwyzktj4-mysql.services.clever-cloud.com',   // หรือ IP ของ Database
     user: 'urqpet8hr9e140i5',        // User ของ Database
     password: 'kHolbtlLF8xcItzwe1Qc',        // Password ของ Database
-    database: 'bft7bcehnrmpxwyzktj4'        // ชื่อ Database ที่ต้องการเชื่อมต่อ
+    database: 'bft7bcehnrmpxwyzktj4'        // ชื่อ Database
 };
 
 const influx = new InfluxDB({ url: INFLUX_URL, token: INFLUX_TOKEN });
@@ -43,22 +43,18 @@ async function autoReportToMySQL(mac, temp, vib, cur, volt, power, energy, level
     try {
         connection = await mysql.createConnection(dbConfig);
         
-        // 1. หา machine_id
         const [machines] = await connection.execute(
             'SELECT machine_id FROM machines WHERE mac_address = ?', 
             [mac]
         );
         const machineId = machines.length > 0 ? machines[0].machine_id : mac;
 
-        // -------------------------------------------------------------
-        // 2. สุ่มหาช่าง 1 คน
-        // -------------------------------------------------------------
         const [techs] = await connection.execute(
             "SELECT user_id FROM users WHERE role = 'Technician' ORDER BY RAND() LIMIT 1"
         );
 
         let technicianId = null;
-        let technicianName = "System Pool"; // ถ้าไม่มีช่าง ให้กองไว้ที่ส่วนกลาง
+        let technicianName = "System Pool";
 
         if (techs.length > 0) {
             technicianId = techs[0].user_id;
@@ -69,9 +65,8 @@ async function autoReportToMySQL(mac, temp, vib, cur, volt, power, energy, level
         if (level === "Warning") {
             timeText = "> 30 sec.";
         } else {
-            timeText = "> 1 min."; // สำหรับ Danger
+            timeText = "> 1 min.";
         }
-        // -------------------------------------------------------------
 
         const detail = `[Auto Alert] ${level} detected ${timeText} (` +
             `Temp:${Number(temp).toFixed(2)}, ` +
@@ -81,7 +76,6 @@ async function autoReportToMySQL(mac, temp, vib, cur, volt, power, energy, level
             `Power:${Number(power).toFixed(2)}, ` +  
             `Energy:${Number(energy).toFixed(2)})`;
 
-        // 3. Insert โดยใส่ technician_id ถ้ามี ถ้าไม่มีใส่เป็น NULL
         const sql = `
             INSERT INTO repair_history 
             (machine_id, reporter, position, type, detail, status, report_time, technician_id) 
@@ -98,7 +92,6 @@ async function autoReportToMySQL(mac, temp, vib, cur, volt, power, energy, level
     }
 }
 
-// --- Threshold Cache System ---
 let thresholdsCache = {};
 
 async function loadThresholds() {
@@ -128,8 +121,6 @@ mqttClient.on("message", async (topic, message) => {
     try {
         const payload = JSON.parse(message.toString());
         const mac = (payload.mac || "unknown").toLowerCase();
-        
-        // 1. ดึงค่าจาก Payload
         const temp = payload.temperature || 0;
         const vib = payload.accel_percent || 0;
         const pzem = payload.pzem || {};
@@ -138,7 +129,6 @@ mqttClient.on("message", async (topic, message) => {
         const power = pzem.power || 0;
         const energy = pzem.energy || 0;
 
-        // 2. บันทึกลง InfluxDB
         const points = [];
         if (typeof payload.temperature === 'number') {
             points.push(new Point("DS18B20").tag("device", mac).floatField("temperature", temp));
@@ -162,25 +152,21 @@ mqttClient.on("message", async (topic, message) => {
             console.log(` Recorded ${points.length} points for ${mac}`);
         }
 
-        // 3. Logic ควบคุมไฟ LED (Alert System)
-        //let danger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1700 || energy >= 3000);
-        //let warning = (temp >= 45 || vib >= 60 || cur >= 4 || volt >= 230 || power >= 800 || energy >= 2500);
         const t = thresholdsCache[mac] || thresholdsCache['default'];
 
         let danger = false;
         let warning = false;
 
         if (t) {
-            // ใช้เกณฑ์จาก Database
+
             danger = (temp >= t.danger_temp || vib >= t.danger_vib || cur >= t.danger_cur || volt >= t.danger_volt || power >= t.danger_power || energy >= t.danger_energy);
             warning = (temp >= t.warn_temp || vib >= t.warn_vib || cur >= t.warn_cur || volt >= t.warn_volt || power >= t.warn_power || energy >= t.warn_energy);
         } else {
-            // Fallback ถ้าไม่มีใน Database ใช้ค่าเดิม
+
             danger = (temp >= 55 || vib >= 80 || cur >= 8 || volt >= 280 || power >= 1700 || energy >= 3000);
             warning = (temp >= 45 || vib >= 60 || cur >= 4 || volt >= 230 || power >= 800 || energy >= 2500);
         }
 
-        // สร้าง State ให้ Mac นี้ถ้ายังไม่มี
         if (!deviceAlertState[mac]) {
             deviceAlertState[mac] = { dangerCount: 0, warningCount: 0, dangerStartTime: null, isReported: false, warningStartTime: null, isWarningReported: false };
         }
@@ -198,7 +184,7 @@ mqttClient.on("message", async (topic, message) => {
         }
 
         if (danger) {
-            // ถ้าเพิ่งเริ่มอันตราย ให้บันทึกเวลาเริ่มต้น
+
             deviceAlertState[mac].warningStartTime = null;
             deviceAlertState[mac].isWarningReported = false;
             
@@ -206,20 +192,20 @@ mqttClient.on("message", async (topic, message) => {
                 deviceAlertState[mac].dangerStartTime = Date.now();
                 console.log(` START Timer for ${mac} at ${new Date().toLocaleTimeString()}`);
             } else {
-                // คำนวณเวลาที่ผ่านไป (ms)
+
                 const elapsed = Date.now() - deviceAlertState[mac].dangerStartTime;
                 const seconds = (elapsed / 1000).toFixed(1);
                 console.log(` Timer Running: ${seconds}s / 10s | Reported: ${deviceAlertState[mac].isReported}`);
-                // ถ้าเกิน 60,000 ms (1 นาที) 
+                
                 if (elapsed >= 60000 && !deviceAlertState[mac].isReported) {
-                    await autoReportToMySQL(mac, temp, vib, cur, volt, power, energy, "Danger"); // เรียกฟังก์ชันแจ้งซ่อม
+                    await autoReportToMySQL(mac, temp, vib, cur, volt, power, energy, "Danger"); 
                     deviceAlertState[mac].isReported = true;
-                    console.log(" Database Insert Requested."); // ล็อกไว้ไม่ให้แจ้งซ้ำ
+                    console.log(" Database Insert Requested."); 
                 } 
             }
 
         }else if (warning) {
-            // รีเซ็ตตัวจับเวลา Danger
+
             deviceAlertState[mac].dangerStartTime = null;
             deviceAlertState[mac].isReported = false;
 
@@ -228,16 +214,16 @@ mqttClient.on("message", async (topic, message) => {
                 console.log(` [WARNING] Timer Started for ${mac}`);
             } else {
                 const elapsed = Date.now() - deviceAlertState[mac].warningStartTime;
-                // เช็คเวลา 
+                 
                 if (elapsed >= 30000 && !deviceAlertState[mac].isWarningReported) {
                     console.log(" Sending WARNING Report...");
-                    // ส่งค่า "Warning" ไป
+                    
                     await autoReportToMySQL(mac, temp, vib, cur, volt, power, energy, "Warning");
                     deviceAlertState[mac].isWarningReported = true;
                 }
             } 
           }else {
-            // ถ้ากลับมาปกติ ให้รีเซ็ตค่าทั้งหมด
+            
             if (deviceAlertState[mac].dangerStartTime || deviceAlertState[mac].warningStartTime) {
                 console.log(` [NORMAL] Reset Timers for ${mac}`);
             }
@@ -313,10 +299,7 @@ app.get("/api/latest/:mac", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-//----------------------------
-// =============================
-//  API ดึงข้อมูลย้อนหลัง
-// =============================
+
 app.get("/api/history", async (req, res) => {
   const range = req.query.range || "1h";
   //const mac = req.query.mac;
@@ -373,7 +356,6 @@ app.get("/api/history", async (req, res) => {
   });
 });
 
-//-----------------------------
 app.get("/api/status", async (req, res) => {
   try {
     let isConnected = false;
@@ -395,7 +377,7 @@ app.get("/api/status", async (req, res) => {
   }
 });
 
-// API สำหรับบันทึกหรือแก้ไขเกณฑ์ (Thresholds)
+// API สำหรับบันทึกหรือแก้ไข Thresholds
 app.post("/api/thresholds", async (req, res) => {
     const { 
         mac_address, 
@@ -435,7 +417,24 @@ app.post("/api/thresholds", async (req, res) => {
             warn_energy, danger_energy
         ]);
 
-        await loadThresholds(); 
+        await loadThresholds();
+        
+        const mqttPayload = {
+            update_config: {
+                temp_yellow: Number(warn_temp),
+                temp_red: Number(danger_temp),
+                vib_yellow: Number(warn_vib),
+                vib_red: Number(danger_vib),
+                curr_yellow: Number(warn_cur),
+                curr_red: Number(danger_cur),
+                volt_yellow: Number(warn_volt),
+                volt_red: Number(danger_volt),
+                power_yellow: Number(warn_power),
+                power_red: Number(danger_power)
+            }
+        };
+        mqttClient.publish("test/cmd/led", JSON.stringify(mqttPayload));
+        console.log("Published new thresholds to ESP32:", mqttPayload);
 
         res.json({ message: "Threshold updated and cache refreshed immediately!" });
         console.log(` Threshold for ${mac_address || 'default'} updated by Web UI`);
@@ -447,8 +446,6 @@ app.post("/api/thresholds", async (req, res) => {
         if (connection) await connection.end();
     }
 });
-
-// API ดึงค่า Threshold ของแต่ละเครื่องจักร
 
 app.get("/api/thresholds/:mac", async (req, res) => {
     const mac = req.params.mac;
